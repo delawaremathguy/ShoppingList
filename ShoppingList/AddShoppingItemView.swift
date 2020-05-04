@@ -18,21 +18,26 @@ struct AddShoppingItemView: View {
 		Form {
 			// 1
 			Section {
-				TextField("Item name", text: $itemName)
+				TextField("Item name", text: $itemName, onCommit: commitTextEntry)
 			}
 			
 			// 2
 			Section {
 				Button("Save") {
-					let newItem = ShoppingItem.addNewItem(name: self.itemName)
-					self.shoppingItems.append(newItem)
-					self.presentationMode.wrappedValue.dismiss()
+					self.commitTextEntry()
 				}
 			}
 			
 		} // end of Form
 			.navigationBarTitle("Add Book")
 	}
+	
+	func commitTextEntry() {
+		let newItem = ShoppingItem.addNewItem(name: itemName)
+		shoppingItems.append(newItem)
+		presentationMode.wrappedValue.dismiss()
+	}
+
 	
 }
 

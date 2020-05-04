@@ -25,4 +25,9 @@ extension ShoppingItem: Identifiable {
 		appDelegate.saveContext()
 		return newItem
 	}
+	
+	static func delete(item: ShoppingItem) {
+		appDelegate.persistentContainer.viewContext.delete(item)
+		appDelegate.saveContext()
+	}
 }

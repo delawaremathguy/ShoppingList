@@ -15,7 +15,7 @@ struct ContentView: View {
 	// the list of shoppingItems is loaded in .onAppear so we can control
 	// when it gets loaded and then own it ourself
 	@State private var shoppingItems = [ShoppingItem]()
-
+	@State private var isHistorySectionShowing: Bool = true
 	
 // the purchasedItems are just handled directly through @FetchRequest
 	@FetchRequest(entity: ShoppingItem.entity(),
@@ -31,19 +31,33 @@ struct ContentView: View {
 			List {
 				Section(header: Text("On List (\(shoppingItems.count) items)")) {
 					ForEach(shoppingItems) { item in
-						Text(item.name!) // (item as! ShoppingItem).name!)
+						NavigationLink(destination: ModifyShoppingItemView(editableItem: item, shoppingItems: self.$shoppingItems)) {
+							Text(item.name!) // (item as! ShoppingItem).name!)
+						}
 					}
 					.onMove(perform: moveItems)
 					.onDelete(perform: moveToHistory)
+					
+					HStack {
+						Spacer()
+						Button(isHistorySectionShowing ? "Hide History Section" : "Show History Section") {
+							self.isHistorySectionShowing.toggle()
+						}
+						Spacer()
+					}
+				} // end of Section
+				
+				
+				if isHistorySectionShowing {
+					Section(header: Text("History (\(historyItems.count) items)")) {
+						ForEach(historyItems) { (item) in
+							Text(item.name!) // (item as! ShoppingItem).name!)
+						}
+						.onDelete(perform: moveToShoppingList)
+						
+					}
 				}
 				
-				Section(header: Text("History (\(historyItems.count) items)")) {
-					ForEach(historyItems) { (item) in
-						Text(item.name!) // (item as! ShoppingItem).name!)
-					}
-				.onDelete(perform: moveToShoppingList)
-					
-				}
 			}  // end of List
 			.listStyle(GroupedListStyle())
 				.navigationBarTitle(Text("Shopping List"))

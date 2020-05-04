@@ -16,6 +16,7 @@
 		D62B88342451162E0051A7CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D62B88332451162E0051A7CE /* Assets.xcassets */; };
 		D62B88372451162E0051A7CE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D62B88362451162E0051A7CE /* Preview Assets.xcassets */; };
 		D62B883A2451162E0051A7CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D62B88382451162E0051A7CE /* LaunchScreen.storyboard */; };
+		D6450BD7245F49DB0074DA16 /* ModifyShoppingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6450BD6245F49DB0074DA16 /* ModifyShoppingItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		D62B88362451162E0051A7CE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D62B88392451162E0051A7CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D62B883B2451162E0051A7CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D6450BD6245F49DB0074DA16 /* ModifyShoppingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyShoppingItemView.swift; sourceTree = "<group>"; };
 		D6FDCBF3245F1E0E001DB209 /* ShoppingList 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ShoppingList 3.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,6 +70,7 @@
 				D62B882C2451162D0051A7CE /* SceneDelegate.swift */,
 				D62B88312451162D0051A7CE /* ContentView.swift */,
 				D610C3BB2451D380009F7F36 /* AddShoppingItemView.swift */,
+				D6450BD6245F49DB0074DA16 /* ModifyShoppingItemView.swift */,
 				D62B88332451162E0051A7CE /* Assets.xcassets */,
 				D62B88382451162E0051A7CE /* LaunchScreen.storyboard */,
 				D62B883B2451162E0051A7CE /* Info.plist */,
@@ -157,6 +160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6450BD7245F49DB0074DA16 /* ModifyShoppingItemView.swift in Sources */,
 				D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */,
 				D62B88302451162D0051A7CE /* ShoppingList.xcdatamodeld in Sources */,
 				D62B882B2451162D0051A7CE /* AppDelegate.swift in Sources */,
