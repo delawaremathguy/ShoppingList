@@ -17,6 +17,7 @@
 		D62B88372451162E0051A7CE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D62B88362451162E0051A7CE /* Preview Assets.xcassets */; };
 		D62B883A2451162E0051A7CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D62B88382451162E0051A7CE /* LaunchScreen.storyboard */; };
 		D6450BD7245F49DB0074DA16 /* ModifyShoppingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6450BD6245F49DB0074DA16 /* ModifyShoppingItemView.swift */; };
+		D6FC7A00246354AB0096F018 /* DataSeed.txt in Resources */ = {isa = PBXBuildFile; fileRef = D6FC79FF246354AB0096F018 /* DataSeed.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		D62B88392451162E0051A7CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D62B883B2451162E0051A7CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D6450BD6245F49DB0074DA16 /* ModifyShoppingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyShoppingItemView.swift; sourceTree = "<group>"; };
+		D6FC79FF246354AB0096F018 /* DataSeed.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataSeed.txt; sourceTree = "<group>"; };
 		D6FDCBF3245F1E0E001DB209 /* ShoppingList 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ShoppingList 3.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,6 +78,7 @@
 				D62B883B2451162E0051A7CE /* Info.plist */,
 				D62B882E2451162D0051A7CE /* ShoppingList.xcdatamodeld */,
 				D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */,
+				D6FC79FF246354AB0096F018 /* DataSeed.txt */,
 				D62B88352451162E0051A7CE /* Preview Content */,
 			);
 			path = ShoppingList;
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D62B883A2451162E0051A7CE /* LaunchScreen.storyboard in Resources */,
+				D6FC7A00246354AB0096F018 /* DataSeed.txt in Resources */,
 				D62B88372451162E0051A7CE /* Preview Assets.xcassets in Resources */,
 				D62B88342451162E0051A7CE /* Assets.xcassets in Resources */,
 			);

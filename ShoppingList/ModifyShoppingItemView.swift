@@ -40,6 +40,7 @@ struct ModifyShoppingItemView: View {
 			.onAppear(perform: loadData)
 			
 		} // end of Form
+			.navigationBarTitle("Modify Item", displayMode: .inline)
 	}
 	
 	func loadData() {

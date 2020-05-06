@@ -29,6 +29,7 @@ struct ContentView: View {
 	var body: some View {
 		NavigationView {
 			List {
+				
 				Section(header: Text("On List (\(shoppingItems.count) items)")) {
 					ForEach(shoppingItems) { item in
 						NavigationLink(destination: ModifyShoppingItemView(editableItem: item, shoppingItems: self.$shoppingItems)) {
@@ -38,6 +39,17 @@ struct ContentView: View {
 					.onMove(perform: moveItems)
 					.onDelete(perform: moveToHistory)
 					
+					// add new item
+					NavigationLink(destination: AddShoppingItemView(shoppingItems: self.$shoppingItems, saveItemOrderFunction: self.saveItemOrder)) {
+						HStack {
+							Spacer()
+							Text("Add New Item")
+								.foregroundColor(Color.blue)
+							Spacer()
+						}
+					}
+
+					// hide/show History section
 					HStack {
 						Spacer()
 						Button(isHistorySectionShowing ? "Hide History Section" : "Show History Section") {
@@ -59,18 +71,15 @@ struct ContentView: View {
 				}
 				
 			}  // end of List
-			.listStyle(GroupedListStyle())
+				.listStyle(GroupedListStyle())
 				.navigationBarTitle(Text("Shopping List"))
-				.navigationBarItems(leading: EditButton(),
-														trailing: Button(action: {
-															self.showingAddScreen.toggle()
-														}) {
-															Text("Add")
-				})
-				.sheet(isPresented: $showingAddScreen) {
-					AddShoppingItemView(shoppingItems: self.$shoppingItems)
-			}
-			.onAppear(perform: loadData)
+				.navigationBarItems(leading: Button(action: {
+					self.exportData()
+				}) {
+					Text("Export Data")
+					},
+					trailing: EditButton())
+				.onAppear(perform: loadData)
 			
 		}  // end of NavigationView
 	}
@@ -115,7 +124,7 @@ struct ContentView: View {
 		}
 		shoppingItems = savedItems
 //		for item in shoppingItems {
-//			print(item.id!)
+//			print(item.name!)
 //		}
 		
 		// if shoppingItems is empty, we're done
@@ -128,7 +137,10 @@ struct ContentView: View {
 		if let arrayOfOrder = try? managedObjectContext.fetch(fetchRequest2), arrayOfOrder.count > 0 {
 			let shoppingListByUUID = arrayOfOrder[0].uuidOrder!
 			// these should be the same length ...
-			guard shoppingListByUUID.count == shoppingItems.count else { return }
+			guard shoppingListByUUID.count == shoppingItems.count else {
+				print("ERROR MATCHING SAVED ORDER WITH COUNT OF LIST ITEMS")
+				return
+			}
 			// split up shopping items by id, a UUID
 			let uuid2ShoppingItem = Dictionary(grouping: shoppingItems, by: { $0.id! })
 			shoppingItems = shoppingListByUUID.map({ uuid2ShoppingItem[$0]!.first! })
@@ -139,7 +151,7 @@ struct ContentView: View {
 	func saveItemOrder() {
 		// find existing order of items (it should be there, unless we never
 		// added anything to the shopping list
-		let newUUIDOrder = shoppingItems.compactMap({ $0.id })
+		let newUUIDOrder = shoppingItems.map({ $0.id! })
 		
 		let fetchRequest: NSFetchRequest<ListOrder> = ListOrder.fetchRequest()
 		let currentUUIDOrder: ListOrder
@@ -149,6 +161,7 @@ struct ContentView: View {
 				currentUUIDOrder = arrayOfOrder[0]
 				currentUUIDOrder.uuidOrder = newUUIDOrder
 				try? managedObjectContext.save()
+				print("new order saved.")
 				return
 			}
 		} catch {
@@ -159,6 +172,15 @@ struct ContentView: View {
 		let newListOrder = ListOrder(context: managedObjectContext)
 		newListOrder.uuidOrder = newUUIDOrder
 		try? managedObjectContext.save()
+	}
+	
+	func exportData() {
+		for item in shoppingItems {
+			print(item.name!)
+		}
+		for item in historyItems {
+			print(item.name!)
+		}
 	}
 }
 
