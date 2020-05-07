@@ -58,7 +58,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	             */
 	            fatalError("Unresolved error \(error), \(error.userInfo)")
 	        }
-	    })
+				// hook in here on the completion to load the database if there are no ShoppingItems
+				let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
+				do {
+					let count = try container.viewContext.count(for: fetchRequest)
+					print("Number of ShoppingItems in database is \(count)")
+				}
+				catch let error as NSError {
+					fatalError("Error couting items: \(error.localizedDescription), \(error.userInfo)")
+				}
+				
+			})
 	    return container
 	}()
 
@@ -73,10 +83,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	            // Replace this implementation with code to handle the error appropriately.
 	            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 	            let nserror = error as NSError
-	            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+	            fatalError("Unresolved error saving context: \(nserror), \(nserror.userInfo)")
 	        }
 	    }
 	}
+	
 
 }
 
