@@ -58,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	             */
 	            fatalError("Unresolved error \(error), \(error.userInfo)")
 	        }
-				// hook in here on the completion to load the database if there are no ShoppingItems
+				// hook in here to report number of ShoppingItems -- purely for debugging
 				let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
 				do {
 					let count = try container.viewContext.count(for: fetchRequest)

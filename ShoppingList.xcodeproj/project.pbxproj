@@ -40,6 +40,7 @@
 		D648D348246388C100CD881B /* Location+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Extensions.swift"; sourceTree = "<group>"; };
 		D648D34A24638A3A00CD881B /* AddLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationView.swift; sourceTree = "<group>"; };
 		D65721B22464591700E4AAAF /* ModifyLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyLocationView.swift; sourceTree = "<group>"; };
+		D65A15D22465A137004ACCBB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D6B8A95324636711005F8EF2 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D6B8A9552463693D005F8EF2 /* LocationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsView.swift; sourceTree = "<group>"; };
 		D6FC79FF246354AB0096F018 /* DataSeed.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataSeed.txt; sourceTree = "<group>"; };
@@ -77,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				D62B882A2451162D0051A7CE /* AppDelegate.swift */,
+				D65A15D22465A137004ACCBB /* README.md */,
 				D6FC7A0824635D950096F018 /* ShoppingList.xcdatamodeld */,
 				D62B882C2451162D0051A7CE /* SceneDelegate.swift */,
 				D62B88312451162D0051A7CE /* ShoppingListView.swift */,
