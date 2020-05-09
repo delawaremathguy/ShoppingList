@@ -54,8 +54,9 @@ struct AddShoppingItemView: View {
 		let newItem = ShoppingItem.addNewItem(name: itemName, location: locations[selectedLocationIndex])
 		newItem.quantity = Int32(itemQuantity)
 		let location = locations[selectedLocationIndex]
-		newItem.location = location
-		newItem.visitationOrder = location.visitationOrder
+		newItem.setLocation(location: location)
+//		newItem.location = location
+//		newItem.visitationOrder = location.visitationOrder
 		try? managedObjectContext.save()
 		presentationMode.wrappedValue.dismiss()
 	}

@@ -36,10 +36,13 @@ struct LocationsView: View {
 							HStack {
 								Text(location.name!)
 									.font(.headline)
-								Spacer()
-								Text(String(location.visitationOrder))
+								if location.visitationOrder != kUnknownLocationVisitationOrder {
+									Spacer()
+									Text(String(location.visitationOrder))
+								}
 							}
 						}
+					.disabled(location.visitationOrder == kUnknownLocationVisitationOrder)
 					}
 				}
 			}

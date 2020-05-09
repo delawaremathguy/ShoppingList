@@ -23,9 +23,10 @@ extension ShoppingItem: Identifiable {
 		newItem.name = name
 		newItem.quantity = 1
 		newItem.onList = true
-		newItem.location = location
+		newItem.setLocation(location: location)
+		//newItem.location = location
 		// this is "redundant information, but it helps synch order in shoppinglist
-		newItem.visitationOrder = location.visitationOrder
+		//newItem.visitationOrder = location.visitationOrder
 		appDelegate.saveContext()
 		return newItem
 	}
@@ -59,14 +60,14 @@ extension ShoppingItem: Identifiable {
 		
 		if let index = listOfLocations.firstIndex(where: { $0.name! == locationName }) {
 			let location = listOfLocations[index]
-			newItem.location = location
-			newItem.visitationOrder = location.visitationOrder
+			newItem.setLocation(location: location)
+//			location = location
+//			newItem.visitationOrder = location.visitationOrder
 		} else {
 			// create a new Location now
 			let visitationOrder = Int(splitString[2]) ?? 100
 			let newLocation = Location.addNewLocation(name: locationName, visitationOrder: visitationOrder)
-			newItem.location = newLocation
-			newItem.visitationOrder = Int32(visitationOrder)
+			newItem.setLocation(location: newLocation)
 		}
 
 		appDelegate.saveContext()
@@ -77,5 +78,10 @@ extension ShoppingItem: Identifiable {
 	static func delete(item: ShoppingItem) {
 		appDelegate.persistentContainer.viewContext.delete(item)
 		appDelegate.saveContext()
+	}
+	
+	func setLocation(location: Location) {
+		self.location = location
+		visitationOrder = location.visitationOrder
 	}
 }
