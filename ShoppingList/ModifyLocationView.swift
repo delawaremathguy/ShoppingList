@@ -44,8 +44,13 @@ struct ModifyLocationView: View {
 		// and if we return to the list of Locations, that's cool.  but if we move
 		// over to the shopping list tab (or if we go back and then move over to the
 		// shopping list tab), we're screwed -- it has not seen this update.
-		// one possible remedy: reinstate a modificationToken for each ShoppingListItem
-		// and id: the list items in the shoppingList by the modificationToken?
+		// so we will update the parallel visitationOrder in all the shoppingList
+		// items to match this order
+		if let shoppingItems = location.items as? Set<ShoppingItem> {
+			for item in shoppingItems {
+				item.visitationOrder = Int32(visitationOrder)
+			}
+		}
 		try? managedObjectContext.save()
 		presentationMode.wrappedValue.dismiss()
 	}

@@ -11,10 +11,11 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="onList" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="quantity" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="visitationOrder" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="items" inverseEntity="Location"/>
     </entity>
     <elements>
         <element name="Location" positionX="184.453125" positionY="-2.875" width="128" height="103"/>
-        <element name="ShoppingItem" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="ShoppingItem" positionX="-63" positionY="-18" width="128" height="133"/>
     </elements>
 </model>

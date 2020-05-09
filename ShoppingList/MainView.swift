@@ -9,7 +9,6 @@
 import SwiftUI
 import CoreData
 
-let kUnknownLocationName = "Unknown Location"
 
 struct MainView: View {
 	@Environment(\.managedObjectContext) var managedObjectContext
@@ -43,11 +42,11 @@ struct MainView: View {
 			// nothing to do
 		}
 		
-		// first, demand that there's a default, Unknown location
-		let newLocation = Location(context: managedObjectContext)
-		newLocation.id = UUID()
-		newLocation.name = kUnknownLocationName
-		newLocation.visitationOrder = 100
+//		// first, demand that there's a default, Unknown location
+//		let newLocation = Location(context: managedObjectContext)
+//		newLocation.id = UUID()
+//		newLocation.name = kUnknownLocationName
+//		newLocation.visitationOrder = kUnknownLocationVisitationOrder
 		
 		// now read data from seedData.txt
 		let fileName = "DataSeed.txt"

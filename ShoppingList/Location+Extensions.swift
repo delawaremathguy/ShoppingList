@@ -8,6 +8,10 @@
 
 import UIKit
 
+// constants
+let kUnknownLocationName = "Unknown Location"
+let kUnknownLocationVisitationOrder = INT32_MAX
+
 extension Location: Identifiable {
 	
 	fileprivate static var appDelegate: AppDelegate = {

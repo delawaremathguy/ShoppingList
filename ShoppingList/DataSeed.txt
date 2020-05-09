@@ -1,17 +1,4 @@
-Activia yogurt cherry or peach:Back Wall:20
-Cinnamon rolls:Back Wall:20
-Ham steak, 1 pound:Back Wall:20
-Hot dogs I like:Back Wall:20
-Package meatloaf mix:Back Wall:20
-Pizza crust:Back Wall:20
-Stamps:Service Desk:39
-Large cans of crushed tomatoes:Italian:42
-Lasagna noodles:Italian:42
-Spaghetti:Italian:42
-Tomato sauce, 12 oz can:Italian:42
-Box frozen chopped spinach:Frozen Vegetables:35
-Skinny cow:Frozen Vegetables:35
-Bag of carrots full size:Fruits & Vegetables:35
+Bag of carrots full size:Fruits & Vegetables:5
 Bananas:Fruits & Vegetables:5
 Blueberries:Fruits & Vegetables:5
 Cherry tomatoes:Fruits & Vegetables:5
@@ -20,11 +7,16 @@ Green grapes:Fruits & Vegetables:5
 Green pepper:Fruits & Vegetables:5
 Red potatoes, 5 pound bag:Fruits & Vegetables:5
 Watermelon chunks:Fruits & Vegetables:5
-Bread:Bread Aisle:60
-English muffins, Thomas's:Bread Aisle:60
-Hamburger rolls:Bread Aisle:60
-Hot dog rolls:Bread Aisle:60
-Skippy, low fat:Bread Aisle:60
+Pub cheese regular:Deli:10
+Sliced cheese, LOL, 1/2 pound:Deli:10
+Sliced ham, Boar's Head, 1/2 lb.:Deli:10
+Tortellini (3 cheese):Deli:10
+Activia yogurt cherry or peach:Back Wall:20
+Cinnamon rolls:Back Wall:20
+Ham steak, 1 pound:Back Wall:20
+Hot dogs I like:Back Wall:20
+Package meatloaf mix:Back Wall:20
+Pizza crust:Back Wall:20
 Butter, 1 pound:Dairy:25
 Buttermilk:Dairy:25
 Cream cheese 8 oz.:Dairy:25
@@ -33,29 +25,37 @@ Eggs 2 dozen if XL, else 1 doz large:Dairy:25
 Hazelnut coffee creamer:Dairy:25
 Milk:Dairy:25
 Ricotta cheese, 8 oz:Dairy:25
-Oven cleaner:Kitchen:66
-Pam original:Kitchen:66
-Tide:Kitchen:66
-Trash bags for kitchen:Kitchen:66
-Creamed corn:Canned Vegetables:70
-Jar of turkey gravy not in can:Canned Vegetables:70
-Pub cheese regular:Deli:10
-Sliced cheese, LOL, 1/2 pound:Deli:10
-Sliced ham, Boar's Head, 1/2 lb.:Deli:10
-Tortellini (3 cheese):Deli:10
-Apple sauce, jar:Unknown Location:100
-Cranberry sauce:Unknown Location:100
-Crushed pineapple can:Unknown Location:100
-King Arthur flour:Unknown Location:100
-Milk chocolate chips (not semisweet):Unknown Location:100
-Potato chips:Chips & Snacks:75
-Poultry seasoning:Unknown Location:100
-Pretzels barrel (bag better):Chips & Snacks:75
-Quaker Oats quick oatmeal:Unknown Location:100
-Quaker rice cakes:Unknown Location:100
+Box frozen chopped spinach:Frozen Vegetables:35
+Skinny cow:Frozen Vegetables:35
+Large cans of crushed tomatoes:Italian:45
+Lasagna noodles:Italian:45
+Oven cleaner:Kitchen:45
+Pam original:Kitchen:45
+Small can of tomato paste, Contadina or Hunts:Italian:45
+Spaghetti:Italian:45
+Tide:Kitchen:45
+Tomato sauce, 12 oz can:Italian:45
+Trash bags for kitchen:Kitchen:45
+Bread:Bread Aisle:50
+English muffins, Thomas's:Bread Aisle:50
+Hamburger rolls:Bread Aisle:50
+Hot dog rolls:Bread Aisle:50
+Skippy, low fat:Bread Aisle:50
+Creamed corn:Canned Vegetables:65
+Jar of turkey gravy not in can:Canned Vegetables:65
 Raisin Bran cereal, Post or Kellogg’s, 15 oz box:Cereal:70
-Salt (Morton 26 ounces iodized):Unknown Location:100
-Saltines:Unknown Location:100
-Slice of ham, sealed package, 1 pound:Unknown Location:100
-Small can of tomato paste, Contadina or Hunts:Italian:42
 Special K Chocolatey Delight, family size:Cereal:70
+Potato chips:Chips & Snacks:75
+Pretzels barrel (bag better):Chips & Snacks:75
+Stamps:Service Desk:95
+Apple sauce, jar:Unknown Location:2147483647
+Cranberry sauce:Unknown Location:2147483647
+Crushed pineapple can:Unknown Location:2147483647
+King Arthur flour:Unknown Location:2147483647
+Milk chocolate chips (not semisweet):Unknown Location:2147483647
+Poultry seasoning:Unknown Location:2147483647
+Quaker Oats quick oatmeal:Unknown Location:2147483647
+Quaker rice cakes:Unknown Location:2147483647
+Salt (Morton 26 ounces iodized):Unknown Location:2147483647
+Saltines:Unknown Location:2147483647
+Slice of ham, sealed package, 1 pound:Unknown Location:2147483647

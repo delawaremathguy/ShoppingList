@@ -12,15 +12,13 @@ import CoreData
 struct ShoppingListView: View {
 	@Environment(\.managedObjectContext) var managedObjectContext
 	
-	// the list of shoppingItems is loaded in .onAppear so we can control
-	// when it gets loaded and then own it ourself
+	// boolean state to control whether to show the history section
 	@State private var isHistorySectionShowing: Bool = true
 	
-//	@State private var shoppingItems = [ShoppingItem]()
-
+	// fetch requests to get both the items on the list, and those off the list
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
-									NSSortDescriptor(keyPath: \ShoppingItem.location?.visitationOrder, ascending: true),
+									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
 								predicate: NSPredicate(format: "onList == true")
 	) var shoppingItems: FetchedResults<ShoppingItem>
@@ -31,17 +29,23 @@ struct ShoppingListView: View {
 								predicate: NSPredicate(format: "onList == false")
 	) var historyItems: FetchedResults<ShoppingItem>
 
-	@State private var showingAddScreen: Bool = false
-	
 	var body: some View {
 		NavigationView {
 			List {
 				
+				// add new item stays at top
+				NavigationLink(destination: AddShoppingItemView()) {
+					HStack {
+						Spacer()
+						Text("Add New Item")
+						.foregroundColor(Color.blue)
+						Spacer()
+					}
+				}
+				
 				Section(header: Text("On List (\(shoppingItems.count) items)")) {
-					ForEach(shoppingItems) { item in
-						NavigationLink(destination:
-							ModifyShoppingItemView(editableItem: item)
-						){ // }, shoppingItems: self.$shoppingItems)) {
+					ForEach(shoppingItems, id:\.self) { item in
+						NavigationLink(destination: ModifyShoppingItemView(editableItem: item)) {
 							HStack {
 								VStack(alignment: .leading) {
 									Text(item.name!)
@@ -62,15 +66,6 @@ struct ShoppingListView: View {
 //					.onMove(perform: moveItems)
 					.onDelete(perform: moveToHistory)
 					
-					// add new item
-					NavigationLink(destination: AddShoppingItemView()) {
-						HStack {
-							Spacer()
-							Text("Add New Item")
-								.foregroundColor(Color.blue)
-							Spacer()
-						}
-					}
 
 					// hide/show History section
 					HStack {
@@ -81,8 +76,7 @@ struct ShoppingListView: View {
 						Spacer()
 					}
 				} // end of Section
-				
-				
+								
 				if isHistorySectionShowing {
 					Section(header: Text("History (\(historyItems.count) items)")) {
 						ForEach(historyItems) { item in
@@ -94,9 +88,11 @@ struct ShoppingListView: View {
 				}
 				
 			}  // end of List
-				.listStyle(GroupedListStyle())
+				.listStyle(PlainListStyle())
 				.navigationBarTitle(Text("Shopping List"))
 				.onAppear(perform: loadData)
+			
+			
 			
 		}  // end of NavigationView
 	}
@@ -134,15 +130,15 @@ struct ShoppingListView: View {
 //		}
 
 		
-//		for item in shoppingItems {
-//			print("\(item.name!):\(item.location!.name!):\(item.location!.visitationOrder)")
-//		}
+		for item in shoppingItems {
+			print("\(item.name!):\(item.location!.name!):\(item.location!.visitationOrder)")
+		}
 	}
 			
 	func textColor(for item: ShoppingItem) -> Color {
 		if let location = item.location {
 			if location.name! == kUnknownLocationName {
-				return Color.gray
+				return Color.init(.sRGB, red: 0.9, green: 0.9, blue: 0.9, opacity: 0.5)
 			}
 			return Color.clear
 		}

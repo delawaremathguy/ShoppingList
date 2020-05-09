@@ -85,6 +85,7 @@ struct ModifyShoppingItemView: View {
 		if newLocation != editableItem.location {
 			editableItem.location?.removeFromItems(editableItem)
 			editableItem.location = newLocation
+			editableItem.visitationOrder = newLocation.visitationOrder
 		}
 		try? managedObjectContext.save()
 		presentationMode.wrappedValue.dismiss()

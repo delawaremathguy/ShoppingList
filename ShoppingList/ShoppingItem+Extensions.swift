@@ -24,6 +24,8 @@ extension ShoppingItem: Identifiable {
 		newItem.quantity = 1
 		newItem.onList = true
 		newItem.location = location
+		// this is "redundant information, but it helps synch order in shoppinglist
+		newItem.visitationOrder = location.visitationOrder
 		appDelegate.saveContext()
 		return newItem
 	}
@@ -31,7 +33,8 @@ extension ShoppingItem: Identifiable {
 	static func addNewItem(nameAndLocation: String) -> ShoppingItem {
 		// note: here, we're adding a ShoppintItem based on an incoming string that
 		// is formatted as "Name:LocationName:visitationOrder"
-		// we should get 3 String (slices)
+		// we should get 3 String (slices), unless the location name
+		// is Unknown Location -- it already exists
 		let splitString = nameAndLocation.split(separator: ":")
 		
 		let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
@@ -53,13 +56,17 @@ extension ShoppingItem: Identifiable {
 			print("Error fetching Locations: \(error.localizedDescription), \(error.userInfo)")
 			listOfLocations = []
 		}
+		
 		if let index = listOfLocations.firstIndex(where: { $0.name! == locationName }) {
-			newItem.location = listOfLocations[index]
-		} else if locationName != kUnknownLocationName {
+			let location = listOfLocations[index]
+			newItem.location = location
+			newItem.visitationOrder = location.visitationOrder
+		} else {
 			// create a new Location now
 			let visitationOrder = Int(splitString[2]) ?? 100
 			let newLocation = Location.addNewLocation(name: locationName, visitationOrder: visitationOrder)
 			newItem.location = newLocation
+			newItem.visitationOrder = Int32(visitationOrder)
 		}
 
 		appDelegate.saveContext()

@@ -80,6 +80,8 @@
 				D62B882A2451162D0051A7CE /* AppDelegate.swift */,
 				D65A15D22465A137004ACCBB /* README.md */,
 				D6FC7A0824635D950096F018 /* ShoppingList.xcdatamodeld */,
+				D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */,
+				D648D348246388C100CD881B /* Location+Extensions.swift */,
 				D62B882C2451162D0051A7CE /* SceneDelegate.swift */,
 				D62B88312451162D0051A7CE /* ShoppingListView.swift */,
 				D6B8A9552463693D005F8EF2 /* LocationsView.swift */,
@@ -91,8 +93,6 @@
 				D62B88332451162E0051A7CE /* Assets.xcassets */,
 				D62B88382451162E0051A7CE /* LaunchScreen.storyboard */,
 				D62B883B2451162E0051A7CE /* Info.plist */,
-				D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */,
-				D648D348246388C100CD881B /* Location+Extensions.swift */,
 				D6FC79FF246354AB0096F018 /* DataSeed.txt */,
 				D62B88352451162E0051A7CE /* Preview Content */,
 			);
