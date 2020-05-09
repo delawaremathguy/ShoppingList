@@ -40,10 +40,12 @@ struct ModifyLocationView: View {
 	func commitData() {
 		location.name = locationName
 		location.visitationOrder = Int32(visitationOrder)
-		// here, we could go through every ShoppingItem that references this location and
-		// remove/reinsert links to this Location -- maybe that would trigger a ShoppingListView
-		// update.  if not, we should go back to using a modificationToken strategy and update
-		// the modificationToken of every ShoppingItem that references this location.
+		// THE PROBLEM: we now may have reordered the Locations by visitationOrder.
+		// and if we return to the list of Locations, that's cool.  but if we move
+		// over to the shopping list tab (or if we go back and then move over to the
+		// shopping list tab), we're screwed -- it has not seen this update.
+		// one possible remedy: reinstate a modificationToken for each ShoppingListItem
+		// and id: the list items in the shoppingList by the modificationToken?
 		try? managedObjectContext.save()
 		presentationMode.wrappedValue.dismiss()
 	}

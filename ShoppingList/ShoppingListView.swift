@@ -39,12 +39,14 @@ struct ShoppingListView: View {
 				
 				Section(header: Text("On List (\(shoppingItems.count) items)")) {
 					ForEach(shoppingItems) { item in
-						NavigationLink(destination: ModifyShoppingItemView(editableItem: item)) { // }, shoppingItems: self.$shoppingItems)) {
+						NavigationLink(destination:
+							ModifyShoppingItemView(editableItem: item)
+						){ // }, shoppingItems: self.$shoppingItems)) {
 							HStack {
 								VStack(alignment: .leading) {
 									Text(item.name!)
 										.font(.headline)
-//										.foregroundColor(self.textColor(for: item))
+									//										.foregroundColor(self.textColor(for: item))
 									Text(item.location!.name!)
 										.font(.caption)
 								}
@@ -117,7 +119,7 @@ struct ShoppingListView: View {
 	}
 	
 	func loadData() {
-		print("Shopping List appeared.")
+//		print("Shopping List appeared.")
 //		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
 //		fetchRequest.sortDescriptors = [
 //										NSSortDescriptor(keyPath: \ShoppingItem.location?.visitationOrder, ascending: true),
@@ -142,7 +144,7 @@ struct ShoppingListView: View {
 			if location.name! == kUnknownLocationName {
 				return Color.gray
 			}
-			return Color.green
+			return Color.clear
 		}
 		return Color.red
 	}
