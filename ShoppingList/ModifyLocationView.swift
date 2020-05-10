@@ -15,26 +15,60 @@ struct ModifyLocationView: View {
 	@State private var locationName: String = ""
 	@State private var visitationOrder: Int = 0
 
-    var body: some View {
-			Form {
-				// 1: Name and Quantity
-				Section {
-					TextField("Location name", text: $locationName)
-					Stepper(value: $visitationOrder, in: 1...100) {
-						Text("Visitation Order: \(visitationOrder)")
+	var body: some View {
+		Form {
+			// 1: Name and Quantity
+			Section(header: Text("Basic Information")) {
+				TextField("Location name", text: $locationName)
+				Stepper(value: $visitationOrder, in: 1...100) {
+					Text("Visitation Order: \(visitationOrder)")
+				}
+			}
+			
+			// 2
+			Section(header: Text("Location Management")) {
+				HStack {
+					Spacer()
+					Button("Save") {
+						self.commitData()
 					}
-					
-					
-					// 2
-					Section {
-						Button("Save") {
-							self.commitData()
-						}
+					.disabled(locationName.isEmpty)
+					Spacer()
+				}
+				
+				HStack {
+					Spacer()
+					Button("Delete This Location") {
+						self.deleteLocation()
 					}
-				} // end of Section
-			} // end of Form
-				.navigationBarTitle("Add New Location", displayMode: .inline)
+					.foregroundColor(Color.red)
+					.disabled(true)
+					Spacer()
+				}
+			}  // end of Section				}
+		} // end of Form
+			.navigationBarTitle("Add New Location", displayMode: .inline)
 				.onAppear(perform: loadData)
+	}
+	
+	func deleteLocation() {
+		// we will move all items in this location to the Unknown Location
+		// if we can't find it, however, bail now
+		guard let unknownLocation = Location.unknownLocation() else { return }
+		
+		// ADD ALERT: are you sure ????
+		
+		// need to move all items in this location to Unknown
+		if let items = location.items as? Set<ShoppingItem> {
+			for item in items {
+				item.location?.removeFromItems(item)
+				item.setLocation(location: unknownLocation)
+			}
+		}
+		// now finish and deismiss
+		managedObjectContext.delete(location)
+		try? managedObjectContext.save()
+		presentationMode.wrappedValue.dismiss()
 	}
 
 	func commitData() {

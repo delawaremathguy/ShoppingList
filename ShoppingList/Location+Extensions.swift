@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
 // constants
 let kUnknownLocationName = "Unknown Location"
-let kUnknownLocationVisitationOrder = INT32_MAX
+let kUnknownLocationVisitationOrder: Int32 = INT32_MAX
 
 extension Location: Identifiable {
 	
@@ -25,6 +26,20 @@ extension Location: Identifiable {
 		newLocation.visitationOrder = Int32(visitationOrder)
 		appDelegate.saveContext()
 		return newLocation
+	}
+	
+	static func unknownLocation() -> Location? {
+		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "visitationOrder == %d", kUnknownLocationVisitationOrder)
+		do {
+			let locations = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+			if locations.count == 1 {
+				return locations[0]
+			}
+		} catch let error as NSError {
+			print("Error fetching unknown location: \(error.localizedDescription), \(error.userInfo)")
+		}
+		return nil
 	}
 
 }

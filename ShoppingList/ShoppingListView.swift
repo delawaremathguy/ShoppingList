@@ -67,6 +67,16 @@ struct ShoppingListView: View {
 					.onDelete(perform: moveToHistory)
 					
 
+					// clear shopping list
+					HStack {
+						Spacer()
+						Button("Clear List") {
+							self.clearShoppingList()
+						}
+						.foregroundColor(Color.blue)
+						Spacer()
+					}
+
 					// hide/show History section
 					HStack {
 						Spacer()
@@ -97,6 +107,12 @@ struct ShoppingListView: View {
 		}  // end of NavigationView
 	}
 		
+	func clearShoppingList() {
+		for item in shoppingItems {
+			item.onList = false
+		}
+	}
+	
 	func moveToShoppingList(indexSet: IndexSet) {
 		for index in indexSet {
 			let item = historyItems[index]

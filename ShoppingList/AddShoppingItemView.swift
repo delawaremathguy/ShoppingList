@@ -20,7 +20,7 @@ struct AddShoppingItemView: View {
 //	@State private var itemLocationIndex: Int
 //	@Binding var shoppingItems: [ShoppingItem]
 	@State private var locationNames = [String]()
-	@State private var selectedLocationIndex: Int = 0
+	@State private var selectedLocationIndex: Int = -1 // signifies @State not set up yet
 	
 	var body: some View {
 		Form {
@@ -47,10 +47,11 @@ struct AddShoppingItemView: View {
 			
 		} // end of Form
 			.navigationBarTitle("Add New Item", displayMode: .inline)
-			.onAppear(perform: loadData)
+			.onAppear(perform: initializeDataIfNecessary)
 	}
 	
 	func commitTextEntry() {
+		print(selectedLocationIndex)
 		let newItem = ShoppingItem.addNewItem(name: itemName, location: locations[selectedLocationIndex])
 		newItem.quantity = Int32(itemQuantity)
 		let location = locations[selectedLocationIndex]
@@ -61,9 +62,11 @@ struct AddShoppingItemView: View {
 		presentationMode.wrappedValue.dismiss()
 	}
 
-	func loadData() {
-		locationNames = locations.map() { $0.name! }
-		selectedLocationIndex = locationNames.count - 1
+	func initializeDataIfNecessary() {
+		if selectedLocationIndex == -1 {
+			locationNames = locations.map() { $0.name! }
+			selectedLocationIndex = locationNames.count - 1
+		}
 	}
 	
 }

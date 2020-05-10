@@ -44,14 +44,13 @@ struct ModifyShoppingItemView: View {
 					self.commitDataEntry()
 				}
 				
-				//				Button("Delete this Item") {
-				//					if let index = self.shoppingItems.firstIndex(of: self.editableItem) {
-				//						self.shoppingItems.remove(at: index)
-				//						ShoppingItem.delete(item: self.editableItem)
-				//						// self.shoppingItems.append(newItem)
-//						self.presentationMode.wrappedValue.dismiss()
-//					}
-//				}
+				HStack {
+					Spacer()
+					Button("Delete This Shopping Item") {
+						self.deleteItem()
+					}
+					Spacer()
+				}
 
 			}
 			.onAppear(perform: initializeDataIfNecessary)
@@ -90,5 +89,13 @@ struct ModifyShoppingItemView: View {
 		try? managedObjectContext.save()
 		presentationMode.wrappedValue.dismiss()
 
+	}
+	
+	func deleteItem() {
+		// remove reference in locations
+		let location = editableItem.location
+		location?.removeFromItems(editableItem)
+		managedObjectContext.delete(editableItem)
+		try? managedObjectContext.save()
 	}
 }
