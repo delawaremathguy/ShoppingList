@@ -1,0 +1,52 @@
+[
+  {
+    "id" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
+    "name" : "Fruits & Vegetables",
+    "visitationOrder" : 11
+  },
+  {
+    "id" : "855AC915-9B99-4FE8-9CC1-4807FB8B44F9",
+    "name" : "Back Wall",
+    "visitationOrder" : 20
+  },
+  {
+    "id" : "8E94B4F6-3335-42BF-BAC4-39579EEB22FC",
+    "name" : "Dairy",
+    "visitationOrder" : 25
+  },
+  {
+    "id" : "77275861-8531-41F8-95EC-10F72436E933",
+    "name" : "Frozen Vegetables",
+    "visitationOrder" : 35
+  },
+  {
+    "id" : "3B9DD600-C1AE-4A6E-8BDC-5D86FD9E539E",
+    "name" : "Italian",
+    "visitationOrder" : 45
+  },
+  {
+    "id" : "D39CA2D3-A0AC-4C9A-A2B6-846C7E41CA9C",
+    "name" : "Kitchen",
+    "visitationOrder" : 45
+  },
+  {
+    "id" : "46CA0401-275C-4472-81B8-28D74984D16D",
+    "name" : "Bread Aisle",
+    "visitationOrder" : 50
+  },
+  {
+    "id" : "98BA7927-F8B1-4D53-9309-E128669CCD18",
+    "name" : "Canned Vegetables",
+    "visitationOrder" : 65
+  },
+  {
+    "id" : "351DA591-12DA-446F-8901-32D5FCBB153D",
+    "name" : "Cereal",
+    "visitationOrder" : 70
+  },
+  {
+    "id" : "EED80E88-F874-4253-B4C0-5EB300D2C411",
+    "name" : "Unknown Location",
+    "visitationOrder" : 2147483647
+  }
+]

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct LocationsView: View {
 	@Environment(\.managedObjectContext) var managedObjectContext
@@ -14,6 +15,7 @@ struct LocationsView: View {
 	@FetchRequest(entity: Location.entity(),
 								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
 	var locations: FetchedResults<Location>
+	@State private var loadedDataWasOutput = true // change to false to dump locations list as JSON
 	
 	var body: some View {
 		
@@ -48,7 +50,27 @@ struct LocationsView: View {
 			}
 			.navigationBarTitle(Text("Locations"))
 		}
+		.onAppear(perform: loadData)
 	}
+	
+	func loadData() {
+		let filepath = "/Users/keough/Desktop/locations.json"
+		if !loadedDataWasOutput {
+			let jsonLocationList = locations.map() { LocationJSON(from: $0) }
+			let encoder = JSONEncoder()
+			encoder.outputFormatting = .prettyPrinted
+			do {
+				let data = try encoder.encode(jsonLocationList)
+				try data.write(to: URL(fileURLWithPath: filepath))
+				print("Locations saved.")
+			} catch let error as NSError {
+				print("Error: \(error.localizedDescription), \(error.userInfo)")
+			}
+			loadedDataWasOutput = true
+		}
+		
+	}
+	
 }
 
 struct LocationsView_Previews: PreviewProvider {

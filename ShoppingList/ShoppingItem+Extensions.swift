@@ -17,63 +17,43 @@ extension ShoppingItem: Identifiable {
 	}()
 
 	
-	static func addNewItem(name: String, location: Location) -> ShoppingItem {
+	static func addNewItem(name: String, quantity: Int) -> ShoppingItem {
 		let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
 		newItem.id = UUID()
 		newItem.name = name
-		newItem.quantity = 1
+		newItem.quantity = Int32(quantity)
 		newItem.onList = true
-		newItem.setLocation(location: location)
-		//newItem.location = location
-		// this is "redundant information, but it helps synch order in shoppinglist
-		//newItem.visitationOrder = location.visitationOrder
 		appDelegate.saveContext()
 		return newItem
 	}
 	
-	static func addNewItem(nameAndLocation: String) -> ShoppingItem {
-		// note: here, we're adding a ShoppintItem based on an incoming string that
-		// is formatted as "Name:LocationName:visitationOrder"
-		// we should get 3 String (slices), unless the location name
-		// is Unknown Location -- it already exists
-		let splitString = nameAndLocation.split(separator: ":")
+	static func insertNewItems(from jsonShoppingItems: [ShoppingItemJSON]) { // }, using uuid2Location: [UUID : [Location]]) {
 		
-		let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
-		newItem.id = UUID()
-		newItem.name = String(splitString[0])
-		newItem.quantity = 1
-		newItem.onList = true
-		
-		// figure location name to use
-		let locationName = String(splitString[1])
-
-		// get all locations
+		// get all Locations
+		var locations: [Location]
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
-		var listOfLocations: [Location]
 		do {
-			let locations = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
-			listOfLocations = locations
+			let list = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+			locations = list
 		} catch let error as NSError {
-			print("Error fetching Locations: \(error.localizedDescription), \(error.userInfo)")
-			listOfLocations = []
+			print("Error looking up locations: \(error.localizedDescription), \(error.userInfo)")
+			locations = []
 		}
 		
-		if let index = listOfLocations.firstIndex(where: { $0.name! == locationName }) {
-			let location = listOfLocations[index]
+		var count = 0
+		for jsonShoppingItem in jsonShoppingItems {
+			let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
+			newItem.id = jsonShoppingItem.id
+			newItem.name = jsonShoppingItem.name
+			newItem.quantity = jsonShoppingItem.quantity
+			newItem.onList = jsonShoppingItem.onList
+			let location = locations.filter({ $0.id! == jsonShoppingItem.locationID }).first!
+//			let location = uuid2Location[jsonShoppingItem.locationID]!.first!
 			newItem.setLocation(location: location)
-//			location = location
-//			newItem.visitationOrder = location.visitationOrder
-		} else {
-			// create a new Location now
-			let visitationOrder = Int(splitString[2]) ?? 100
-			let newLocation = Location.addNewLocation(name: locationName, visitationOrder: visitationOrder)
-			newItem.setLocation(location: newLocation)
+			count += 1
 		}
-
-		appDelegate.saveContext()
-		return newItem
+		print("Inserted \(count) shopping items")
 	}
-
 	
 	static func delete(item: ShoppingItem) {
 		appDelegate.persistentContainer.viewContext.delete(item)

@@ -59,14 +59,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	            fatalError("Unresolved error \(error), \(error.userInfo)")
 	        }
 				// hook in here to report number of ShoppingItems -- purely for debugging
-				let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
-				do {
-					let count = try container.viewContext.count(for: fetchRequest)
-					print("Number of ShoppingItems in database is \(count)")
-				}
-				catch let error as NSError {
-					fatalError("Error couting items: \(error.localizedDescription), \(error.userInfo)")
-				}
+//				let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
+//				do {
+//					let count = try container.viewContext.count(for: fetchRequest)
+//					print("Number of ShoppingItems in database is \(count)")
+//				}
+//				catch let error as NSError {
+//					fatalError("Error couting items: \(error.localizedDescription), \(error.userInfo)")
+//				}
 				
 			})
 	    return container

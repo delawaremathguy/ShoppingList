@@ -41,6 +41,18 @@ extension Location: Identifiable {
 		}
 		return nil
 	}
+	
+	static func insertNewLocations(from jsonLocations: [LocationJSON]) {
+		var count = 0
+		for jsonLocation in jsonLocations {
+			let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
+			newLocation.id = jsonLocation.id
+			newLocation.name = jsonLocation.name
+			newLocation.visitationOrder = jsonLocation.visitationOrder
+			count += 1
+		}
+		print("Inserted \(count) locations.")
+	}
 
 }
 	

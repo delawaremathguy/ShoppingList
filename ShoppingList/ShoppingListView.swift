@@ -14,7 +14,8 @@ struct ShoppingListView: View {
 	
 	// boolean state to control whether to show the history section
 	@State private var isHistorySectionShowing: Bool = true
-	
+	@State private var loadedDataWasOutput = true // change to false to regenerate or reload shopping list dump
+	@State private var initialLoadDataCallWasMade = false
 	// fetch requests to get both the items on the list, and those off the list
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
@@ -70,7 +71,7 @@ struct ShoppingListView: View {
 					// clear shopping list
 					HStack {
 						Spacer()
-						Button("Clear List") {
+						Button("Move All Items off-list") {
 							self.clearShoppingList()
 						}
 						.foregroundColor(Color.blue)
@@ -83,6 +84,7 @@ struct ShoppingListView: View {
 						Button(isHistorySectionShowing ? "Hide History Section" : "Show History Section") {
 							self.isHistorySectionShowing.toggle()
 						}
+						.foregroundColor(Color.blue)
 						Spacer()
 					}
 				} // end of Section
@@ -100,7 +102,7 @@ struct ShoppingListView: View {
 			}  // end of List
 				.listStyle(PlainListStyle())
 				.navigationBarTitle(Text("Shopping List"))
-				.onAppear(perform: loadData)
+				.onAppear(perform: loadInitialData)
 			
 			
 			
@@ -131,23 +133,84 @@ struct ShoppingListView: View {
 	}
 	
 	func loadData() {
-//		print("Shopping List appeared.")
-//		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
-//		fetchRequest.sortDescriptors = [
-//										NSSortDescriptor(keyPath: \ShoppingItem.location?.visitationOrder, ascending: true),
-//										NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)]
-//		fetchRequest.predicate = NSPredicate(format: "onList == true")
-//		do {
-//			let itemList = try managedObjectContext.fetch(fetchRequest)
-//			shoppingItems = itemList
-//		} catch let error as NSError {
-//			NSLog("Unresolved error fetching shopping list: \(error), \(error.userInfo)")
-//			shoppingItems.removeAll()
-//		}
-
 		
-		for item in shoppingItems {
-			print("\(item.name!):\(item.location!.name!):\(item.location!.visitationOrder)")
+		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
+		do {
+			let count = try managedObjectContext.count(for: fetchRequest)
+			print("Number of ShoppingItems in database is \(count)")
+		}
+		catch let error as NSError {
+			fatalError("Error couting items: \(error.localizedDescription), \(error.userInfo)")
+		}
+
+	}
+	
+	func loadInitialData() {
+		
+		if !initialLoadDataCallWasMade {
+			// must have at least one Location in the database -- the Unknown Location.  if there is not one,
+			// then this sets up an initial database in Core Data
+			if Location.unknownLocation() == nil {
+				populateDatabaseFromJSON()
+			}
+			initialLoadDataCallWasMade = true
+		}
+	}
+	
+	func populateDatabaseFromJSON() {
+		// read locations first, and create dictionary to keep track of them
+		guard let url1 = Bundle.main.url(forResource: "locations.json", withExtension: nil) else {
+			fatalError("Failed to locate locations.json in app bundle.")
+		}
+		guard let data1 = try? Data(contentsOf: url1) else {
+			fatalError("Failed to load locations.json from app bundle.")
+		}
+		
+		let decoder = JSONDecoder()
+		
+		// insert all new locations
+		do {
+			let jsonLocations = try decoder.decode([LocationJSON].self, from: data1)
+			Location.insertNewLocations(from: jsonLocations)
+		} catch let error as NSError {
+			print("Error inserting locations: \(error.localizedDescription), \(error.userInfo)")
+		}
+		
+		// read locations first, and create dictionary to keep track of them
+		guard let url2 = Bundle.main.url(forResource: "shoppingItems.json", withExtension: nil) else {
+			fatalError("Failed to locate shoppingItems.json in app bundle.")
+		}
+		guard let data2 = try? Data(contentsOf: url2) else {
+			fatalError("Failed to load shoppingItems.json from app bundle.")
+		}
+
+		// insert all shoppingItems
+		do {
+			let jsonShoppingItems = try decoder.decode([ShoppingItemJSON].self, from: data2)
+			ShoppingItem.insertNewItems(from: jsonShoppingItems) // , using: locationDictionary)
+		} catch let error as NSError {
+			print("Error reading in locations: \(error.localizedDescription), \(error.userInfo)")
+		}
+		
+		try! managedObjectContext.save()
+				
+	}
+
+	func writeShoppingListAsJSON() {
+		let filepath = "/Users/keough/Desktop/shoppingList.json"
+		if !loadedDataWasOutput {
+			let jsonShoppingItems1 = shoppingItems.map() { ShoppingItemJSON(from: $0) }
+			let jsonShoppingItems2 = historyItems.map() { ShoppingItemJSON(from: $0) }
+			let jsonShoppingItems = jsonShoppingItems1 + jsonShoppingItems2
+			let encoder = JSONEncoder()
+			encoder.outputFormatting = .prettyPrinted
+			do {
+				let data = try encoder.encode(jsonShoppingItems)
+				try data.write(to: URL(fileURLWithPath: filepath))
+			} catch let error as NSError {
+				print("Error: \(error.localizedDescription), \(error.userInfo)")
+			}
+			loadedDataWasOutput = true
 		}
 	}
 			

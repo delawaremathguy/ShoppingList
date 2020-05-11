@@ -17,8 +17,6 @@ struct AddShoppingItemView: View {
 
 	@State private var itemName: String = ""
 	@State private var itemQuantity: Int = 1
-//	@State private var itemLocationIndex: Int
-//	@Binding var shoppingItems: [ShoppingItem]
 	@State private var locationNames = [String]()
 	@State private var selectedLocationIndex: Int = -1 // signifies @State not set up yet
 	
@@ -52,12 +50,11 @@ struct AddShoppingItemView: View {
 	
 	func commitTextEntry() {
 		print(selectedLocationIndex)
-		let newItem = ShoppingItem.addNewItem(name: itemName, location: locations[selectedLocationIndex])
-		newItem.quantity = Int32(itemQuantity)
+		// adds basic info for new shopping item
+		let newItem = ShoppingItem.addNewItem(name: itemName, quantity: itemQuantity)
 		let location = locations[selectedLocationIndex]
+		// then links to intended location
 		newItem.setLocation(location: location)
-//		newItem.location = location
-//		newItem.visitationOrder = location.visitationOrder
 		try? managedObjectContext.save()
 		presentationMode.wrappedValue.dismiss()
 	}

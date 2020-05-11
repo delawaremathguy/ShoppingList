@@ -11,9 +11,6 @@ import SwiftUI
 struct AddLocationView: View {
 	@Environment(\.managedObjectContext) var managedObjectContext
 	@Environment(\.presentationMode) var presentationMode
-//	@FetchRequest(entity: Location.entity(),
-//								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
-//	var locations: FetchedResults<Location>
 
 	@State private var locationName: String = ""
 	@State private var visitationOrder: Int = 0
