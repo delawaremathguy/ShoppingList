@@ -4,7 +4,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="visitationOrder" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ShoppingItem" inverseName="location" inverseEntity="ShoppingItem"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="ShoppingItem" inverseName="location" inverseEntity="ShoppingItem"/>
     </entity>
     <entity name="ShoppingItem" representedClassName="ShoppingItem" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -12,7 +12,7 @@
         <attribute name="onList" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="quantity" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="visitationOrder" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="items" inverseEntity="Location"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Location" inverseName="items" inverseEntity="Location"/>
     </entity>
     <elements>
         <element name="Location" positionX="184.453125" positionY="-2.875" width="128" height="103"/>

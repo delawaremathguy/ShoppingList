@@ -49,6 +49,7 @@ struct ModifyShoppingItemView: View {
 					Button("Delete This Shopping Item") {
 						self.deleteItem()
 					}
+					.foregroundColor(Color.red)
 					Spacer()
 				}
 

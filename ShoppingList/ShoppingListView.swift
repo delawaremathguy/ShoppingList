@@ -154,6 +154,7 @@ struct ShoppingListView: View {
 				populateDatabaseFromJSON()
 			}
 			initialLoadDataCallWasMade = true
+			writeShoppingListAsJSON()
 		}
 	}
 	
@@ -177,11 +178,11 @@ struct ShoppingListView: View {
 		}
 		
 		// read locations first, and create dictionary to keep track of them
-		guard let url2 = Bundle.main.url(forResource: "shoppingItems.json", withExtension: nil) else {
+		guard let url2 = Bundle.main.url(forResource: "shoppingList.json", withExtension: nil) else {
 			fatalError("Failed to locate shoppingItems.json in app bundle.")
 		}
 		guard let data2 = try? Data(contentsOf: url2) else {
-			fatalError("Failed to load shoppingItems.json from app bundle.")
+			fatalError("Failed to load shoppingList.json from app bundle.")
 		}
 
 		// insert all shoppingItems
