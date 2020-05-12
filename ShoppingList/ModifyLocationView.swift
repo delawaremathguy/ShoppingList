@@ -14,15 +14,48 @@ struct ModifyLocationView: View {
 	@ObservedObject var location: Location
 	@State private var locationName: String = ""
 	@State private var visitationOrder: Int = 0
+	@State private var red: Double = 0
+	@State private var green: Double = 0
+	@State private var blue: Double = 0
+	@State private var opacity: Double = 0
 
 	var body: some View {
 		Form {
-			// 1: Name and Quantity
+			// 1: Name, Visitation Order, Colors
 			Section(header: Text("Basic Information")) {
 				TextField("Location name", text: $locationName)
-				Stepper(value: $visitationOrder, in: 1...100) {
-					Text("Visitation Order: \(visitationOrder)")
+				if location.visitationOrder != kUnknownLocationVisitationOrder {
+					Stepper(value: $visitationOrder, in: 1...100) {
+						Text("Visitation Order: \(visitationOrder)")
+					}
 				}
+				
+				HStack {
+					Text("Red: \(red)")
+					Spacer()
+					Slider(value: $red, in: 0 ... 1)
+						.frame(width: 200)
+				}
+				HStack {
+					Text("Green: \(green)")
+					Spacer()
+					Slider(value: $green, in: 0 ... 1)
+						.frame(width: 200)
+				}
+				HStack {
+					Text("Blue: \(blue)")
+					Spacer()
+					Slider(value: $blue, in: 0 ... 1)
+						.frame(width: 200)
+				}
+				HStack {
+					Text("Opacity: \(opacity)")
+					Spacer()
+					Slider(value: $opacity, in: 0 ... 1)
+						.frame(width: 200)
+				}
+				Color(.sRGB, red: red, green: green, blue: blue, opacity: opacity)
+
 			}
 			
 			// 2
@@ -74,6 +107,10 @@ struct ModifyLocationView: View {
 	func commitData() {
 		location.name = locationName
 		location.visitationOrder = Int32(visitationOrder)
+		location.red = red
+		location.green = green
+		location.blue = blue
+		location.opacity = opacity
 		// THE PROBLEM: we now may have reordered the Locations by visitationOrder.
 		// and if we return to the list of Locations, that's cool.  but if we move
 		// over to the shopping list tab (or if we go back and then move over to the
@@ -92,6 +129,10 @@ struct ModifyLocationView: View {
 	func loadData() {
 		locationName = location.name!
 		visitationOrder = Int(location.visitationOrder)
+		red = location.red
+		green = location.green
+		blue = location.blue
+		opacity = location.opacity
 	}
 }
 

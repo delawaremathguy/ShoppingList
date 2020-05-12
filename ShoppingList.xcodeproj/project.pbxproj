@@ -23,8 +23,8 @@
 		D65721B32464591700E4AAAF /* ModifyLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65721B22464591700E4AAAF /* ModifyLocationView.swift */; };
 		D6B8A95424636711005F8EF2 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A95324636711005F8EF2 /* MainView.swift */; };
 		D6B8A9562463693D005F8EF2 /* LocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A9552463693D005F8EF2 /* LocationsView.swift */; };
-		D6C056FF2469C78D00EE101D /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = D6C056FD2469C78D00EE101D /* locations.json */; };
 		D6C057002469C78D00EE101D /* shoppingList.json in Resources */ = {isa = PBXBuildFile; fileRef = D6C056FE2469C78D00EE101D /* shoppingList.json */; };
+		D6CE3BAE246AEF6C0017EBA9 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = D6CE3BAD246AEF6C0017EBA9 /* locations.json */; };
 		D6FC7A0A24635D950096F018 /* ShoppingList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6FC7A0824635D950096F018 /* ShoppingList.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -48,8 +48,8 @@
 		D65A15D22465A137004ACCBB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D6B8A95324636711005F8EF2 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D6B8A9552463693D005F8EF2 /* LocationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsView.swift; sourceTree = "<group>"; };
-		D6C056FD2469C78D00EE101D /* locations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 		D6C056FE2469C78D00EE101D /* shoppingList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = shoppingList.json; sourceTree = "<group>"; };
+		D6CE3BAD246AEF6C0017EBA9 /* locations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 		D6FC7A0924635D950096F018 /* ShoppingList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ShoppingList.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -101,8 +101,8 @@
 				D62B88332451162E0051A7CE /* Assets.xcassets */,
 				D62B88382451162E0051A7CE /* LaunchScreen.storyboard */,
 				D62B883B2451162E0051A7CE /* Info.plist */,
-				D6C056FD2469C78D00EE101D /* locations.json */,
 				D6C056FE2469C78D00EE101D /* shoppingList.json */,
+				D6CE3BAD246AEF6C0017EBA9 /* locations.json */,
 				D62B88352451162E0051A7CE /* Preview Content */,
 			);
 			path = ShoppingList;
@@ -176,7 +176,7 @@
 			files = (
 				D62B883A2451162E0051A7CE /* LaunchScreen.storyboard in Resources */,
 				D62B88372451162E0051A7CE /* Preview Assets.xcassets in Resources */,
-				D6C056FF2469C78D00EE101D /* locations.json in Resources */,
+				D6CE3BAE246AEF6C0017EBA9 /* locations.json in Resources */,
 				D6C057002469C78D00EE101D /* shoppingList.json in Resources */,
 				D62B88342451162E0051A7CE /* Assets.xcassets in Resources */,
 			);

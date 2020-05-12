@@ -12,10 +12,19 @@ struct LocationJSON: Codable {
 	var id: UUID
 	var name: String
 	var visitationOrder: Int32
+	var red: Double
+	var green: Double
+	var blue: Double
+	var opacity: Double
+
 	
 	init(from location: Location) {
 		id = location.id!
 		name = location.name!
 		visitationOrder = location.visitationOrder
+		red = location.red
+		green = location.green
+		blue = location.blue
+		opacity = location.opacity
 	}
 }

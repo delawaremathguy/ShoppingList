@@ -19,6 +19,18 @@ extension Location: Identifiable {
 		UIApplication.shared.delegate as! AppDelegate
 	}()
 
+	static func entityCount() -> Int {
+		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
+		do {
+			let count = try appDelegate.persistentContainer.viewContext.count(for: fetchRequest)
+			return count
+		}
+		catch let error as NSError {
+			print("Error couting Locations: \(error.localizedDescription), \(error.userInfo)")
+		}
+		return 0
+	}
+
 	static func addNewLocation(name: String, visitationOrder: Int) -> Location {
 		let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
 		newLocation.id = UUID()
@@ -49,6 +61,10 @@ extension Location: Identifiable {
 			newLocation.id = jsonLocation.id
 			newLocation.name = jsonLocation.name
 			newLocation.visitationOrder = jsonLocation.visitationOrder
+			newLocation.red = jsonLocation.red
+			newLocation.green = jsonLocation.green
+			newLocation.blue = jsonLocation.blue
+			newLocation.opacity = jsonLocation.opacity
 			count += 1
 		}
 		print("Inserted \(count) locations.")

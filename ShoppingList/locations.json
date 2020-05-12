@@ -1,72 +1,128 @@
 [
   {
+    "green" : 0.10000000000000001,
     "id" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
-    "name" : "Fruits & Vegetables",
-    "visitationOrder" : 11
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 11,
+    "name" : "Fruits & Vegetables"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "3A5A7EC0-1DF6-4A05-965C-6167212A1A5C",
-    "name" : "Deli",
-    "visitationOrder" : 12
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 12,
+    "name" : "Deli"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "855AC915-9B99-4FE8-9CC1-4807FB8B44F9",
-    "name" : "Back Wall",
-    "visitationOrder" : 20
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 20,
+    "name" : "Back Wall"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "8E94B4F6-3335-42BF-BAC4-39579EEB22FC",
-    "name" : "Dairy",
-    "visitationOrder" : 25
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 25,
+    "name" : "Dairy"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "77275861-8531-41F8-95EC-10F72436E933",
-    "name" : "Frozen Vegetables",
-    "visitationOrder" : 35
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 35,
+    "name" : "Frozen Vegetables"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "D39CA2D3-A0AC-4C9A-A2B6-846C7E41CA9C",
-    "name" : "Kitchen",
-    "visitationOrder" : 40
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 40,
+    "name" : "Kitchen"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "3B9DD600-C1AE-4A6E-8BDC-5D86FD9E539E",
-    "name" : "Italian",
-    "visitationOrder" : 45
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 45,
+    "name" : "Italian"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "46CA0401-275C-4472-81B8-28D74984D16D",
-    "name" : "Bread Aisle",
-    "visitationOrder" : 50
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 50,
+    "name" : "Bread Aisle"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "F1FA0AF8-2CB0-4E80-999E-30EBB97F4DBB",
-    "name" : "Snacks & Chips",
-    "visitationOrder" : 59
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 59,
+    "name" : "Snacks & Chips"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "968727C5-0244-4B90-B366-CA1FA6E92DCC",
-    "name" : "Baking Supplies",
-    "visitationOrder" : 64
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 64,
+    "name" : "Baking Supplies"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "98BA7927-F8B1-4D53-9309-E128669CCD18",
-    "name" : "Canned Vegetables",
-    "visitationOrder" : 65
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 65,
+    "name" : "Canned Vegetables"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "351DA591-12DA-446F-8901-32D5FCBB153D",
-    "name" : "Cereal",
-    "visitationOrder" : 70
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 70,
+    "name" : "Cereal"
   },
   {
+    "green" : 0.10000000000000001,
     "id" : "7F613477-533A-458E-821B-96EF90786349",
-    "name" : "Service Desk",
-    "visitationOrder" : 95
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 95,
+    "name" : "Service Desk"
   },
   {
+    "green" : 0.9,
     "id" : "EED80E88-F874-4253-B4C0-5EB300D2C411",
-    "name" : "Unknown Location",
-    "visitationOrder" : 2147483647
+    "blue" : 0.9,
+    "red" : 0.99,
+    "opacity" : 0.5,
+    "visitationOrder" : 2147483647,
+    "name" : "Unknown Location"
   }
 ]

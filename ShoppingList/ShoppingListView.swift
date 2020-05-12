@@ -14,8 +14,8 @@ struct ShoppingListView: View {
 	
 	// boolean state to control whether to show the history section
 	@State private var isHistorySectionShowing: Bool = true
-	@State private var loadedDataWasOutput = true // change to false to regenerate or reload shopping list dump
-	@State private var initialLoadDataCallWasMade = false
+	@State private var performJSONOutputDumpOnAppear = false // change to true to regenerate json files
+	@State private var performInitialDataLoad = false // change to true to force data loading
 	// fetch requests to get both the items on the list, and those off the list
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
@@ -132,28 +132,15 @@ struct ShoppingListView: View {
 		try? managedObjectContext.save()
 	}
 	
-	func loadData() {
-		
-		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
-		do {
-			let count = try managedObjectContext.count(for: fetchRequest)
-			print("Number of ShoppingItems in database is \(count)")
-		}
-		catch let error as NSError {
-			fatalError("Error couting items: \(error.localizedDescription), \(error.userInfo)")
-		}
-
-	}
-	
 	func loadInitialData() {
-		
-		if !initialLoadDataCallWasMade {
+		print(".onAppear in ShoppingListView")
+		if performInitialDataLoad {
 			// must have at least one Location in the database -- the Unknown Location.  if there is not one,
 			// then this sets up an initial database in Core Data
-			if Location.unknownLocation() == nil {
+			if Location.entityCount() == 0 {
 				populateDatabaseFromJSON()
 			}
-			initialLoadDataCallWasMade = true
+			performInitialDataLoad = false
 			writeShoppingListAsJSON()
 		}
 	}
@@ -174,7 +161,7 @@ struct ShoppingListView: View {
 			let jsonLocations = try decoder.decode([LocationJSON].self, from: data1)
 			Location.insertNewLocations(from: jsonLocations)
 		} catch let error as NSError {
-			print("Error inserting locations: \(error.localizedDescription), \(error.userInfo)")
+			fatalError("Error inserting locations: \(error.localizedDescription), \(error.userInfo)")
 		}
 		
 		// read locations first, and create dictionary to keep track of them
@@ -190,7 +177,7 @@ struct ShoppingListView: View {
 			let jsonShoppingItems = try decoder.decode([ShoppingItemJSON].self, from: data2)
 			ShoppingItem.insertNewItems(from: jsonShoppingItems) // , using: locationDictionary)
 		} catch let error as NSError {
-			print("Error reading in locations: \(error.localizedDescription), \(error.userInfo)")
+			fatalError("Error reading in locations: \(error.localizedDescription), \(error.userInfo)")
 		}
 		
 		try! managedObjectContext.save()
@@ -199,7 +186,7 @@ struct ShoppingListView: View {
 
 	func writeShoppingListAsJSON() {
 		let filepath = "/Users/keough/Desktop/shoppingList.json"
-		if !loadedDataWasOutput {
+		if performJSONOutputDumpOnAppear {
 			let jsonShoppingItems1 = shoppingItems.map() { ShoppingItemJSON(from: $0) }
 			let jsonShoppingItems2 = historyItems.map() { ShoppingItemJSON(from: $0) }
 			let jsonShoppingItems = jsonShoppingItems1 + jsonShoppingItems2
@@ -211,16 +198,13 @@ struct ShoppingListView: View {
 			} catch let error as NSError {
 				print("Error: \(error.localizedDescription), \(error.userInfo)")
 			}
-			loadedDataWasOutput = true
+			performJSONOutputDumpOnAppear = false
 		}
 	}
 			
 	func textColor(for item: ShoppingItem) -> Color {
 		if let location = item.location {
-			if location.name! == kUnknownLocationName {
-				return Color.init(.sRGB, red: 0.9, green: 0.9, blue: 0.9, opacity: 0.5)
-			}
-			return Color.clear
+			return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
 		}
 		return Color.red
 	}

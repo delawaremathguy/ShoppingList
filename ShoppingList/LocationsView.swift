@@ -15,7 +15,7 @@ struct LocationsView: View {
 	@FetchRequest(entity: Location.entity(),
 								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
 	var locations: FetchedResults<Location>
-	@State private var loadedDataWasOutput = true // change to false to dump locations list as JSON
+	@State private var performJSONOutputDumpOnAppear = false // change to true to dump locations list as JSON onAppear()
 	
 	var body: some View {
 		
@@ -37,6 +37,7 @@ struct LocationsView: View {
 						NavigationLink(destination: ModifyLocationView(location: location)) {
 							HStack {
 								Text(location.name!)
+//									.foregroundColor(self.textColor(for: location))
 									.font(.headline)
 								if location.visitationOrder != kUnknownLocationVisitationOrder {
 									Spacer()
@@ -44,7 +45,8 @@ struct LocationsView: View {
 								}
 							}
 						}
-					.disabled(location.visitationOrder == kUnknownLocationVisitationOrder)
+						// .disabled(location.visitationOrder == kUnknownLocationVisitationOrder)
+						.listRowBackground(self.textColor(for: location))
 					}
 				}
 			}
@@ -54,8 +56,9 @@ struct LocationsView: View {
 	}
 	
 	func loadData() {
-		let filepath = "/Users/keough/Desktop/locations.json"
-		if !loadedDataWasOutput {
+		print(".onAppear in LocationsView")
+		if performJSONOutputDumpOnAppear {
+			let filepath = "/Users/keough/Desktop/locations.json"
 			let jsonLocationList = locations.map() { LocationJSON(from: $0) }
 			let encoder = JSONEncoder()
 			encoder.outputFormatting = .prettyPrinted
@@ -66,10 +69,15 @@ struct LocationsView: View {
 			} catch let error as NSError {
 				print("Error: \(error.localizedDescription), \(error.userInfo)")
 			}
-			loadedDataWasOutput = true
+			performJSONOutputDumpOnAppear = false
 		}
 		
 	}
+	
+	func textColor(for location: Location) -> Color {
+		return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
+	}
+
 	
 }
 

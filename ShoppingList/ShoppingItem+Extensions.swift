@@ -16,6 +16,17 @@ extension ShoppingItem: Identifiable {
 		UIApplication.shared.delegate as! AppDelegate
 	}()
 
+	static func entityCount() -> Int {
+		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
+		do {
+			let count = try appDelegate.persistentContainer.viewContext.count(for: fetchRequest)
+			return count
+		}
+		catch let error as NSError {
+			print("Error couting ShoppingItems: \(error.localizedDescription), \(error.userInfo)")
+		}
+		return 0
+	}
 	
 	static func addNewItem(name: String, quantity: Int) -> ShoppingItem {
 		let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)

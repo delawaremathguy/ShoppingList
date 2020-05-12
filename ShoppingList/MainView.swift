@@ -26,8 +26,12 @@ struct MainView: View {
 					Text("Locations")
 			}
 		}
+		.onAppear(perform: onAppearanceCode)
 	}
 	
+	func onAppearanceCode() {
+		print(".onAppear in MainView")
+	}
 }
 
 struct MainView_Previews: PreviewProvider {
