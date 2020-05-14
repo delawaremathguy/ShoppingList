@@ -35,7 +35,7 @@ struct ShoppingListView: View {
 			List {
 				
 				// add new item stays at top
-				NavigationLink(destination: AddShoppingItemView()) {
+				NavigationLink(destination: AddShoppingItemView(placeOnShoppingList: true)) {
 					HStack {
 						Spacer()
 						Text("Add New Item")
@@ -63,9 +63,9 @@ struct ShoppingListView: View {
 							
 						}
 						.listRowBackground(self.textColor(for: item))
-					}
+					} // end of ForEach
 //					.onMove(perform: moveItems)
-					.onDelete(perform: moveToHistory)
+						.onDelete(perform: moveToHistory)
 					
 
 					// clear shopping list
@@ -78,26 +78,26 @@ struct ShoppingListView: View {
 						Spacer()
 					}
 
-					// hide/show History section
-					HStack {
-						Spacer()
-						Button(isHistorySectionShowing ? "Hide History Section" : "Show History Section") {
-							self.isHistorySectionShowing.toggle()
-						}
-						.foregroundColor(Color.blue)
-						Spacer()
-					}
+//					// hide/show History section
+//					HStack {
+//						Spacer()
+//						Button(isHistorySectionShowing ? "Hide History Section" : "Show History Section") {
+//							self.isHistorySectionShowing.toggle()
+//						}
+//						.foregroundColor(Color.blue)
+//						Spacer()
+//					}
 				} // end of Section
-								
-				if isHistorySectionShowing {
-					Section(header: Text("History (\(historyItems.count) items)")) {
-						ForEach(historyItems) { item in
-							Text(item.name!) // (item as! ShoppingItem).name!)
-						}
-						.onDelete(perform: moveToShoppingList)
-						
-					}
-				}
+//
+//				if isHistorySectionShowing {
+//					Section(header: Text("History (\(historyItems.count) items)")) {
+//						ForEach(historyItems) { item in
+//							Text(item.name!) // (item as! ShoppingItem).name!)
+//						}
+//						.onDelete(perform: moveToShoppingList)
+//
+//					}
+//				}
 				
 			}  // end of List
 				.listStyle(PlainListStyle())
@@ -133,7 +133,7 @@ struct ShoppingListView: View {
 	}
 	
 	func loadInitialData() {
-		print(".onAppear in ShoppingListView")
+		//print(".onAppear in ShoppingListView")
 		if performInitialDataLoad {
 			// must have at least one Location in the database -- the Unknown Location.  if there is not one,
 			// then this sets up an initial database in Core Data

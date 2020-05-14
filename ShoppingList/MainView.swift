@@ -20,6 +20,12 @@ struct MainView: View {
 					Text("Shopping List")
 			}
 			
+			PurchasedItemView()
+				.tabItem {
+					Image(systemName: "purchased")
+					Text("Purchased")
+			}
+			
 			LocationsView()
 				.tabItem {
 					Image(systemName: "map")
@@ -30,7 +36,7 @@ struct MainView: View {
 	}
 	
 	func onAppearanceCode() {
-		print(".onAppear in MainView")
+		//print(".onAppear in MainView")
 	}
 }
 

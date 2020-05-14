@@ -56,7 +56,7 @@ struct LocationsView: View {
 	}
 	
 	func loadData() {
-		print(".onAppear in LocationsView")
+		//print(".onAppear in LocationsView")
 		if performJSONOutputDumpOnAppear {
 			let filepath = "/Users/keough/Desktop/locations.json"
 			let jsonLocationList = locations.map() { LocationJSON(from: $0) }
