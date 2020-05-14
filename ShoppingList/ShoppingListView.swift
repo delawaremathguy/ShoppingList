@@ -35,7 +35,7 @@ struct ShoppingListView: View {
 			List {
 				
 				// add new item stays at top
-				NavigationLink(destination: AddShoppingItemView(placeOnShoppingList: true)) {
+				NavigationLink(destination: ModifyShoppingItemView()) {
 					HStack {
 						Spacer()
 						Text("Add New Item")
@@ -195,6 +195,7 @@ struct ShoppingListView: View {
 			do {
 				let data = try encoder.encode(jsonShoppingItems)
 				try data.write(to: URL(fileURLWithPath: filepath))
+				print("ShoppingItems dumped as JSON.")
 			} catch let error as NSError {
 				print("Error: \(error.localizedDescription), \(error.userInfo)")
 			}

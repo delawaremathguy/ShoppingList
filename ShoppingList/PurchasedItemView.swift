@@ -23,7 +23,7 @@ struct PurchasedItemView: View {
 			List {
 				
 				// add new item stays at top
-				NavigationLink(destination: AddShoppingItemView(placeOnShoppingList: false)) {
+				NavigationLink(destination: ModifyShoppingItemView(placeOnShoppingList: false)) {
 					HStack {
 						Spacer()
 						Text("Add New Item")

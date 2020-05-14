@@ -19,7 +19,7 @@ struct AddShoppingItemView: View {
 	@State private var itemQuantity: Int = 1
 	@State private var locationNames = [String]()
 	@State private var selectedLocationIndex: Int = -1 // signifies @State not set up yet
-	var placeOnShoppingList: Bool
+	var placeOnShoppingList: Bool  = true // assume we want new items on shopping list
 	
 	var body: some View {
 		Form {
@@ -52,7 +52,9 @@ struct AddShoppingItemView: View {
 	func commitTextEntry() {
 		//print(selectedLocationIndex)
 		// adds basic info for new shopping item
-		let newItem = ShoppingItem.addNewItem(name: itemName, quantity: itemQuantity)
+		let newItem = ShoppingItem.addNewItem()  // (name: itemName, quantity: itemQuantity)
+		newItem.name = itemName
+		newItem.quantity = Int32(itemQuantity)
 		newItem.onList = placeOnShoppingList
 		let location = locations[selectedLocationIndex]
 		// then links to intended location

@@ -65,7 +65,7 @@ struct LocationsView: View {
 			do {
 				let data = try encoder.encode(jsonLocationList)
 				try data.write(to: URL(fileURLWithPath: filepath))
-				print("Locations saved.")
+				print("Locations dumped as JSON.")
 			} catch let error as NSError {
 				print("Error: \(error.localizedDescription), \(error.userInfo)")
 			}

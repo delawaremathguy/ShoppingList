@@ -28,7 +28,7 @@ extension ShoppingItem: Identifiable {
 		return 0
 	}
 	
-	static func addNewItem(name: String, quantity: Int) -> ShoppingItem {
+	static func addNewItem2(name: String, quantity: Int) -> ShoppingItem {
 		let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
 		newItem.id = UUID()
 		newItem.name = name
@@ -37,6 +37,13 @@ extension ShoppingItem: Identifiable {
 		appDelegate.saveContext()
 		return newItem
 	}
+	
+	static func addNewItem() -> ShoppingItem {
+		let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
+		newItem.id = UUID()
+		return newItem
+	}
+
 	
 	static func insertNewItems(from jsonShoppingItems: [ShoppingItemJSON]) { // }, using uuid2Location: [UUID : [Location]]) {
 		

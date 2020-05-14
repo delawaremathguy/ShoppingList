@@ -1,13 +1,6 @@
 [
   {
     "onList" : true,
-    "id" : "385A38A1-AE37-412D-A50C-4EFADE3BFC4E",
-    "quantity" : 1,
-    "locationID" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
-    "name" : "Bag of carrots full size"
-  },
-  {
-    "onList" : true,
     "id" : "E7E63958-C635-4FEB-A73F-415AA07D587A",
     "quantity" : 1,
     "locationID" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
@@ -43,13 +36,6 @@
   },
   {
     "onList" : true,
-    "id" : "0F9487B5-C405-4317-9B88-CE377FF5FCDA",
-    "quantity" : 1,
-    "locationID" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
-    "name" : "Green pepper"
-  },
-  {
-    "onList" : true,
     "id" : "39D80CBE-98A9-4D14-A581-B9A5F7C339A1",
     "quantity" : 1,
     "locationID" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
@@ -67,7 +53,7 @@
     "id" : "77B3436F-3AD8-4DDB-AA09-782340214878",
     "quantity" : 1,
     "locationID" : "3A5A7EC0-1DF6-4A05-965C-6167212A1A5C",
-    "name" : "Pub cheese regular"
+    "name" : "Pub cheese, regular"
   },
   {
     "onList" : true,
@@ -116,7 +102,7 @@
     "id" : "79B4CD82-4BC6-47FC-8381-54991568917D",
     "quantity" : 1,
     "locationID" : "855AC915-9B99-4FE8-9CC1-4807FB8B44F9",
-    "name" : "Hot dogs I like"
+    "name" : "Hot dogs"
   },
   {
     "onList" : true,
@@ -151,7 +137,7 @@
     "id" : "B0245784-2B92-45D8-B25A-2842E2ACF182",
     "quantity" : 1,
     "locationID" : "8E94B4F6-3335-42BF-BAC4-39579EEB22FC",
-    "name" : "Cream cheese 8 oz."
+    "name" : "Cream cheese, 8 oz."
   },
   {
     "onList" : true,
@@ -165,7 +151,7 @@
     "id" : "A2CB76E6-2F4F-402E-B096-C2EA65737BDF",
     "quantity" : 1,
     "locationID" : "8E94B4F6-3335-42BF-BAC4-39579EEB22FC",
-    "name" : "Eggs 2 dozen if XL, else 1 doz large"
+    "name" : "Eggs, XL (else 1 doz large)"
   },
   {
     "onList" : true,
@@ -249,7 +235,7 @@
     "id" : "1891FA10-7A80-4AA7-81EE-8DC8643AD383",
     "quantity" : 1,
     "locationID" : "3B9DD600-C1AE-4A6E-8BDC-5D86FD9E539E",
-    "name" : "Small can of tomato paste, Contadina or Hunts"
+    "name" : "Small tomato paste, Contadina or Hunts"
   },
   {
     "onList" : true,
@@ -263,7 +249,7 @@
     "id" : "BE1AF811-ADC2-41E4-BFFC-E12AAD8532BF",
     "quantity" : 1,
     "locationID" : "3B9DD600-C1AE-4A6E-8BDC-5D86FD9E539E",
-    "name" : "Tomato sauce, 12 oz can"
+    "name" : "Tomato sauce, 12 oz. can"
   },
   {
     "onList" : true,
@@ -361,14 +347,14 @@
     "id" : "65E319B5-8CDD-44B8-9D7F-71DFAE7B07A5",
     "quantity" : 1,
     "locationID" : "98BA7927-F8B1-4D53-9309-E128669CCD18",
-    "name" : "Jar of turkey gravy not in can"
+    "name" : "Turkey gravy, 12 oz. jar"
   },
   {
     "onList" : true,
     "id" : "8BC035E0-979E-4BA8-9EB6-FF6A9BC75071",
     "quantity" : 1,
     "locationID" : "351DA591-12DA-446F-8901-32D5FCBB153D",
-    "name" : "Raisin Bran cereal, Post or Kellogg’s, 15 oz box"
+    "name" : "Raisin Bran, Post or Kellogg’s, 15 oz box"
   },
   {
     "onList" : true,
@@ -418,5 +404,19 @@
     "quantity" : 1,
     "locationID" : "EED80E88-F874-4253-B4C0-5EB300D2C411",
     "name" : "Quaker Oats quick oatmeal"
+  },
+  {
+    "onList" : false,
+    "id" : "385A38A1-AE37-412D-A50C-4EFADE3BFC4E",
+    "quantity" : 1,
+    "locationID" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
+    "name" : "Bag of carrots full size"
+  },
+  {
+    "onList" : false,
+    "id" : "0F9487B5-C405-4317-9B88-CE377FF5FCDA",
+    "quantity" : 1,
+    "locationID" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
+    "name" : "Green pepper"
   }
 ]

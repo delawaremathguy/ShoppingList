@@ -11,19 +11,19 @@ import SwiftUI
 struct ModifyShoppingItemView: View {
 	@Environment(\.managedObjectContext) var managedObjectContext
 	@Environment(\.presentationMode) var presentationMode
-	@ObservedObject var editableItem: ShoppingItem
+	var editableItem: ShoppingItem? = nil
 	@State private var itemName: String = ""
-	@State private var itemQuantity: Int = 0
+	@State private var itemQuantity: Int = 1
 	@State private var selectedLocationIndex: Int = -1 // signifies @State vars not yet set up
 	@State private var showDeleteConfirmation: Bool = false
-	
+	var placeOnShoppingList: Bool  = true // assume we want new items on shopping list, set to false if adding a new item
+
 	// we need access to the complete list of Locations to populate
 	// the picker
 	@FetchRequest(entity: Location.entity(),
 								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
 	var locations: FetchedResults<Location>
 
-	
 	var body: some View {
 		Form {
 			// 1
@@ -45,7 +45,8 @@ struct ModifyShoppingItemView: View {
 					self.commitDataEntry()
 				}
 				
-				HStack {
+				if editableItem != nil {
+					HStack {
 					Spacer()
 					Button("Delete This Shopping Item") {
 						self.showDeleteConfirmation = true
@@ -54,17 +55,24 @@ struct ModifyShoppingItemView: View {
 					.foregroundColor(Color.red)
 					Spacer()
 				}
+				}
 
 			}
 			.onAppear(perform: initializeDataIfNecessary)
 			.alert(isPresented: $showDeleteConfirmation) {
-				Alert(title: Text("Delete \'\(editableItem.name!)\'?"), message: Text("Are you sure you want to delete this item?"),
+				Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
+							message: Text("Are you sure you want to delete this item?"),
 							primaryButton: .cancel(Text("No")),
 							secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
-			)}
-			
+				)}
+	
+		
 		} // end of Form
-			.navigationBarTitle("Modify Item", displayMode: .inline)
+			.navigationBarTitle(barTitle(), displayMode: .inline)
+	}
+	
+	func barTitle() -> Text {
+		return editableItem == nil ? Text("Add New Item") : Text("Modify Item")
 	}
 	
 	func initializeDataIfNecessary() {
@@ -72,38 +80,51 @@ struct ModifyShoppingItemView: View {
 		// opened up with editableItem set, but the properties we might change have
 		// not yet been moved out to the @State variables.  do that now.
 		if selectedLocationIndex == -1 {
-			itemName = editableItem.name!
-			itemQuantity = Int(editableItem.quantity)
-			let locationNames = locations.map() { $0.name! }
-			if let index = locationNames.firstIndex(of: editableItem.location!.name!) {
-				selectedLocationIndex = index
+			if let item = editableItem {
+				itemName = item.name!
+				itemQuantity = Int(item.quantity)
+				let locationNames = locations.map() { $0.name! }
+				if let index = locationNames.firstIndex(of: item.location!.name!) {
+					selectedLocationIndex = index
+				} else {
+					selectedLocationIndex = locations.count - 1 // index of Unknown Location
+				}
 			} else {
-				selectedLocationIndex = locations.count - 1 // index of Unknown Location
+				selectedLocationIndex = 0
 			}
 		}
 	}
 	
 	func commitDataEntry() {
-		editableItem.name = itemName
-		editableItem.quantity = Int32(itemQuantity)
-		// futz a little here to remove old location from this item and then
-		// in stall the new location, if this changed
-		let newLocation = locations[selectedLocationIndex]
-		if newLocation != editableItem.location {
-			editableItem.location?.removeFromItems(editableItem)
-			editableItem.location = newLocation
-			editableItem.visitationOrder = newLocation.visitationOrder
+		// if we already have an editableItem, use it,
+		// else create it now
+		var itemForCommit: ShoppingItem
+		if let item = editableItem {
+			itemForCommit = item
+		} else {
+			itemForCommit = ShoppingItem.addNewItem()
 		}
+
+		// fill in basic info fields
+		itemForCommit.name = itemName
+		itemForCommit.quantity = Int32(itemQuantity)
+		itemForCommit.onList = placeOnShoppingList
+		// if existing object, remove its reference from its locations
+		editableItem?.location?.removeFromItems(editableItem!)
+		// then update location info
+		let newLocation = locations[selectedLocationIndex]
+		itemForCommit.location = newLocation
+		itemForCommit.visitationOrder = newLocation.visitationOrder
 		try? managedObjectContext.save()
 		presentationMode.wrappedValue.dismiss()
-
 	}
 	
 	func deleteItem() {
-		// remove reference in locations
-		let location = editableItem.location
-		location?.removeFromItems(editableItem)
-		managedObjectContext.delete(editableItem)
-		try? managedObjectContext.save()
+		if let item = editableItem {
+			let location = item.location
+			location?.removeFromItems(item)
+			managedObjectContext.delete(item)
+			try? managedObjectContext.save()
+		}
 	}
 }
