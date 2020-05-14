@@ -18,6 +18,7 @@ struct ModifyLocationView: View {
 	@State private var green: Double = 0
 	@State private var blue: Double = 0
 	@State private var opacity: Double = 0
+	@State private var showDeleteConfirmation: Bool = false
 
 	var body: some View {
 		Form {
@@ -72,36 +73,40 @@ struct ModifyLocationView: View {
 				HStack {
 					Spacer()
 					Button("Delete This Location") {
-						self.deleteLocation()
-					}
+						self.showDeleteConfirmation = true
+						}
 					.foregroundColor(Color.red)
-					.disabled(true)
-					Spacer()
+						Spacer()
 				}
 			}  // end of Section				}
 		} // end of Form
+			.onAppear(perform: loadData)
 			.navigationBarTitle("Add New Location", displayMode: .inline)
-				.onAppear(perform: loadData)
+			.alert(isPresented: $showDeleteConfirmation) {
+				Alert(title: Text("Delete \'\(locationName)\'?"),
+							message: Text("Are you sure you want to delete this location?"),
+							primaryButton: .cancel(Text("No")),
+							secondaryButton: .destructive(Text("Yes"), action: self.deleteLocation)
+				)}
 	}
 	
 	func deleteLocation() {
+		print("No deletion took place.  Not yet implemented for Locations.")
 		// we will move all items in this location to the Unknown Location
 		// if we can't find it, however, bail now
-		guard let unknownLocation = Location.unknownLocation() else { return }
+//		guard let unknownLocation = Location.unknownLocation() else { return }
 		
-		// ADD ALERT: are you sure ????
-		
-		// need to move all items in this location to Unknown
-		if let items = location.items as? Set<ShoppingItem> {
-			for item in items {
-				item.location?.removeFromItems(item)
-				item.setLocation(location: unknownLocation)
-			}
-		}
-		// now finish and deismiss
-		managedObjectContext.delete(location)
-		try? managedObjectContext.save()
-		presentationMode.wrappedValue.dismiss()
+//		// need to move all items in this location to Unknown
+//		if let items = location.items as? Set<ShoppingItem> {
+//			for item in items {
+//				item.location?.removeFromItems(item)
+//				item.setLocation(location: unknownLocation)
+//			}
+//		}
+//		// now finish and deismiss
+//		managedObjectContext.delete(location)
+//		try? managedObjectContext.save()
+//		presentationMode.wrappedValue.dismiss()
 	}
 
 	func commitData() {

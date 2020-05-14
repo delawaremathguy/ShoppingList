@@ -15,6 +15,7 @@ struct ModifyShoppingItemView: View {
 	@State private var itemName: String = ""
 	@State private var itemQuantity: Int = 0
 	@State private var selectedLocationIndex: Int = -1 // signifies @State vars not yet set up
+	@State private var showDeleteConfirmation: Bool = false
 	
 	// we need access to the complete list of Locations to populate
 	// the picker
@@ -47,7 +48,8 @@ struct ModifyShoppingItemView: View {
 				HStack {
 					Spacer()
 					Button("Delete This Shopping Item") {
-						self.deleteItem()
+						self.showDeleteConfirmation = true
+						// self.deleteItem()
 					}
 					.foregroundColor(Color.red)
 					Spacer()
@@ -55,6 +57,11 @@ struct ModifyShoppingItemView: View {
 
 			}
 			.onAppear(perform: initializeDataIfNecessary)
+			.alert(isPresented: $showDeleteConfirmation) {
+				Alert(title: Text("Delete \'\(editableItem.name!)\'?"), message: Text("Are you sure you want to delete this item?"),
+							primaryButton: .cancel(Text("No")),
+							secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
+			)}
 			
 		} // end of Form
 			.navigationBarTitle("Modify Item", displayMode: .inline)

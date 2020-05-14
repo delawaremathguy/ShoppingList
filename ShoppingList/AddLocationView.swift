@@ -14,7 +14,11 @@ struct AddLocationView: View {
 
 	@State private var locationName: String = ""
 	@State private var visitationOrder: Int = 0
-	
+	@State private var red: Double = 0.5
+	@State private var green: Double = 0.5
+	@State private var blue: Double = 0.5
+	@State private var opacity: Double = 0.5
+
 	var body: some View {
 		Form {
 			// 1: Name and Quantity
@@ -24,6 +28,31 @@ struct AddLocationView: View {
 					Text("Visitation Order: \(visitationOrder)")
 				}
 
+				HStack {
+					Text("Red: \(red)")
+					Spacer()
+					Slider(value: $red, in: 0 ... 1)
+						.frame(width: 200)
+				}
+				HStack {
+					Text("Green: \(green)")
+					Spacer()
+					Slider(value: $green, in: 0 ... 1)
+						.frame(width: 200)
+				}
+				HStack {
+					Text("Blue: \(blue)")
+					Spacer()
+					Slider(value: $blue, in: 0 ... 1)
+						.frame(width: 200)
+				}
+				HStack {
+					Text("Opacity: \(opacity)")
+					Spacer()
+					Slider(value: $opacity, in: 0 ... 1)
+						.frame(width: 200)
+				}
+				Color(.sRGB, red: red, green: green, blue: blue, opacity: opacity)
 
 			// 2
 			Section {
@@ -38,7 +67,11 @@ struct AddLocationView: View {
 	}
 	
 	func commitData() {
-		let _ = Location.addNewLocation(name: locationName, visitationOrder: visitationOrder)
+		let newLocation = Location.addNewLocation(name: locationName, visitationOrder: visitationOrder)
+		newLocation.red = red
+		newLocation.green = green
+		newLocation.blue = blue
+		newLocation.opacity = opacity
 		presentationMode.wrappedValue.dismiss()
 	}
 	
