@@ -10,46 +10,46 @@ import SwiftUI
 import CoreData
 
 struct LocationsView: View {
+	// CoreData setup
 	@Environment(\.managedObjectContext) var managedObjectContext
-	
 	@FetchRequest(entity: Location.entity(),
 								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
 	var locations: FetchedResults<Location>
-	@State private var performJSONOutputDumpOnAppear = false // change to true to dump locations list as JSON onAppear()
+	
+	// local used to dump location data as JSON in .onAppear() if global flag says to do it
+	@State private var performJSONOutputDumpOnAppear = kPerformJSONOutputDumpOnAppear
 	
 	var body: some View {
 		
 		NavigationView {
-			VStack {
-				
-				
 				List {
-					NavigationLink(destination: AddLocationView()) {
-					HStack {
-						Spacer()
-						Text("Add New Location")
-							.foregroundColor(Color.blue)
-						Spacer()
-					}
+					
+					// first item is an add new location "button"
+					NavigationLink(destination: AddorModifyLocationView()) {
+						HStack {
+							Spacer()
+							Text("Add New Location")
+								.foregroundColor(Color.blue)
+							Spacer()
+						}
 					}
 					
+					// then come all the locations
 					ForEach(locations) { location in
-						NavigationLink(destination: ModifyLocationView(location: location)) {
+						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
 							HStack {
 								Text(location.name!)
-//									.foregroundColor(self.textColor(for: location))
-									.font(.headline)
+										.font(.headline)
 								if location.visitationOrder != kUnknownLocationVisitationOrder {
 									Spacer()
 									Text(String(location.visitationOrder))
 								}
 							}
-						}
-						// .disabled(location.visitationOrder == kUnknownLocationVisitationOrder)
-						.listRowBackground(self.textColor(for: location))
-					}
-				}
-			}
+						} // end of NavigationLink
+							.listRowBackground(self.textColor(for: location))
+					} // end of ForEach
+					
+				} // end of List
 			.navigationBarTitle(Text("Locations"))
 		}
 		.onAppear(perform: loadData)

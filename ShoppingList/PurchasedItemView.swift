@@ -17,13 +17,14 @@ struct PurchasedItemView: View {
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
 								predicate: NSPredicate(format: "onList == false")
 	) var purchasedItems: FetchedResults<ShoppingItem>
+	@State private var performJSONOutputDumpOnAppear = kPerformJSONOutputDumpOnAppear
 	
 	var body: some View {
 		NavigationView {
 			List {
 				
 				// add new item stays at top
-				NavigationLink(destination: ModifyShoppingItemView(placeOnShoppingList: false)) {
+				NavigationLink(destination: AddorModifyShoppingItemView(placeOnShoppingList: false)) {
 					HStack {
 						Spacer()
 						Text("Add New Item")
@@ -34,19 +35,8 @@ struct PurchasedItemView: View {
 				
 				Section(header: Text("Items Listed: \(purchasedItems.count)")) {
 					ForEach(purchasedItems) { item in
-						NavigationLink(destination: ModifyShoppingItemView(editableItem: item)) {
-							HStack {
-								VStack(alignment: .leading) {
-									Text(item.name!)
-										.font(.headline)
-									Text(item.location!.name!)
-										.font(.caption)
-								}
-								Spacer()
-								Text(String(item.quantity))
-									.font(.headline)
-									.foregroundColor(Color.blue)
-							}
+						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+							ShoppingItemView(item: item)
 						} // end of NavigationLink
 					} // end of ForEach
 						.onDelete(perform: moveToShoppingList)
@@ -68,10 +58,20 @@ struct PurchasedItemView: View {
 		try? managedObjectContext.save()
 	}
 	
-//	func textColor(for item: ShoppingItem) -> Color {
-//		if let location = item.location {
-//			return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
-//		}
-//		return Color.red
-//	}
+	func writePurchasedListAsJSON() {
+		let filepath = "/Users/keough/Desktop/purchasedItemList.json"
+		if performJSONOutputDumpOnAppear {
+			let jsonShoppingItems = purchasedItems.map() { ShoppingItemJSON(from: $0) }
+			let encoder = JSONEncoder()
+			encoder.outputFormatting = .prettyPrinted
+			do {
+				let data = try encoder.encode(jsonShoppingItems)
+				try data.write(to: URL(fileURLWithPath: filepath))
+				print("Purchased items dumped as JSON.")
+			} catch let error as NSError {
+				print("Error: \(error.localizedDescription), \(error.userInfo)")
+			}
+			performJSONOutputDumpOnAppear = false
+		}
+	}
 }

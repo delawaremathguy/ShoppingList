@@ -8,16 +8,19 @@
 
 import SwiftUI
 
-struct ModifyLocationView: View {
+struct AddorModifyLocationView: View {
 	@Environment(\.managedObjectContext) var managedObjectContext
 	@Environment(\.presentationMode) var presentationMode
-	@ObservedObject var location: Location
-	@State private var locationName: String = ""
-	@State private var visitationOrder: Int = 0
+	var editableLocation: Location? = nil
+	
+	@State private var locationName: String = "" // all of these values are suitable defaults for a new location
+	@State private var visitationOrder: Int = 50
 	@State private var red: Double = 0
 	@State private var green: Double = 0
 	@State private var blue: Double = 0
 	@State private var opacity: Double = 0
+	
+	@State private var dataLoaded = false
 	@State private var showDeleteConfirmation: Bool = false
 
 	var body: some View {
@@ -25,7 +28,7 @@ struct ModifyLocationView: View {
 			// 1: Name, Visitation Order, Colors
 			Section(header: Text("Basic Information")) {
 				TextField("Location name", text: $locationName)
-				if location.visitationOrder != kUnknownLocationVisitationOrder {
+				if visitationOrder != kUnknownLocationVisitationOrder {
 					Stepper(value: $visitationOrder, in: 1...100) {
 						Text("Visitation Order: \(visitationOrder)")
 					}
@@ -70,15 +73,17 @@ struct ModifyLocationView: View {
 					Spacer()
 				}
 				
-				HStack {
-					Spacer()
-					Button("Delete This Location") {
-						self.showDeleteConfirmation = true
-						}
-					.foregroundColor(Color.red)
+				if editableLocation != nil {
+					HStack {
 						Spacer()
+						Button("Delete This Location") {
+							self.showDeleteConfirmation = true
+						}
+						.foregroundColor(Color.red)
+						Spacer()
+					}
 				}
-			}  // end of Section				}
+			}  // end of Section
 		} // end of Form
 			.onAppear(perform: loadData)
 			.navigationBarTitle("Add New Location", displayMode: .inline)
@@ -110,19 +115,26 @@ struct ModifyLocationView: View {
 	}
 
 	func commitData() {
-		location.name = locationName
-		location.visitationOrder = Int32(visitationOrder)
-		location.red = red
-		location.green = green
-		location.blue = blue
-		location.opacity = opacity
+		var locationForCommit: Location
+		if let location = editableLocation {
+			locationForCommit = location
+		} else {
+			locationForCommit = Location.addNewLocation()
+		}
+		
+		locationForCommit.name = locationName
+		locationForCommit.visitationOrder = Int32(visitationOrder)
+		locationForCommit.red = red
+		locationForCommit.green = green
+		locationForCommit.blue = blue
+		locationForCommit.opacity = opacity
 		// THE PROBLEM: we now may have reordered the Locations by visitationOrder.
 		// and if we return to the list of Locations, that's cool.  but if we move
 		// over to the shopping list tab (or if we go back and then move over to the
 		// shopping list tab), we're screwed -- it has not seen this update.
 		// so we will update the parallel visitationOrder in all the shoppingList
 		// items to match this order
-		if let shoppingItems = location.items as? Set<ShoppingItem> {
+		if let shoppingItems = locationForCommit.items as? Set<ShoppingItem> {
 			for item in shoppingItems {
 				item.visitationOrder = Int32(visitationOrder)
 			}
@@ -132,12 +144,23 @@ struct ModifyLocationView: View {
 	}
 
 	func loadData() {
-		locationName = location.name!
-		visitationOrder = Int(location.visitationOrder)
-		red = location.red
-		green = location.green
-		blue = location.blue
-		opacity = location.opacity
+		// called on every .onAppear().  if dataLoaded is true, then we have
+		// already taken care of setting up the local state variables.
+		if dataLoaded {
+			return
+		}
+		// if there is an incoming editable location, offload its
+		// values to the state variables
+		if let location = editableLocation {
+			locationName = location.name!
+			visitationOrder = Int(location.visitationOrder)
+			red = location.red
+			green = location.green
+			blue = location.blue
+			opacity = location.opacity
+		}
+		// and be sure we don't do this again (!)
+		dataLoaded = true
 	}
 }
 

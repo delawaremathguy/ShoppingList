@@ -67,7 +67,7 @@ struct AddLocationView: View {
 	}
 	
 	func commitData() {
-		let newLocation = Location.addNewLocation(name: locationName, visitationOrder: visitationOrder)
+		let newLocation = Location.addNewLocation()
 		newLocation.red = red
 		newLocation.green = green
 		newLocation.blue = blue

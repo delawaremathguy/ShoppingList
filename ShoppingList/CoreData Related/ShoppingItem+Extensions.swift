@@ -58,6 +58,9 @@ extension ShoppingItem: Identifiable {
 			locations = []
 		}
 		
+		// group by id for faster lookup below
+		let uuid2Location = Dictionary(grouping: locations, by: { $0.id! })
+		
 		var count = 0
 		for jsonShoppingItem in jsonShoppingItems {
 			let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
@@ -65,8 +68,7 @@ extension ShoppingItem: Identifiable {
 			newItem.name = jsonShoppingItem.name
 			newItem.quantity = jsonShoppingItem.quantity
 			newItem.onList = jsonShoppingItem.onList
-			let location = locations.filter({ $0.id! == jsonShoppingItem.locationID }).first!
-//			let location = uuid2Location[jsonShoppingItem.locationID]!.first!
+			let location = uuid2Location[jsonShoppingItem.locationID]!.first! //locations.filter({ $0.id! == jsonShoppingItem.locationID }).first!
 			newItem.setLocation(location: location)
 			count += 1
 		}

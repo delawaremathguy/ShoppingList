@@ -31,7 +31,13 @@ extension Location: Identifiable {
 		return 0
 	}
 
-	static func addNewLocation(name: String, visitationOrder: Int) -> Location {
+	static func addNewLocation() -> Location {
+		let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
+		newLocation.id = UUID()
+		return newLocation
+	}
+
+	static func addNewLocation2(name: String, visitationOrder: Int) -> Location {
 		let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
 		newLocation.id = UUID()
 		newLocation.name = name
