@@ -11,14 +11,11 @@ import CoreData
 
 struct LocationsView: View {
 	// CoreData setup
-	@Environment(\.managedObjectContext) var managedObjectContext
+	// @Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: Location.entity(),
 								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
 	var locations: FetchedResults<Location>
-	
-	// local used to dump location data as JSON in .onAppear() if global flag says to do it
-	@State private var performJSONOutputDumpOnAppear = kPerformJSONOutputDumpOnAppear
-	
+		
 	var body: some View {
 		
 		NavigationView {
@@ -35,7 +32,7 @@ struct LocationsView: View {
 					}
 					
 					// then come all the locations
-					ForEach(locations) { location in
+					ForEach(locations, id:\.self) { location in
 						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
 							HStack {
 								Text(location.name!)
@@ -52,26 +49,11 @@ struct LocationsView: View {
 				} // end of List
 			.navigationBarTitle(Text("Locations"))
 		}
-		.onAppear(perform: loadData)
+		.onAppear(perform: doAppearanceCode)
 	}
 	
-	func loadData() {
+	func doAppearanceCode() {
 		//print(".onAppear in LocationsView")
-		if performJSONOutputDumpOnAppear {
-			let filepath = "/Users/keough/Desktop/locations.json"
-			let jsonLocationList = locations.map() { LocationJSON(from: $0) }
-			let encoder = JSONEncoder()
-			encoder.outputFormatting = .prettyPrinted
-			do {
-				let data = try encoder.encode(jsonLocationList)
-				try data.write(to: URL(fileURLWithPath: filepath))
-				print("Locations dumped as JSON.")
-			} catch let error as NSError {
-				print("Error: \(error.localizedDescription), \(error.userInfo)")
-			}
-			performJSONOutputDumpOnAppear = false
-		}
-		
 	}
 	
 	func textColor(for location: Location) -> Color {

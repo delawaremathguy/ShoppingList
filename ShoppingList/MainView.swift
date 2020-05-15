@@ -11,7 +11,7 @@ import CoreData
 
 
 struct MainView: View {
-	@Environment(\.managedObjectContext) var managedObjectContext
+	// @Environment(\.managedObjectContext) var managedObjectContext
 	var body: some View {
 		TabView {
 			ShoppingListView()
@@ -32,12 +32,20 @@ struct MainView: View {
 					Text("Locations")
 			}
 		}
-		.onAppear(perform: onAppearanceCode)
+		.onAppear(perform: doAppearanceCode)
 	}
 	
-	func onAppearanceCode() {
-		//print(".onAppear in MainView")
+	func doAppearanceCode() {
+		if kPerformJSONOutputDumpOnAppear {
+			writeAsJSON(items: ShoppingItem.allShoppingItems())
+			writeAsJSON(items: Location.allLocations())
+		}
+		if kPerformInitialDataLoad {
+			populateDatabaseFromJSON()
+		}
 	}
+	
+
 }
 
 struct MainView_Previews: PreviewProvider {

@@ -31,21 +31,24 @@ extension Location: Identifiable {
 		return 0
 	}
 
+	static func allLocations() -> [Location] {
+		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
+		do {
+			let items = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+			return items
+		}
+		catch let error as NSError {
+			print("Error getting ShoppingItems: \(error.localizedDescription), \(error.userInfo)")
+		}
+		return [Location]()
+	}
+
 	static func addNewLocation() -> Location {
 		let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
 		newLocation.id = UUID()
 		return newLocation
 	}
 
-	static func addNewLocation2(name: String, visitationOrder: Int) -> Location {
-		let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
-		newLocation.id = UUID()
-		newLocation.name = name
-		newLocation.visitationOrder = Int32(visitationOrder)
-		appDelegate.saveContext()
-		return newLocation
-	}
-	
 	static func unknownLocation() -> Location? {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "visitationOrder == %d", kUnknownLocationVisitationOrder)
@@ -75,6 +78,11 @@ extension Location: Identifiable {
 		}
 		print("Inserted \(count) locations.")
 	}
+	
+	static func saveChanges() {
+		appDelegate.saveContext()
+	}
+
 
 }
 	

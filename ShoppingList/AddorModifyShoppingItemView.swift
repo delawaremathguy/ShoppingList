@@ -35,7 +35,10 @@ struct AddorModifyShoppingItemView: View {
 					Text("Quantity: \(itemQuantity)")
 				}
 				Picker(selection: $selectedLocationIndex, label: Text("Location")) {
-					ForEach(0 ..< locations.count) { index in
+//					ForEach(locations) { location in
+//						Text(location.name!)
+//					}
+					ForEach(0 ..< locations.count, id:\.self) { index in
 						Text(self.locations[index].name!)
 					}
 				}

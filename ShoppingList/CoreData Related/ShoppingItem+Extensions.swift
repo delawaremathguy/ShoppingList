@@ -28,15 +28,18 @@ extension ShoppingItem: Identifiable {
 		return 0
 	}
 	
-	static func addNewItem2(name: String, quantity: Int) -> ShoppingItem {
-		let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
-		newItem.id = UUID()
-		newItem.name = name
-		newItem.quantity = Int32(quantity)
-		newItem.onList = true
-		appDelegate.saveContext()
-		return newItem
+	static func allShoppingItems() -> [ShoppingItem] {
+		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
+		do {
+			let items = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+			return items
+		}
+		catch let error as NSError {
+			print("Error getting ShoppingItems: \(error.localizedDescription), \(error.userInfo)")
+		}
+		return [ShoppingItem]()
 	}
+
 	
 	static func addNewItem() -> ShoppingItem {
 		let newItem = ShoppingItem(context: appDelegate.persistentContainer.viewContext)
@@ -75,11 +78,17 @@ extension ShoppingItem: Identifiable {
 		print("Inserted \(count) shopping items")
 	}
 	
+	static func saveChanges() {
+		appDelegate.saveContext()
+	}
+
+	
 	static func delete(item: ShoppingItem) {
 		appDelegate.persistentContainer.viewContext.delete(item)
 		appDelegate.saveContext()
 	}
 	
+
 	func setLocation(location: Location) {
 		self.location = location
 		visitationOrder = location.visitationOrder

@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct PurchasedItemView: View {
-	@Environment(\.managedObjectContext) var managedObjectContext
 	
-	// fetch request to get items off-list
+	// CoreData setup
+	// @Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
 								predicate: NSPredicate(format: "onList == false")
 	) var purchasedItems: FetchedResults<ShoppingItem>
-	@State private var performJSONOutputDumpOnAppear = kPerformJSONOutputDumpOnAppear
+
 	
 	var body: some View {
 		NavigationView {
@@ -34,7 +34,7 @@ struct PurchasedItemView: View {
 				}
 				
 				Section(header: Text("Items Listed: \(purchasedItems.count)")) {
-					ForEach(purchasedItems) { item in
+					ForEach(purchasedItems, id:\.self) { item in
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							ShoppingItemView(item: item)
 						} // end of NavigationLink
@@ -55,23 +55,7 @@ struct PurchasedItemView: View {
 			let item = purchasedItems[index]
 			item.onList = true
 		}
-		try? managedObjectContext.save()
+		ShoppingItem.saveChanges()
 	}
 	
-	func writePurchasedListAsJSON() {
-		let filepath = "/Users/keough/Desktop/purchasedItemList.json"
-		if performJSONOutputDumpOnAppear {
-			let jsonShoppingItems = purchasedItems.map() { ShoppingItemJSON(from: $0) }
-			let encoder = JSONEncoder()
-			encoder.outputFormatting = .prettyPrinted
-			do {
-				let data = try encoder.encode(jsonShoppingItems)
-				try data.write(to: URL(fileURLWithPath: filepath))
-				print("Purchased items dumped as JSON.")
-			} catch let error as NSError {
-				print("Error: \(error.localizedDescription), \(error.userInfo)")
-			}
-			performJSONOutputDumpOnAppear = false
-		}
-	}
 }
