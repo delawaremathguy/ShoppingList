@@ -59,41 +59,50 @@ func writeAsJSON(items: [Location]) {
 }
 
 func populateDatabaseFromJSON() {
-	// read locations first, and create dictionary to keep track of them
-	guard let url1 = Bundle.main.url(forResource: kLocationsFilename, withExtension: nil) else {
-		fatalError("Failed to locate " + kLocationsFilename + " in app bundle.")
-	}
-	guard let data1 = try? Data(contentsOf: url1) else {
-		fatalError("Failed to load " + kLocationsFilename + " from app bundle.")
-	}
 	
-	let decoder = JSONDecoder()
+	let jsonLocations: [LocationJSON] = Bundle.main.decode(from: kLocationsFilename)
+	Location.insertNewLocations(from: jsonLocations)
 	
-	// insert all new locations
-	do {
-		let jsonLocations = try decoder.decode([LocationJSON].self, from: data1)
-		Location.insertNewLocations(from: jsonLocations)
-	} catch let error as NSError {
-		fatalError("Error inserting locations: \(error.localizedDescription), \(error.userInfo)")
-	}
-	
-	// read locations first, and create dictionary to keep track of them
-	guard let url2 = Bundle.main.url(forResource: kShoppingItemsFilename, withExtension: nil) else {
-		fatalError("Failed to locate " + kShoppingItemsFilename + " in app bundle.")
-	}
-	guard let data2 = try? Data(contentsOf: url2) else {
-		fatalError("Failed to load " + kShoppingItemsFilename + " from app bundle.")
-	}
-	
-	// insert all shoppingItems
-	do {
-		let jsonShoppingItems = try decoder.decode([ShoppingItemJSON].self, from: data2)
-		ShoppingItem.insertNewItems(from: jsonShoppingItems) // , using: locationDictionary)
-	} catch let error as NSError {
-		fatalError("Error reading in locations: \(error.localizedDescription), \(error.userInfo)")
-	}
+	let jsonShoppingItems: [ShoppingItemJSON] = Bundle.main.decode(from: kShoppingItemsFilename)
+	ShoppingItem.insertNewItems(from: jsonShoppingItems)
 	
 	ShoppingItem.saveChanges()
+	
+//	// read locations first, and create dictionary to keep track of them
+//	guard let url1 = Bundle.main.url(forResource: kLocationsFilename, withExtension: nil) else {
+//		fatalError("Failed to locate " + kLocationsFilename + " in app bundle.")
+//	}
+//	guard let data1 = try? Data(contentsOf: url1) else {
+//		fatalError("Failed to load " + kLocationsFilename + " from app bundle.")
+//	}
+//
+//	let decoder = JSONDecoder()
+//
+//	// insert all new locations
+//	do {
+//		let jsonLocations = try decoder.decode([LocationJSON].self, from: data1)
+//		Location.insertNewLocations(from: jsonLocations)
+//	} catch let error as NSError {
+//		fatalError("Error inserting locations: \(error.localizedDescription), \(error.userInfo)")
+//	}
+//
+//	// read locations first, and create dictionary to keep track of them
+//	guard let url2 = Bundle.main.url(forResource: kShoppingItemsFilename, withExtension: nil) else {
+//		fatalError("Failed to locate " + kShoppingItemsFilename + " in app bundle.")
+//	}
+//	guard let data2 = try? Data(contentsOf: url2) else {
+//		fatalError("Failed to load " + kShoppingItemsFilename + " from app bundle.")
+//	}
+//
+//	// insert all shoppingItems
+//	do {
+//		let jsonShoppingItems = try decoder.decode([ShoppingItemJSON].self, from: data2)
+//		ShoppingItem.insertNewItems(from: jsonShoppingItems) // , using: locationDictionary)
+//	} catch let error as NSError {
+//		fatalError("Error reading in locations: \(error.localizedDescription), \(error.userInfo)")
+//	}
+//
+//	ShoppingItem.saveChanges()
 	
 }
 
