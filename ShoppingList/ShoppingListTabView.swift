@@ -9,7 +9,7 @@
 import SwiftUI
 import CoreData
 
-struct ShoppingListView: View {
+struct ShoppingListTabView: View {
 	// Core Data access for items on shopping list
 	// @Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: ShoppingItem.entity(),

@@ -14,19 +14,19 @@ struct MainView: View {
 	// @Environment(\.managedObjectContext) var managedObjectContext
 	var body: some View {
 		TabView {
-			ShoppingListView()
+			ShoppingListTabView()
 				.tabItem {
 					Image(systemName: "cart")
 					Text("Shopping List")
 			}
 			
-			PurchasedItemView()
+			PurchasedTabView()
 				.tabItem {
 					Image(systemName: "purchased")
 					Text("Purchased")
 			}
 			
-			LocationsView()
+			LocationsTabView()
 				.tabItem {
 					Image(systemName: "map")
 					Text("Locations")

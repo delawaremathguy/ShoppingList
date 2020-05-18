@@ -9,7 +9,7 @@
 import SwiftUI
 import CoreData
 
-struct LocationsView: View {
+struct LocationsTabView: View {
 	// CoreData setup
 	// @Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: Location.entity(),
@@ -65,6 +65,6 @@ struct LocationsView: View {
 
 struct LocationsView_Previews: PreviewProvider {
 	static var previews: some View {
-		LocationsView()
+		LocationsTabView()
 	}
 }

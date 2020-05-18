@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct PurchasedItemView: View {
+struct PurchasedTabView: View {
 	
 	// CoreData setup
 	// @Environment(\.managedObjectContext) var managedObjectContext
@@ -40,7 +40,6 @@ struct PurchasedItemView: View {
 						} // end of NavigationLink
 					} // end of ForEach
 						.onDelete(perform: moveToShoppingList)
-					
 				} // end of Section
 				
 			}  // end of List
