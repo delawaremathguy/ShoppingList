@@ -22,44 +22,69 @@ struct AddorModifyLocationView: View {
 	
 	@State private var dataHasBeenLoaded = false
 	@State private var showDeleteConfirmation: Bool = false
-
+			
 	var body: some View {
 		Form {
 			// 1: Name, Visitation Order, Colors
 			Section(header: Text("Basic Information")) {
-				TextField("Location name", text: $locationName)
+				HStack {
+					MyFormLabelText(labelText: "Name: ")
+					TextField("Location name", text: $locationName)
+				}
+				
 				if visitationOrder != kUnknownLocationVisitationOrder {
 					Stepper(value: $visitationOrder, in: 1...100) {
-						Text("Visitation Order: \(visitationOrder)")
+						HStack {
+							MyFormLabelText(labelText: "Visitation Order: ")
+							Text("\(visitationOrder)")
+						}
 					}
 				}
 				
 				HStack {
-					Text("Red: \(red)")
+					HStack {
+						MyFormLabelText(labelText: "Red: ")
+						Text(String(format: "%.2f", red))
+					}
 					Spacer()
 					Slider(value: $red, in: 0 ... 1)
 						.frame(width: 200)
 				}
 				HStack {
-					Text("Green: \(green)")
+					HStack {
+						MyFormLabelText(labelText: "Green: ")
+						Text(String(format: "%.2f", green))
+					}
 					Spacer()
 					Slider(value: $green, in: 0 ... 1)
 						.frame(width: 200)
 				}
 				HStack {
-					Text("Blue: \(blue)")
+					HStack {
+						MyFormLabelText(labelText: "Blue: ")
+						Text(String(format: "%.2f", blue))
+					}
 					Spacer()
 					Slider(value: $blue, in: 0 ... 1)
 						.frame(width: 200)
 				}
 				HStack {
-					Text("Opacity: \(opacity)")
+					HStack {
+						MyFormLabelText(labelText: "Opacity: ")
+						Text(String(format: "%.2f", opacity))
+					}
 					Spacer()
 					Slider(value: $opacity, in: 0 ... 1)
 						.frame(width: 200)
 				}
-				Color(.sRGB, red: red, green: green, blue: blue, opacity: opacity)
-
+				HStack {
+					Text("Combined:")
+					Spacer()
+					RoundedRectangle(cornerRadius: 16)
+						.fill(Color(.sRGB, red: red, green: green, blue: blue, opacity: opacity))
+						.frame(width: 200)
+				}
+	
 			}
 			
 			// 2
@@ -84,6 +109,8 @@ struct AddorModifyLocationView: View {
 					}
 				}
 			}  // end of Section
+			
+			
 		} // end of Form
 			.onAppear(perform: loadData)
 			.navigationBarTitle("Add New Location", displayMode: .inline)
@@ -164,6 +191,7 @@ struct AddorModifyLocationView: View {
 				blue = location.blue
 				opacity = location.opacity
 			}
+						
 			// and be sure we don't do this again (!)
 			dataHasBeenLoaded = true
 		}

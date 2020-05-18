@@ -40,6 +40,7 @@ struct ShoppingListTabView: View {
 					}
 				}
 				
+				
 				// one main section, showing all items
 				Section(header: Text("On List (\(shoppingItems.count) items)")) {
 					ForEach(shoppingItems, id:\.self) { item in
@@ -79,6 +80,7 @@ struct ShoppingListTabView: View {
 							Spacer()
 						}
 					}
+
 				} // end of Section
 				
 			}  // end of List

@@ -30,14 +30,18 @@ struct AddorModifyShoppingItemView: View {
 		Form {
 			// 1
 			Section(header: Text("Basic Information")) {
-				TextField("Item name", text: $itemName, onCommit: { self.commitDataEntry() })
-				Stepper(value: $itemQuantity, in: 1...10) {
-					Text("Quantity: \(itemQuantity)")
+				HStack(alignment: .firstTextBaseline) {
+					MyFormLabelText(labelText: "Name: ")
+					TextField("Item name", text: $itemName, onCommit: { self.commitDataEntry() })
 				}
-				Picker(selection: $selectedLocationIndex, label: Text("Location")) {
-//					ForEach(locations) { location in
-//						Text(location.name!)
-//					}
+				Stepper(value: $itemQuantity, in: 1...10) {
+					HStack {
+						MyFormLabelText(labelText: "Quantity: ")
+						Text("\(itemQuantity)")
+					}
+				}
+				Picker(selection: $selectedLocationIndex,
+							 label: MyFormLabelText(labelText: "Location: ")) {
 					ForEach(0 ..< locations.count, id:\.self) { index in
 						Text(self.locations[index].name!)
 					}
