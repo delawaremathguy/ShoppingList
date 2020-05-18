@@ -9,18 +9,18 @@
 import SwiftUI
 
 struct AddorModifyLocationView: View {
-	@Environment(\.managedObjectContext) var managedObjectContext
+	// @Environment(\.managedObjectContext) var managedObjectContext
 	@Environment(\.presentationMode) var presentationMode
 	var editableLocation: Location? = nil
 	
 	@State private var locationName: String = "" // all of these values are suitable defaults for a new location
 	@State private var visitationOrder: Int = 50
-	@State private var red: Double = 0
-	@State private var green: Double = 0
-	@State private var blue: Double = 0
-	@State private var opacity: Double = 0
+	@State private var red: Double = 0.25
+	@State private var green: Double = 0.25
+	@State private var blue: Double = 0.25
+	@State private var opacity: Double = 0.40
 	
-	@State private var dataLoaded = false
+	@State private var dataHasBeenLoaded = false
 	@State private var showDeleteConfirmation: Bool = false
 
 	var body: some View {
@@ -87,6 +87,12 @@ struct AddorModifyLocationView: View {
 		} // end of Form
 			.onAppear(perform: loadData)
 			.navigationBarTitle("Add New Location", displayMode: .inline)
+			.navigationBarBackButtonHidden(true)
+			.navigationBarItems(leading: Button(action : {
+				self.presentationMode.wrappedValue.dismiss()
+			}){
+				Text("Cancel")
+			})
 			.alert(isPresented: $showDeleteConfirmation) {
 				Alert(title: Text("Delete \'\(locationName)\'?"),
 							message: Text("Are you sure you want to delete this location?"),
@@ -96,22 +102,23 @@ struct AddorModifyLocationView: View {
 	}
 	
 	func deleteLocation() {
-		print("No deletion took place.  Not yet implemented for Locations.")
 		// we will move all items in this location to the Unknown Location
 		// if we can't find it, however, bail now
-//		guard let unknownLocation = Location.unknownLocation() else { return }
-		
-//		// need to move all items in this location to Unknown
-//		if let items = location.items as? Set<ShoppingItem> {
-//			for item in items {
-//				item.location?.removeFromItems(item)
-//				item.setLocation(location: unknownLocation)
-//			}
-//		}
-//		// now finish and deismiss
-//		managedObjectContext.delete(location)
-//		try? managedObjectContext.save()
-//		presentationMode.wrappedValue.dismiss()
+		if let unknownLocation = Location.unknownLocation(),
+			let location = editableLocation {
+			
+			// need to move all items in this location to Unknown
+			if let shoppingItems = location.items as? Set<ShoppingItem> {
+				for item in shoppingItems {
+					location.removeFromItems(item)
+					item.setLocation(location: unknownLocation)
+				}
+			}
+			
+			// now finish and dismiss
+			Location.delete(item: location)
+			presentationMode.wrappedValue.dismiss()
+		}
 	}
 
 	func commitData() {
@@ -139,28 +146,27 @@ struct AddorModifyLocationView: View {
 				item.visitationOrder = Int32(visitationOrder)
 			}
 		}
-		try? managedObjectContext.save()
+		Location.saveChanges()
 		presentationMode.wrappedValue.dismiss()
 	}
 
 	func loadData() {
 		// called on every .onAppear().  if dataLoaded is true, then we have
 		// already taken care of setting up the local state variables.
-		if dataLoaded {
-			return
+		if !dataHasBeenLoaded {
+			// if there is an incoming editable location, offload its
+			// values to the state variables
+			if let location = editableLocation {
+				locationName = location.name!
+				visitationOrder = Int(location.visitationOrder)
+				red = location.red
+				green = location.green
+				blue = location.blue
+				opacity = location.opacity
+			}
+			// and be sure we don't do this again (!)
+			dataHasBeenLoaded = true
 		}
-		// if there is an incoming editable location, offload its
-		// values to the state variables
-		if let location = editableLocation {
-			locationName = location.name!
-			visitationOrder = Int(location.visitationOrder)
-			red = location.red
-			green = location.green
-			blue = location.blue
-			opacity = location.opacity
-		}
-		// and be sure we don't do this again (!)
-		dataLoaded = true
 	}
 }
 

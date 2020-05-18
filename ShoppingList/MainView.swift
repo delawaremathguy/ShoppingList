@@ -36,12 +36,12 @@ struct MainView: View {
 	}
 	
 	func doAppearanceCode() {
+		if kPerformInitialDataLoad {
+			populateDatabaseFromJSON()
+		}
 		if kPerformJSONOutputDumpOnAppear {
 			writeAsJSON(items: ShoppingItem.allShoppingItems())
 			writeAsJSON(items: Location.allLocations())
-		}
-		if kPerformInitialDataLoad {
-			populateDatabaseFromJSON()
 		}
 	}
 	

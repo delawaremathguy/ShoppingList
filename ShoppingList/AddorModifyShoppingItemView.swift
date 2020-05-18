@@ -29,7 +29,7 @@ struct AddorModifyShoppingItemView: View {
 	var body: some View {
 		Form {
 			// 1
-			Section {
+			Section(header: Text("Basic Information")) {
 				TextField("Item name", text: $itemName, onCommit: { self.commitDataEntry() })
 				Stepper(value: $itemQuantity, in: 1...10) {
 					Text("Quantity: \(itemQuantity)")
@@ -44,12 +44,17 @@ struct AddorModifyShoppingItemView: View {
 				}
 			}
 			
-			// 2
-			Section {
-				Button("Save") {
-					self.commitDataEntry()
+			// 2 -- operational buttons
+			Section(header: Text("Shopping Item Management")) {
+				HStack {
+					Spacer()
+					Button("Save") {
+						self.commitDataEntry()
+					}
+					.disabled(itemName.isEmpty)
+					Spacer()
 				}
-				
+
 				if editableItem != nil {
 					HStack {
 					Spacer()
@@ -74,6 +79,13 @@ struct AddorModifyShoppingItemView: View {
 		
 		} // end of Form
 			.navigationBarTitle(barTitle(), displayMode: .inline)
+			.navigationBarBackButtonHidden(true)
+			.navigationBarItems(leading: Button(action : {
+				self.presentationMode.wrappedValue.dismiss()
+			}){
+				Text("Cancel")
+			})
+
 	}
 	
 	func barTitle() -> Text {
@@ -130,8 +142,7 @@ struct AddorModifyShoppingItemView: View {
 		if let item = editableItem {
 			let location = item.location
 			location?.removeFromItems(item)
-			managedObjectContext.delete(item)
-			try? managedObjectContext.save()
+			ShoppingItem.delete(item: item)
 		}
 	}
 }

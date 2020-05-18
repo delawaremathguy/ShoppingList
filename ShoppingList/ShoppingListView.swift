@@ -27,7 +27,7 @@ struct ShoppingListView: View {
 		NavigationView {
 			List {
 				
-				// add new item stays at top
+				// add new item "button" is at top
 				NavigationLink(destination: AddorModifyShoppingItemView()) {
 					HStack {
 						Spacer()
@@ -37,6 +37,7 @@ struct ShoppingListView: View {
 					}
 				}
 				
+				// one main section, showing all items
 				Section(header: Text("On List (\(shoppingItems.count) items)")) {
 					ForEach(shoppingItems, id:\.self) { item in
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
@@ -48,13 +49,15 @@ struct ShoppingListView: View {
 					
 
 					// clear shopping list
-					HStack {
-						Spacer()
-						Button("Move All Items off-list") {
-							self.clearShoppingList()
+					if !shoppingItems.isEmpty {
+						HStack {
+							Spacer()
+							Button("Move All Items off-list") {
+								self.clearShoppingList()
+							}
+							.foregroundColor(Color.blue)
+							Spacer()
 						}
-						.foregroundColor(Color.blue)
-						Spacer()
 					}
 				} // end of Section
 				
@@ -70,6 +73,7 @@ struct ShoppingListView: View {
 		for item in shoppingItems {
 			item.onList = false
 		}
+		ShoppingItem.saveChanges()
 	}
 	
 	func moveToPurchased(indexSet: IndexSet) {

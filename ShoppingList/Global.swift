@@ -8,15 +8,17 @@
 
 import Foundation
 
-// Use these constants and routines to assist is importing and
-// exporting shoppingItems and Locations
-
-// usually, these will both be false for established database
-// make the first one true to dump an existing database
-// make the second one true to load a new database from the main bundle
-// doesn't make sense that both would be true
-let kPerformJSONOutputDumpOnAppear = false // change to true to dump JSON files in MainView.onAppear()
-let kPerformInitialDataLoad = false // change to true to force initial data loading in MainView.onAppear()
+// Use these constants and routines during development to import and
+// export shoppingItems and Locations via JSON
+//
+// usually, these will both be false for established database.  change only for debugging
+//
+// -- make the second one true to load a new database from the main bundle
+// -- make the first one true to dump an existing database
+//
+// (it doesn't make much sense that both would be true)
+let kPerformJSONOutputDumpOnAppear = false // true = dump JSON files in MainView.onAppear()
+let kPerformInitialDataLoad = false // true = force initial data loading in MainView.onAppear()
 
 // use these filenames for debug output and initial load from bundle
 let kShoppingItemsFilename = "shoppingItems.json"
@@ -59,7 +61,7 @@ func writeAsJSON(items: [Location]) {
 }
 
 func populateDatabaseFromJSON() {
-	
+	// easy to do with HSW's Bundle extension (!)
 	let jsonLocations: [LocationJSON] = Bundle.main.decode(from: kLocationsFilename)
 	Location.insertNewLocations(from: jsonLocations)
 	
@@ -67,43 +69,6 @@ func populateDatabaseFromJSON() {
 	ShoppingItem.insertNewItems(from: jsonShoppingItems)
 	
 	ShoppingItem.saveChanges()
-	
-//	// read locations first, and create dictionary to keep track of them
-//	guard let url1 = Bundle.main.url(forResource: kLocationsFilename, withExtension: nil) else {
-//		fatalError("Failed to locate " + kLocationsFilename + " in app bundle.")
-//	}
-//	guard let data1 = try? Data(contentsOf: url1) else {
-//		fatalError("Failed to load " + kLocationsFilename + " from app bundle.")
-//	}
-//
-//	let decoder = JSONDecoder()
-//
-//	// insert all new locations
-//	do {
-//		let jsonLocations = try decoder.decode([LocationJSON].self, from: data1)
-//		Location.insertNewLocations(from: jsonLocations)
-//	} catch let error as NSError {
-//		fatalError("Error inserting locations: \(error.localizedDescription), \(error.userInfo)")
-//	}
-//
-//	// read locations first, and create dictionary to keep track of them
-//	guard let url2 = Bundle.main.url(forResource: kShoppingItemsFilename, withExtension: nil) else {
-//		fatalError("Failed to locate " + kShoppingItemsFilename + " in app bundle.")
-//	}
-//	guard let data2 = try? Data(contentsOf: url2) else {
-//		fatalError("Failed to load " + kShoppingItemsFilename + " from app bundle.")
-//	}
-//
-//	// insert all shoppingItems
-//	do {
-//		let jsonShoppingItems = try decoder.decode([ShoppingItemJSON].self, from: data2)
-//		ShoppingItem.insertNewItems(from: jsonShoppingItems) // , using: locationDictionary)
-//	} catch let error as NSError {
-//		fatalError("Error reading in locations: \(error.localizedDescription), \(error.userInfo)")
-//	}
-//
-//	ShoppingItem.saveChanges()
-	
 }
 
 

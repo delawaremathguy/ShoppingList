@@ -17,7 +17,7 @@ struct LocationJSON: Codable {
 	var blue: Double
 	var opacity: Double
 
-	
+
 	init(from location: Location) {
 		id = location.id!
 		name = location.name!

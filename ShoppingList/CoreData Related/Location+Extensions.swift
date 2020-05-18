@@ -79,6 +79,12 @@ extension Location: Identifiable {
 		print("Inserted \(count) locations.")
 	}
 	
+	static func delete(item: Location) {
+		appDelegate.persistentContainer.viewContext.delete(item)
+		appDelegate.saveContext()
+	}
+
+	
 	static func saveChanges() {
 		appDelegate.saveContext()
 	}
