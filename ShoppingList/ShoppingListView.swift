@@ -22,6 +22,9 @@ struct ShoppingListView: View {
 	// boolean state to control whether to show the history section
 	@State private var isHistorySectionShowing: Bool = true
 	@State private var performInitialDataLoad = kPerformInitialDataLoad
+	
+	// sections
+//	@State private var sections = [[ShoppingItem]]()
 
 	var body: some View {
 		NavigationView {
@@ -46,6 +49,23 @@ struct ShoppingListView: View {
 						.listRowBackground(self.textColor(for: item))
 					} // end of ForEach
 						.onDelete(perform: moveToPurchased)
+				
+				// here's some working code for separate sections
+//				ForEach(sections, id:\.self) { sectionItems in
+//					Section(header: Text("Title")) {
+//
+//						ForEach(sectionItems, id:\.self) { item in
+//							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+//								ShoppingItemView(item: item)
+//							}
+//							.listRowBackground(self.textColor(for: item))
+//						} // end of ForEach
+//							.onDelete(perform: { offsets in
+//								self.moveToPurchased2(at: offsets, in: sectionItems)
+//								})
+//
+//					} // end of Section
+//				} // end of ForEach
 					
 
 					// clear shopping list
@@ -62,7 +82,7 @@ struct ShoppingListView: View {
 				} // end of Section
 				
 			}  // end of List
-				.listStyle(PlainListStyle())
+				.listStyle(GroupedListStyle())
 				.navigationBarTitle(Text("Shopping List"))
 				.onAppear(perform: doAppearanceCode)
 			
@@ -76,6 +96,15 @@ struct ShoppingListView: View {
 		ShoppingItem.saveChanges()
 	}
 	
+//	func moveToPurchased2(at indexSet: IndexSet, in items: [ShoppingItem]) {
+//		for index in indexSet {
+//			let item = items[index]
+//			item.onList = false
+//		}
+//		ShoppingItem.saveChanges()
+//		//doAppearanceCode()
+//	}
+	
 	func moveToPurchased(indexSet: IndexSet) {
 		for index in indexSet {
 			let item = shoppingItems[index]
@@ -85,7 +114,13 @@ struct ShoppingListView: View {
 	}
 	
 	func doAppearanceCode() {
-		//print(".onAppear in ShoppingListView")
+//		print(".onAppear in ShoppingListView")
+//		sections.removeAll()
+//		let d = Dictionary(grouping: shoppingItems, by: { $0.visitationOrder })
+//		let sortedKeys = d.keys.sorted()
+//		for key in sortedKeys {
+//			sections.append(d[key]!)
+//		}
 	}
 	
 

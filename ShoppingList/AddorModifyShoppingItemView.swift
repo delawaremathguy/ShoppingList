@@ -19,7 +19,7 @@ struct AddorModifyShoppingItemView: View {
 	
 	@State private var dataLoaded = false
 	@State private var showDeleteConfirmation: Bool = false
-	var placeOnShoppingList: Bool  = true // assume we want new items on shopping list, set to false if adding a new item
+	var placeOnShoppingList: Bool = true // assume we want new items on shopping list, set to false if adding a new item
 
 	// we need access to the complete list of Locations to populate the picker
 	@FetchRequest(entity: Location.entity(),
