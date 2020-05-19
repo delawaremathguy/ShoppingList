@@ -32,6 +32,7 @@ struct LocationsTabView: View {
 					}
 					
 					// then come all the locations
+					Section(header: Text("Location Listed: \(locations.count)")) {
 					ForEach(locations, id:\.self) { location in
 						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
 							HStack {
@@ -45,9 +46,11 @@ struct LocationsTabView: View {
 						} // end of NavigationLink
 							.listRowBackground(self.textColor(for: location))
 					} // end of ForEach
+					} // end of Section
 					
 				} // end of List
 			.navigationBarTitle(Text("Locations"))
+			.listStyle(GroupedListStyle())
 		}
 		.onAppear(perform: doAppearanceCode)
 	}

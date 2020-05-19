@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,7 +24,6 @@
 		D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */; };
 		D6B8A95424636711005F8EF2 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A95324636711005F8EF2 /* MainView.swift */; };
 		D6B8A9562463693D005F8EF2 /* LocationsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */; };
-		D6DE39BB2472E5940013F9B4 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = D6DE39BA2472E5940013F9B4 /* ColorKit */; };
 		D6DE39BD247314B40013F9B4 /* MyFormLabelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DE39BC247314B40013F9B4 /* MyFormLabelText.swift */; };
 		D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF557C246D7421007D636B /* PurchasedTabView.swift */; };
 		D6EF5585246D964C007D636B /* ShoppingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF5584246D964C007D636B /* ShoppingItemView.swift */; };
@@ -65,7 +64,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6DE39BB2472E5940013F9B4 /* ColorKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,12 +97,12 @@
 				D6EF5583246D9489007D636B /* CoreData Related */,
 				D6B8A95324636711005F8EF2 /* MainView.swift */,
 				D62B88312451162D0051A7CE /* ShoppingListTabView.swift */,
-				D6EF5584246D964C007D636B /* ShoppingItemView.swift */,
 				D6EF557C246D7421007D636B /* PurchasedTabView.swift */,
-				D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */,
-				D6DE39BC247314B40013F9B4 /* MyFormLabelText.swift */,
 				D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */,
+				D6EF5584246D964C007D636B /* ShoppingItemView.swift */,
+				D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */,
 				D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */,
+				D6DE39BC247314B40013F9B4 /* MyFormLabelText.swift */,
 				D62B88332451162E0051A7CE /* Assets.xcassets */,
 				D62B88382451162E0051A7CE /* LaunchScreen.storyboard */,
 				D62B883B2451162E0051A7CE /* Info.plist */,
@@ -152,7 +150,6 @@
 			);
 			name = ShoppingList;
 			packageProductDependencies = (
-				D6DE39BA2472E5940013F9B4 /* ColorKit */,
 			);
 			productName = ShoppingList;
 			productReference = D62B88272451162D0051A7CE /* ShoppingList.app */;
@@ -183,7 +180,6 @@
 			);
 			mainGroup = D62B881E2451162D0051A7CE;
 			packageReferences = (
-				D6DE39B92472E5940013F9B4 /* XCRemoteSwiftPackageReference "SwiftUI-Color-Kit" */,
 			);
 			productRefGroup = D62B88282451162D0051A7CE /* Products */;
 			projectDirPath = "";
@@ -424,25 +420,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		D6DE39B92472E5940013F9B4 /* XCRemoteSwiftPackageReference "SwiftUI-Color-Kit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kieranb662/SwiftUI-Color-Kit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.2;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		D6DE39BA2472E5940013F9B4 /* ColorKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D6DE39B92472E5940013F9B4 /* XCRemoteSwiftPackageReference "SwiftUI-Color-Kit" */;
-			productName = ColorKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		D6FC7A0824635D950096F018 /* ShoppingList.xcdatamodeld */ = {

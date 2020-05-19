@@ -40,48 +40,55 @@ struct AddorModifyLocationView: View {
 						}
 					}
 				}
+			} // end of Section
 				
+			Section(header: Text("Color Adjustment")) {
 				HStack {
-					HStack {
-						MyFormLabelText(labelText: "Red: ")
-						Text(String(format: "%.2f", red))
-					}
+					MyFormLabelText(labelText: "Composite Color: ")
 					Spacer()
+					RoundedRectangle(cornerRadius: 16)
+						.fill(Color(.sRGB, red: red, green: green, blue: blue, opacity: opacity))
+						.frame(width: 200)
+						.overlay(Capsule().stroke(Color.black, lineWidth: 1))
+				}
+				HStack {
+					Spacer()
+					HStack {
+						Text("Red: ")
+						Text(String(format: "%.2f", red))
+							.frame(width:40)
+					}
 					Slider(value: $red, in: 0 ... 1)
 						.frame(width: 200)
 				}
 				HStack {
-					HStack {
-						MyFormLabelText(labelText: "Green: ")
-						Text(String(format: "%.2f", green))
-					}
 					Spacer()
+					HStack {
+						Text("Green: ")
+						Text(String(format: "%.2f", green))
+							.frame(width:40)
+					}
 					Slider(value: $green, in: 0 ... 1)
 						.frame(width: 200)
 				}
 				HStack {
-					HStack {
-						MyFormLabelText(labelText: "Blue: ")
-						Text(String(format: "%.2f", blue))
-					}
 					Spacer()
+					HStack {
+						Text("Blue: ")
+						Text(String(format: "%.2f", blue))
+							.frame(width:40)
+					}
 					Slider(value: $blue, in: 0 ... 1)
 						.frame(width: 200)
 				}
 				HStack {
+					Spacer()
 					HStack {
-						MyFormLabelText(labelText: "Opacity: ")
+						Text("Opacity: ")
 						Text(String(format: "%.2f", opacity))
+							.frame(width:40)
 					}
-					Spacer()
 					Slider(value: $opacity, in: 0 ... 1)
-						.frame(width: 200)
-				}
-				HStack {
-					Text("Combined:")
-					Spacer()
-					RoundedRectangle(cornerRadius: 16)
-						.fill(Color(.sRGB, red: red, green: green, blue: blue, opacity: opacity))
 						.frame(width: 200)
 				}
 	

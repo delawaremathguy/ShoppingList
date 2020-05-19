@@ -34,7 +34,7 @@ struct PurchasedTabView: View {
 				}
 				
 				Section(header: Text("Items Listed: \(purchasedItems.count)")) {
-					ForEach(purchasedItems, id:\.self) { item in
+					ForEach(purchasedItems) { item in // , id:\.self
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item, placeOnShoppingList: false)) {
 							ShoppingItemView(item: item)
 						} // end of NavigationLink

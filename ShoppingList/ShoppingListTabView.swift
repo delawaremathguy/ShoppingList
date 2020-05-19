@@ -9,6 +9,12 @@
 import SwiftUI
 import CoreData
 
+// DEVELOPMENT NOTE: the section coding almost works: can change names and
+// quantities, even move to Purchased list, without a problem.  but if you
+// changed a location, then big boom.  even though .onAppear kicks in, the
+// section recomputation does not happen soon enough, apparently?  besides,
+// it's not clear i liked the sectioning anyway -- colors work for now.
+
 struct ShoppingListTabView: View {
 	// Core Data access for items on shopping list
 	// @Environment(\.managedObjectContext) var managedObjectContext
@@ -28,6 +34,7 @@ struct ShoppingListTabView: View {
 
 	var body: some View {
 		NavigationView {
+
 			List {
 				
 				// add new item "button" is at top
@@ -35,15 +42,15 @@ struct ShoppingListTabView: View {
 					HStack {
 						Spacer()
 						Text("Add New Item")
-						.foregroundColor(Color.blue)
+							.foregroundColor(Color.blue)
 						Spacer()
 					}
 				}
-				
+
 				
 				// one main section, showing all items
-				Section(header: Text("On List (\(shoppingItems.count) items)")) {
-					ForEach(shoppingItems, id:\.self) { item in
+				Section(header: Text("Items Listed: \(shoppingItems.count)")) {
+					ForEach(shoppingItems) { item in // , id:\.self
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							ShoppingItemView(item: item)
 						}
@@ -53,7 +60,7 @@ struct ShoppingListTabView: View {
 				
 				// here's some working code for separate sections
 //				ForEach(sections, id:\.self) { sectionItems in
-//					Section(header: Text("Title")) {
+//					Section(header: self.sectionTitle(for: sectionItems)) {
 //
 //						ForEach(sectionItems, id:\.self) { item in
 //							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
@@ -90,6 +97,13 @@ struct ShoppingListTabView: View {
 			
 		}  // end of NavigationView
 	}
+	
+	func sectionTitle(for items: [ShoppingItem]) -> Text {
+		if let firstItem = items.first {
+			return Text(firstItem.location!.name!)
+		}
+		return Text("Title")
+	}
 		
 	func clearShoppingList() {
 		for item in shoppingItems {
@@ -98,14 +112,14 @@ struct ShoppingListTabView: View {
 		ShoppingItem.saveChanges()
 	}
 	
-//	func moveToPurchased2(at indexSet: IndexSet, in items: [ShoppingItem]) {
-//		for index in indexSet {
-//			let item = items[index]
-//			item.onList = false
-//		}
-//		ShoppingItem.saveChanges()
-//		//doAppearanceCode()
-//	}
+	func moveToPurchased2(at indexSet: IndexSet, in items: [ShoppingItem]) {
+		for index in indexSet {
+			let item = items[index]
+			item.onList = false
+		}
+		ShoppingItem.saveChanges()
+//		buildSections()
+	}
 	
 	func moveToPurchased(indexSet: IndexSet) {
 		for index in indexSet {
@@ -115,14 +129,18 @@ struct ShoppingListTabView: View {
 		ShoppingItem.saveChanges()
 	}
 	
-	func doAppearanceCode() {
-//		print(".onAppear in ShoppingListView")
+//	func buildSections() {
 //		sections.removeAll()
 //		let d = Dictionary(grouping: shoppingItems, by: { $0.visitationOrder })
 //		let sortedKeys = d.keys.sorted()
 //		for key in sortedKeys {
 //			sections.append(d[key]!)
 //		}
+//	}
+	
+	func doAppearanceCode() {
+		print(".onAppear in ShoppingListView")
+//		buildSections()
 	}
 	
 

@@ -13,11 +13,13 @@ import Foundation
 //
 // usually, these will both be false for established database.  change only for debugging
 //
-// -- make the second one true to load a new database from the main bundle
 // -- make the first one true to dump an existing database
+// -- make the second one true to load a new database from the main bundle
 //
 // (it doesn't make much sense that both would be true)
-let kPerformJSONOutputDumpOnAppear = false // true = dump JSON files in MainView.onAppear()
+// in the case of the simulator, data goes to a file on the Desktop
+// in the case of a device, it gets printed to the console
+let kPerformJSONOutputDumpOnAppear = false // true = dump JSON output in MainView.onAppear()
 let kPerformInitialDataLoad = false // true = force initial data loading in MainView.onAppear()
 
 // use these filenames for debug output and initial load from bundle
@@ -31,10 +33,10 @@ func writeAsJSON(items: [ShoppingItem]) {
 	do {
 		let data = try encoder.encode(jsonShoppingItems)
 		#if targetEnvironment(simulator)
-		let filepath = "/Users/keough/Desktop/" + kShoppingItemsFilename
-		try data.write(to: URL(fileURLWithPath: filepath))
+			let filepath = "/Users/keough/Desktop/" + kShoppingItemsFilename
+			try data.write(to: URL(fileURLWithPath: filepath))
 		#else
-		print(String(data: data, encoding: .utf8)!)
+			print(String(data: data, encoding: .utf8)!)
 		#endif
 		print("ShoppingItems dumped as JSON.")
 	} catch let error as NSError {
@@ -49,10 +51,10 @@ func writeAsJSON(items: [Location]) {
 	do {
 		let data = try encoder.encode(jsonLocationList)
 		#if targetEnvironment(simulator)
-		let filepath = "/Users/keough/Desktop/" + kLocationsFilename
-		try data.write(to: URL(fileURLWithPath: filepath))
+			let filepath = "/Users/keough/Desktop/" + kLocationsFilename
+			try data.write(to: URL(fileURLWithPath: filepath))
 		#else
-		print(String(data: data, encoding: .utf8)!)
+			print(String(data: data, encoding: .utf8)!)
 		#endif
 		print("Locations dumped as JSON.")
 	} catch let error as NSError {
@@ -61,14 +63,23 @@ func writeAsJSON(items: [Location]) {
 }
 
 func populateDatabaseFromJSON() {
-	// easy to do with HSW's Bundle extension (!)
+	// it sure is easy to do with HSW's Bundle extension (!)
 	let jsonLocations: [LocationJSON] = Bundle.main.decode(from: kLocationsFilename)
 	Location.insertNewLocations(from: jsonLocations)
-	
 	let jsonShoppingItems: [ShoppingItemJSON] = Bundle.main.decode(from: kShoppingItemsFilename)
 	ShoppingItem.insertNewItems(from: jsonShoppingItems)
-	
 	ShoppingItem.saveChanges()
 }
 
-
+//import SwiftUI
+//struct MyListStyle: ListStyle {
+//	static func _makeView<SelectionValue>(value: _GraphValue<_ListValue<MyListStyle, SelectionValue>>, inputs: _ViewInputs) -> _ViewOutputs where SelectionValue : Hashable {
+//		<#code#>
+//	}
+//
+//	static func _makeViewList<SelectionValue>(value: _GraphValue<_ListValue<MyListStyle, SelectionValue>>, inputs: _ViewListInputs) -> _ViewListOutputs where SelectionValue : Hashable {
+//		<#code#>
+//	}
+//
+//
+//}
