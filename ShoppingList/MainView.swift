@@ -9,31 +9,45 @@
 import SwiftUI
 import CoreData
 
-
 struct MainView: View {
-	// @Environment(\.managedObjectContext) var managedObjectContext
+	@State private var selectedTab = 1
+	
 	var body: some View {
-		TabView {
-			ShoppingListTabView()
-				.tabItem {
-					Image(systemName: "cart")
-					Text("Shopping List")
+		NavigationView {
+			TabView(selection: $selectedTab) {
+				ShoppingListTabView()
+					.tabItem {
+						Image(systemName: "cart")
+						Text("Shopping List")
+				}.tag(1)
+				
+				PurchasedTabView()
+					.tabItem {
+						Image(systemName: "purchased")
+						Text("Purchased")
+				}.tag(2)
+				
+				LocationsTabView()
+					.tabItem {
+						Image(systemName: "map")
+						Text("Locations")
+				}.tag(3)
 			}
-			
-			PurchasedTabView()
-				.tabItem {
-					Image(systemName: "purchased")
-					Text("Purchased")
-			}
-			
-			LocationsTabView()
-				.tabItem {
-					Image(systemName: "map")
-					Text("Locations")
+			.navigationBarTitle(tabTitle(selectedTab: selectedTab))
+			.onAppear(perform: doAppearanceCode)
+			//		}
+		}
+	}
+		
+		func tabTitle(selectedTab: Int) -> String {
+			if selectedTab == 1 {
+				return "Shopping List"
+			} else if selectedTab == 2 {
+				return "Purchased"
+			} else {
+				return "Locations"
 			}
 		}
-		.onAppear(perform: doAppearanceCode)
-	}
 	
 	func doAppearanceCode() {
 		if kPerformInitialDataLoad {

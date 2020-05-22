@@ -11,48 +11,47 @@ import CoreData
 
 struct LocationsTabView: View {
 	// CoreData setup
-	// @Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: Location.entity(),
 								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
 	var locations: FetchedResults<Location>
-		
+	
 	var body: some View {
-		
-		NavigationView {
-				List {
-					
-					// first item is an add new location "button"
-					NavigationLink(destination: AddorModifyLocationView()) {
+		List {
+			
+			// first item is an add new location "button"
+			NavigationLink(destination: AddorModifyLocationView()) {
+				HStack {
+					Spacer()
+					Text("Add New Location")
+						.foregroundColor(Color.blue)
+					Spacer()
+				}
+			}
+			
+			// then come all the locations
+			Section(header: Text("Location Listed: \(locations.count)")) {
+				ForEach(locations, id:\.self) { location in
+					NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
 						HStack {
-							Spacer()
-							Text("Add New Location")
-								.foregroundColor(Color.blue)
-							Spacer()
-						}
-					}
-					
-					// then come all the locations
-					Section(header: Text("Location Listed: \(locations.count)")) {
-					ForEach(locations, id:\.self) { location in
-						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
-							HStack {
+							VStack(alignment: .leading) {
 								Text(location.name!)
-										.font(.headline)
-								if location.visitationOrder != kUnknownLocationVisitationOrder {
-									Spacer()
-									Text(String(location.visitationOrder))
-								}
+									.font(.headline)
+								Text("\(location.items!.count) items")
+									.font(.caption)
 							}
-						} // end of NavigationLink
-							.listRowBackground(self.textColor(for: location))
-					} // end of ForEach
-					} // end of Section
-					
-				} // end of List
-			.navigationBarTitle(Text("Locations"))
+							if location.visitationOrder != kUnknownLocationVisitationOrder {
+								Spacer()
+								Text(String(location.visitationOrder))
+							}
+						}
+					} // end of NavigationLink
+						.listRowBackground(self.textColor(for: location))
+				} // end of ForEach
+			} // end of Section
+			
+		} // end of List
 			.listStyle(GroupedListStyle())
-		}
-		.onAppear(perform: doAppearanceCode)
+			.onAppear(perform: doAppearanceCode)
 	}
 	
 	func doAppearanceCode() {
@@ -62,7 +61,6 @@ struct LocationsTabView: View {
 	func textColor(for location: Location) -> Color {
 		return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
 	}
-
 	
 }
 

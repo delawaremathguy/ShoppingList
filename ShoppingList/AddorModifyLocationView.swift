@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct AddorModifyLocationView: View {
-	// @Environment(\.managedObjectContext) var managedObjectContext
 	@Environment(\.presentationMode) var presentationMode
 	var editableLocation: Location? = nil
 	
@@ -40,9 +39,7 @@ struct AddorModifyLocationView: View {
 						}
 					}
 				}
-			} // end of Section
-				
-			Section(header: Text("Color Adjustment")) {
+
 				HStack {
 					MyFormLabelText(labelText: "Composite Color: ")
 					Spacer()

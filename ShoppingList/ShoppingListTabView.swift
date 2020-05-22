@@ -17,85 +17,78 @@ import CoreData
 
 struct ShoppingListTabView: View {
 	// Core Data access for items on shopping list
-	// @Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
 									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
 								predicate: NSPredicate(format: "onList == true")
 	) var shoppingItems: FetchedResults<ShoppingItem>
-
+	
 	// boolean state to control whether to show the history section
 	@State private var isHistorySectionShowing: Bool = true
 	@State private var performInitialDataLoad = kPerformInitialDataLoad
 	
 	// sections
-//	@State private var sections = [[ShoppingItem]]()
-
+	//	@State private var sections = [[ShoppingItem]]()
+	
 	var body: some View {
-		NavigationView {
-
-			List {
+		List {
+			
+			// add new item "button" is at top
+			NavigationLink(destination: AddorModifyShoppingItemView()) {
+				HStack {
+					Spacer()
+					Text("Add New Item")
+						.foregroundColor(Color.blue)
+					Spacer()
+				}
+			}
+			
+			// one main section, showing all items
+			Section(header: Text("Items Listed: \(shoppingItems.count)")) {
+				ForEach(shoppingItems) { item in // , id:\.self
+					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+						ShoppingItemView(item: item)
+					}
+					.listRowBackground(self.textColor(for: item))
+				} // end of ForEach
+					.onDelete(perform: moveToPurchased)
 				
-				// add new item "button" is at top
-				NavigationLink(destination: AddorModifyShoppingItemView()) {
+				// here's some working code for separate sections
+				//				ForEach(sections, id:\.self) { sectionItems in
+				//					Section(header: self.sectionTitle(for: sectionItems)) {
+				//
+				//						ForEach(sectionItems, id:\.self) { item in
+				//							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+				//								ShoppingItemView(item: item)
+				//							}
+				//							.listRowBackground(self.textColor(for: item))
+				//						} // end of ForEach
+				//							.onDelete(perform: { offsets in
+				//								self.moveToPurchased2(at: offsets, in: sectionItems)
+				//								})
+				//
+				//					} // end of Section
+				//				} // end of ForEach
+				
+				
+				// clear shopping list
+				if !shoppingItems.isEmpty {
 					HStack {
 						Spacer()
-						Text("Add New Item")
-							.foregroundColor(Color.blue)
+						Button("Move All Items off-list") {
+							self.clearShoppingList()
+						}
+						.foregroundColor(Color.blue)
 						Spacer()
 					}
 				}
-
 				
-				// one main section, showing all items
-				Section(header: Text("Items Listed: \(shoppingItems.count)")) {
-					ForEach(shoppingItems) { item in // , id:\.self
-						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-							ShoppingItemView(item: item)
-						}
-						.listRowBackground(self.textColor(for: item))
-					} // end of ForEach
-						.onDelete(perform: moveToPurchased)
-				
-				// here's some working code for separate sections
-//				ForEach(sections, id:\.self) { sectionItems in
-//					Section(header: self.sectionTitle(for: sectionItems)) {
-//
-//						ForEach(sectionItems, id:\.self) { item in
-//							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-//								ShoppingItemView(item: item)
-//							}
-//							.listRowBackground(self.textColor(for: item))
-//						} // end of ForEach
-//							.onDelete(perform: { offsets in
-//								self.moveToPurchased2(at: offsets, in: sectionItems)
-//								})
-//
-//					} // end of Section
-//				} // end of ForEach
-					
-
-					// clear shopping list
-					if !shoppingItems.isEmpty {
-						HStack {
-							Spacer()
-							Button("Move All Items off-list") {
-								self.clearShoppingList()
-							}
-							.foregroundColor(Color.blue)
-							Spacer()
-						}
-					}
-
-				} // end of Section
-				
-			}  // end of List
-				.listStyle(GroupedListStyle())
-				.navigationBarTitle(Text("Shopping List"))
-				.onAppear(perform: doAppearanceCode)
+			} // end of Section
 			
-		}  // end of NavigationView
+		}  // end of List
+			.listStyle(GroupedListStyle())
+			.onAppear(perform: doAppearanceCode)
 	}
 	
 	func sectionTitle(for items: [ShoppingItem]) -> Text {
@@ -104,7 +97,7 @@ struct ShoppingListTabView: View {
 		}
 		return Text("Title")
 	}
-		
+	
 	func clearShoppingList() {
 		for item in shoppingItems {
 			item.onList = false
@@ -118,7 +111,7 @@ struct ShoppingListTabView: View {
 			item.onList = false
 		}
 		ShoppingItem.saveChanges()
-//		buildSections()
+		//		buildSections()
 	}
 	
 	func moveToPurchased(indexSet: IndexSet) {
@@ -129,22 +122,22 @@ struct ShoppingListTabView: View {
 		ShoppingItem.saveChanges()
 	}
 	
-//	func buildSections() {
-//		sections.removeAll()
-//		let d = Dictionary(grouping: shoppingItems, by: { $0.visitationOrder })
-//		let sortedKeys = d.keys.sorted()
-//		for key in sortedKeys {
-//			sections.append(d[key]!)
-//		}
-//	}
+	//	func buildSections() {
+	//		sections.removeAll()
+	//		let d = Dictionary(grouping: shoppingItems, by: { $0.visitationOrder })
+	//		let sortedKeys = d.keys.sorted()
+	//		for key in sortedKeys {
+	//			sections.append(d[key]!)
+	//		}
+	//	}
 	
 	func doAppearanceCode() {
 		print(".onAppear in ShoppingListView")
-//		buildSections()
+		//		buildSections()
 	}
 	
-
-			
+	
+	
 	func textColor(for item: ShoppingItem) -> Color {
 		if let location = item.location {
 			return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
