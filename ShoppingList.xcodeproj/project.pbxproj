@@ -73,6 +73,7 @@
 		D62B881E2451162D0051A7CE = {
 			isa = PBXGroup;
 			children = (
+				D65A15D22465A137004ACCBB /* README.md */,
 				D62B88292451162D0051A7CE /* ShoppingList */,
 				D62B88282451162D0051A7CE /* Products */,
 			);
@@ -92,7 +93,6 @@
 				D62B882A2451162D0051A7CE /* AppDelegate.swift */,
 				D62B882C2451162D0051A7CE /* SceneDelegate.swift */,
 				D6EF5586246D97C3007D636B /* Global.swift */,
-				D65A15D22465A137004ACCBB /* README.md */,
 				D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */,
 				D6EF5583246D9489007D636B /* CoreData Related */,
 				D6B8A95324636711005F8EF2 /* MainView.swift */,
