@@ -135,10 +135,8 @@ struct AddorModifyShoppingItemView: View {
 		// if existing object, remove its reference from its locations (notice ?.?.!)
 		editableItem?.location?.removeFromItems(editableItem!)
 		// then update location info
-		let newLocation = locations[selectedLocationIndex]
-		itemForCommit.location = newLocation
-		itemForCommit.visitationOrder = newLocation.visitationOrder
-		try? managedObjectContext.save()
+		itemForCommit.setLocation(locations[selectedLocationIndex])
+		ShoppingItem.saveChanges()
 		presentationMode.wrappedValue.dismiss()
 	}
 	
@@ -147,6 +145,7 @@ struct AddorModifyShoppingItemView: View {
 			let location = item.location
 			location?.removeFromItems(item)
 			ShoppingItem.delete(item: item)
+			presentationMode.wrappedValue.dismiss()
 		}
 	}
 }

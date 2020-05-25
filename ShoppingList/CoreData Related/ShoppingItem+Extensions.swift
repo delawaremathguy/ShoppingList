@@ -72,7 +72,7 @@ extension ShoppingItem: Identifiable {
 			newItem.quantity = jsonShoppingItem.quantity
 			newItem.onList = jsonShoppingItem.onList
 			let location = uuid2Location[jsonShoppingItem.locationID]!.first! //locations.filter({ $0.id! == jsonShoppingItem.locationID }).first!
-			newItem.setLocation(location: location)
+			newItem.setLocation(location)
 			count += 1
 		}
 		print("Inserted \(count) shopping items")
@@ -89,7 +89,7 @@ extension ShoppingItem: Identifiable {
 	}
 	
 
-	func setLocation(location: Location) {
+	func setLocation(_ location: Location) {
 		self.location = location
 		visitationOrder = location.visitationOrder
 	}

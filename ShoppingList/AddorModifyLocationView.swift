@@ -89,9 +89,9 @@ struct AddorModifyLocationView: View {
 						.frame(width: 200)
 				}
 	
-			}
+			} // end of Section 1
 			
-			// 2
+			// Section 2
 			Section(header: Text("Location Management")) {
 				HStack {
 					Spacer()
@@ -112,12 +112,21 @@ struct AddorModifyLocationView: View {
 						Spacer()
 					}
 				}
-			}  // end of Section
+			}  // end of Section 2
+			
+			// Section 3
+			Section(header: Text("Items in the Location: \(editableLocation?.items?.count ?? 0) items")) {
+				ForEach(itemsArray(at: editableLocation)) { item in
+					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+						Text(item.name!)
+					}
+				}
+			} // end of Section 3
 			
 			
 		} // end of Form
 			.onAppear(perform: loadData)
-			.navigationBarTitle("Add New Location", displayMode: .inline)
+			.navigationBarTitle(barTitle(), displayMode: .inline)
 			.navigationBarBackButtonHidden(true)
 			.navigationBarItems(leading: Button(action : {
 				self.presentationMode.wrappedValue.dismiss()
@@ -132,6 +141,11 @@ struct AddorModifyLocationView: View {
 				)}
 	}
 	
+	func barTitle() -> Text {
+		return editableLocation == nil ? Text("Add New Location") : Text("Modify Location")
+	}
+
+	
 	func deleteLocation() {
 		// we will move all items in this location to the Unknown Location
 		// if we can't find it, however, bail now
@@ -142,7 +156,7 @@ struct AddorModifyLocationView: View {
 			if let shoppingItems = location.items as? Set<ShoppingItem> {
 				for item in shoppingItems {
 					location.removeFromItems(item)
-					item.setLocation(location: unknownLocation)
+					item.setLocation(unknownLocation)
 				}
 			}
 			
@@ -199,6 +213,13 @@ struct AddorModifyLocationView: View {
 			// and be sure we don't do this again (!)
 			dataHasBeenLoaded = true
 		}
+	}
+	
+	func itemsArray(at location: Location?) -> [ShoppingItem] {
+		if let shoppingItems = location?.items as? Set<ShoppingItem> {
+			return shoppingItems.sorted(by: { $0.name! < $1.name! })
+		}
+		return [ShoppingItem]()
 	}
 }
 
