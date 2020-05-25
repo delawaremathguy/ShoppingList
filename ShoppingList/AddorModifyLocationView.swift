@@ -10,16 +10,28 @@ import SwiftUI
 
 struct AddorModifyLocationView: View {
 	@Environment(\.presentationMode) var presentationMode
+	
+	// editableLocation is either a Location to edit, or nil to signify
+	// that we're creating a new Location in this View.
 	var editableLocation: Location? = nil
 	
-	@State private var locationName: String = "" // all of these values are suitable defaults for a new location
+	// all of these @State values are suitable defaults for a new location
+	// so if editableLocation is nil, these are the values we start with
+	// but if editableLocation is not nil, we'll set these in .onAppear()
+	// from the editableLocation
+	@State private var locationName: String = ""
 	@State private var visitationOrder: Int = 50
 	@State private var red: Double = 0.25
 	@State private var green: Double = 0.25
 	@State private var blue: Double = 0.25
 	@State private var opacity: Double = 0.40
 	
+	// this indicates dataHasBeenLoaded from an incoming editableLocation
+	// it will be flipped to true once .onAppear() has been called
 	@State private var dataHasBeenLoaded = false
+	
+	// showDeleteConfirmation controls whether an Alert will appear
+	// to confirm deletion of a Location
 	@State private var showDeleteConfirmation: Bool = false
 			
 	var body: some View {
@@ -91,7 +103,7 @@ struct AddorModifyLocationView: View {
 	
 			} // end of Section 1
 			
-			// Section 2
+			// Section 2: Save and Delete buttons
 			Section(header: Text("Location Management")) {
 				HStack {
 					Spacer()
@@ -114,7 +126,7 @@ struct AddorModifyLocationView: View {
 				}
 			}  // end of Section 2
 			
-			// Section 3
+			// Section 3: Items assigned to this Location
 			Section(header: Text("Items in the Location: \(editableLocation?.items?.count ?? 0) items")) {
 				ForEach(itemsArray(at: editableLocation)) { item in
 					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
@@ -122,7 +134,6 @@ struct AddorModifyLocationView: View {
 					}
 				}
 			} // end of Section 3
-			
 			
 		} // end of Form
 			.onAppear(perform: loadData)
@@ -148,16 +159,16 @@ struct AddorModifyLocationView: View {
 	
 	func deleteLocation() {
 		// we will move all items in this location to the Unknown Location
-		// if we can't find it, however, bail now
+		// only if we can find it, and if there is a current editableLocation
+		// (which should not happen anyway)
 		if let unknownLocation = Location.unknownLocation(),
 			let location = editableLocation {
 			
-			// need to move all items in this location to Unknown
-			if let shoppingItems = location.items as? Set<ShoppingItem> {
-				for item in shoppingItems {
-					location.removeFromItems(item)
-					item.setLocation(unknownLocation)
-				}
+			// need to move all items from the editableLocation! to Unknown
+			let shoppingItems = itemsArray(at: location)
+			for item in shoppingItems {
+				location.removeFromItems(item)
+				item.setLocation(unknownLocation)
 			}
 			
 			// now finish and dismiss
@@ -167,6 +178,7 @@ struct AddorModifyLocationView: View {
 	}
 
 	func commitData() {
+		// do we have an editableLocation or should we create a new Location?
 		var locationForCommit: Location
 		if let location = editableLocation {
 			locationForCommit = location
@@ -174,6 +186,7 @@ struct AddorModifyLocationView: View {
 			locationForCommit = Location.addNewLocation()
 		}
 		
+		// move data over from state variables
 		locationForCommit.name = locationName
 		locationForCommit.visitationOrder = Int32(visitationOrder)
 		locationForCommit.red = red
@@ -186,10 +199,9 @@ struct AddorModifyLocationView: View {
 		// shopping list tab), we're screwed -- it has not seen this update.
 		// so we will update the parallel visitationOrder in all the shoppingList
 		// items to match this order
-		if let shoppingItems = locationForCommit.items as? Set<ShoppingItem> {
-			for item in shoppingItems {
-				item.visitationOrder = Int32(visitationOrder)
-			}
+		let shoppingItems = itemsArray(at: locationForCommit)
+		for item in shoppingItems {
+			item.visitationOrder = Int32(visitationOrder)
 		}
 		Location.saveChanges()
 		presentationMode.wrappedValue.dismiss()
@@ -215,7 +227,15 @@ struct AddorModifyLocationView: View {
 		}
 	}
 	
+	/// Provides a simple way to turn the NSSet of items for a Location into
+	/// an array that's sorted by name.
+	/// - Parameter location: Location for which you want a sorted list of items
+	/// - Returns: [ShoppingItem]
 	func itemsArray(at location: Location?) -> [ShoppingItem] {
+		// note: we could add a sorted parameter, here, to indicated whether
+		// the array returned should be sorted, but it's not worth the
+		// extra code to turn a Set into an Array for the non-sorted case.
+		// besides, the list of items in a Location is usually quite short.
 		if let shoppingItems = location?.items as? Set<ShoppingItem> {
 			return shoppingItems.sorted(by: { $0.name! < $1.name! })
 		}
