@@ -1,5 +1,95 @@
 [
   {
+    "green" : 1,
+    "id" : "77275861-8531-41F8-95EC-10F72436E933",
+    "blue" : 0,
+    "red" : 0,
+    "opacity" : 0.15606936812400818,
+    "visitationOrder" : 30,
+    "name" : "Frozen Vegetables (Aisle 17)"
+  },
+  {
+    "green" : 0,
+    "id" : "46CA0401-275C-4472-81B8-28D74984D16D",
+    "blue" : 0.25144508481025696,
+    "red" : 0.24855491518974304,
+    "opacity" : 0.15895953774452209,
+    "visitationOrder" : 59,
+    "name" : "Bread (Aisle 10)"
+  },
+  {
+    "green" : 0.92196530103683472,
+    "id" : "98BA7927-F8B1-4D53-9309-E128669CCD18",
+    "blue" : 0,
+    "red" : 0,
+    "opacity" : 0.16184970736503601,
+    "visitationOrder" : 65,
+    "name" : "Canned Vegetables (Aisle 9)"
+  },
+  {
+    "green" : 0.10000000000000001,
+    "id" : "855AC915-9B99-4FE8-9CC1-4807FB8B44F9",
+    "blue" : 0.92196530103683472,
+    "red" : 0.89306360483169556,
+    "opacity" : 0.22832369804382324,
+    "visitationOrder" : 20,
+    "name" : "Back Wall"
+  },
+  {
+    "green" : 0.83526009321212769,
+    "id" : "EED80E88-F874-4253-B4C0-5EB300D2C411",
+    "blue" : 0.83236992359161377,
+    "red" : 0.82947975397109985,
+    "opacity" : 1,
+    "visitationOrder" : 2147483647,
+    "name" : "Unknown Location"
+  },
+  {
+    "green" : 0.10000000000000001,
+    "id" : "D39CA2D3-A0AC-4C9A-A2B6-846C7E41CA9C",
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 53,
+    "name" : "Laundry (Aisle 11)"
+  },
+  {
+    "green" : 0.65606933832168579,
+    "id" : "F1FA0AF8-2CB0-4E80-999E-30EBB97F4DBB",
+    "blue" : 0.67919075489044189,
+    "red" : 0,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 87,
+    "name" : "Snacks & Chips (Aisle 4)"
+  },
+  {
+    "green" : 0,
+    "id" : "351DA591-12DA-446F-8901-32D5FCBB153D",
+    "blue" : 0.50578033924102783,
+    "red" : 1,
+    "opacity" : 0.28901734948158264,
+    "visitationOrder" : 75,
+    "name" : "Cereal (Aisle 7)"
+  },
+  {
+    "green" : 0.89884394407272339,
+    "id" : "8E94B4F6-3335-42BF-BAC4-39579EEB22FC",
+    "blue" : 0.90462428331375122,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.36416184902191162,
+    "visitationOrder" : 25,
+    "name" : "Dairy (Aisle 18)"
+  },
+  {
+    "green" : 0.10000000000000001,
+    "id" : "3B9DD600-C1AE-4A6E-8BDC-5D86FD9E539E",
+    "blue" : 0.10000000000000001,
+    "red" : 1,
+    "opacity" : 0.54335260391235352,
+    "visitationOrder" : 64,
+    "name" : "Italian (Aisle 9)"
+  },
+  {
     "green" : 0.9190751314163208,
     "id" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
     "blue" : 0.10000000000000001,
@@ -7,6 +97,15 @@
     "opacity" : 0.53468209505081177,
     "visitationOrder" : 5,
     "name" : "Fruits & Vegetables"
+  },
+  {
+    "green" : 0.10000000000000001,
+    "id" : "968727C5-0244-4B90-B366-CA1FA6E92DCC",
+    "blue" : 0.10000000000000001,
+    "red" : 0.90000000000000002,
+    "opacity" : 0.10000000000000001,
+    "visitationOrder" : 70,
+    "name" : "Baking Supplies (Aisle 8)"
   },
   {
     "green" : 0.89595377445220947,
@@ -19,96 +118,6 @@
   },
   {
     "green" : 0.10000000000000001,
-    "id" : "855AC915-9B99-4FE8-9CC1-4807FB8B44F9",
-    "blue" : 0.92196530103683472,
-    "red" : 0.89306360483169556,
-    "opacity" : 0.22832369804382324,
-    "visitationOrder" : 20,
-    "name" : "Back Wall"
-  },
-  {
-    "green" : 0.89884394407272339,
-    "id" : "8E94B4F6-3335-42BF-BAC4-39579EEB22FC",
-    "blue" : 0.90462428331375122,
-    "red" : 0.90000000000000002,
-    "opacity" : 0.36416184902191162,
-    "visitationOrder" : 25,
-    "name" : "Dairy"
-  },
-  {
-    "green" : 1,
-    "id" : "77275861-8531-41F8-95EC-10F72436E933",
-    "blue" : 0,
-    "red" : 0,
-    "opacity" : 0.15606936812400818,
-    "visitationOrder" : 35,
-    "name" : "Frozen Vegetables"
-  },
-  {
-    "green" : 0.10000000000000001,
-    "id" : "D39CA2D3-A0AC-4C9A-A2B6-846C7E41CA9C",
-    "blue" : 0.10000000000000001,
-    "red" : 0.90000000000000002,
-    "opacity" : 0.10000000000000001,
-    "visitationOrder" : 40,
-    "name" : "Kitchen"
-  },
-  {
-    "green" : 0.10000000000000001,
-    "id" : "3B9DD600-C1AE-4A6E-8BDC-5D86FD9E539E",
-    "blue" : 0.10000000000000001,
-    "red" : 1,
-    "opacity" : 0.54335260391235352,
-    "visitationOrder" : 45,
-    "name" : "Italian"
-  },
-  {
-    "green" : 0,
-    "id" : "46CA0401-275C-4472-81B8-28D74984D16D",
-    "blue" : 0.25144508481025696,
-    "red" : 0.24855491518974304,
-    "opacity" : 0.15895953774452209,
-    "visitationOrder" : 50,
-    "name" : "Bread Aisle"
-  },
-  {
-    "green" : 0.65606933832168579,
-    "id" : "F1FA0AF8-2CB0-4E80-999E-30EBB97F4DBB",
-    "blue" : 0.67919075489044189,
-    "red" : 0,
-    "opacity" : 0.10000000000000001,
-    "visitationOrder" : 59,
-    "name" : "Snacks & Chips"
-  },
-  {
-    "green" : 0.10000000000000001,
-    "id" : "968727C5-0244-4B90-B366-CA1FA6E92DCC",
-    "blue" : 0.10000000000000001,
-    "red" : 0.90000000000000002,
-    "opacity" : 0.10000000000000001,
-    "visitationOrder" : 64,
-    "name" : "Baking Supplies"
-  },
-  {
-    "green" : 0.92196530103683472,
-    "id" : "98BA7927-F8B1-4D53-9309-E128669CCD18",
-    "blue" : 0,
-    "red" : 0,
-    "opacity" : 0.16184970736503601,
-    "visitationOrder" : 65,
-    "name" : "Canned Vegetables"
-  },
-  {
-    "green" : 0,
-    "id" : "351DA591-12DA-446F-8901-32D5FCBB153D",
-    "blue" : 0.50578033924102783,
-    "red" : 1,
-    "opacity" : 0.28901734948158264,
-    "visitationOrder" : 70,
-    "name" : "Cereal"
-  },
-  {
-    "green" : 0.10000000000000001,
     "id" : "7F613477-533A-458E-821B-96EF90786349",
     "blue" : 0.10000000000000001,
     "red" : 0.90000000000000002,
@@ -117,12 +126,57 @@
     "name" : "Service Desk"
   },
   {
-    "green" : 0.83526009321212769,
-    "id" : "EED80E88-F874-4253-B4C0-5EB300D2C411",
-    "blue" : 0.83236992359161377,
-    "red" : 0.82947975397109985,
-    "opacity" : 1,
-    "visitationOrder" : 2147483647,
-    "name" : "Unknown Location"
+    "green" : 0.5,
+    "id" : "BFCD1DA6-C8E5-4DD8-8263-BEE0EEDD22BC",
+    "blue" : 0.5,
+    "red" : 0.5,
+    "opacity" : 0.5,
+    "visitationOrder" : 13,
+    "name" : "Beyond Deli"
+  },
+  {
+    "green" : 0.5,
+    "id" : "EB2267AE-1284-40F0-A694-3ACC7A87AE16",
+    "blue" : 0.5,
+    "red" : 0.5,
+    "opacity" : 0.5,
+    "visitationOrder" : 45,
+    "name" : "Bags & Paper Goods (Aisle 12)"
+  },
+  {
+    "green" : 0,
+    "id" : "72608458-CB52-450D-A560-F87F458B241B",
+    "blue" : 0.53757226467132568,
+    "red" : 1,
+    "opacity" : 0.28034681081771851,
+    "visitationOrder" : 76,
+    "name" : "Candy (Aisle 7)"
+  },
+  {
+    "green" : 0.5,
+    "id" : "334E9633-269E-4C77-B7D7-7B9CB4076955",
+    "blue" : 0.5,
+    "red" : 0.5,
+    "opacity" : 0.5,
+    "visitationOrder" : 60,
+    "name" : "Kitchen gadgets (Aisle 10)"
+  },
+  {
+    "green" : 0.5,
+    "id" : "69ABD287-D9BE-4343-9079-88B3962403B6",
+    "blue" : 0.5,
+    "red" : 0.5,
+    "opacity" : 0.5,
+    "visitationOrder" : 80,
+    "name" : "Coffee & Tea (Aisle 6)"
+  },
+  {
+    "green" : 0.81213873624801636,
+    "id" : "7F8C2504-D94F-4FB1-98C5-A163F8C53310",
+    "blue" : 0,
+    "red" : 0.78323698043823242,
+    "opacity" : 0.53468209505081177,
+    "visitationOrder" : 40,
+    "name" : "Office Supplies (Aisle 14)"
   }
 ]

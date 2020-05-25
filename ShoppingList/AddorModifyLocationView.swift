@@ -114,7 +114,7 @@ struct AddorModifyLocationView: View {
 					Spacer()
 				}
 				
-				if editableLocation != nil {
+				if visitationOrder != kUnknownLocationVisitationOrder {
 					HStack {
 						Spacer()
 						Button("Delete This Location") {
