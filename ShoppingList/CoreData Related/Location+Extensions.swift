@@ -89,6 +89,11 @@ extension Location: Identifiable {
 		appDelegate.saveContext()
 	}
 
+}
 
+extension Location: JSONRepresentable {
+	var jsonProxy: some Decodable & Encodable {
+		return LocationJSON(from: self)
+	}
 }
 	

@@ -26,41 +26,39 @@ let kPerformInitialDataLoad = false // true = force initial data loading in Main
 let kShoppingItemsFilename = "shoppingItems.json"
 let kLocationsFilename = "locations.json"
 
-func writeAsJSON(items: [ShoppingItem]) {
-	let jsonShoppingItems = items.map() { ShoppingItemJSON(from: $0) }
+// to write stuff out -- a list of ShoppingItems and a list of Locations,
+// the code is essentially the same except for the typing of the objects
+// in the list.  so we use the power of generics:  we introduce
+// (1) a protocol that demands that something be able to produce a simple
+// Codable (struct) representation of itself -- a proxy as it were.
+protocol JSONRepresentable {
+	associatedtype DataType: Codable
+	var jsonProxy: DataType { get }
+}
+
+// and (2), knowing that ShoppingItem and Location are NSManagedObjects, we
+// don't want to write our own encoder, and we
+// only want to write out a few fields of data, we extend each to be able to
+// produce a simple, Codable struct holding only what we want to write out
+// (ShoppingItemJSON and LocationJSON structs, repsectively)
+func writeAsJSON<T>(items: [T], to filename: String) where T: JSONRepresentable {
+	let jsonizedItems = items.map() { $0.jsonProxy }
 	let encoder = JSONEncoder()
 	encoder.outputFormatting = .prettyPrinted
 	do {
-		let data = try encoder.encode(jsonShoppingItems)
+		let data = try encoder.encode(jsonizedItems)
 		#if targetEnvironment(simulator)
-			let filepath = "/Users/keough/Desktop/" + kShoppingItemsFilename
+			let filepath = "/Users/keough/Desktop/" + filename
 			try data.write(to: URL(fileURLWithPath: filepath))
 		#else
 			print(String(data: data, encoding: .utf8)!)
 		#endif
-		print("ShoppingItems dumped as JSON.")
+		print("List of items dumped as JSON to " + filename)
 	} catch let error as NSError {
-		print("Error: \(error.localizedDescription), \(error.userInfo)")
+		print("Error with \(filename): \(error.localizedDescription), \(error.userInfo)")
 	}
 }
 
-func writeAsJSON(items: [Location]) {
-	let jsonLocationList = items.map() { LocationJSON(from: $0) }
-	let encoder = JSONEncoder()
-	encoder.outputFormatting = .prettyPrinted
-	do {
-		let data = try encoder.encode(jsonLocationList)
-		#if targetEnvironment(simulator)
-			let filepath = "/Users/keough/Desktop/" + kLocationsFilename
-			try data.write(to: URL(fileURLWithPath: filepath))
-		#else
-			print(String(data: data, encoding: .utf8)!)
-		#endif
-		print("Locations dumped as JSON.")
-	} catch let error as NSError {
-		print("Error: \(error.localizedDescription), \(error.userInfo)")
-	}
-}
 
 func populateDatabaseFromJSON() {
 	// it sure is easy to do with HSW's Bundle extension (!)
@@ -70,6 +68,20 @@ func populateDatabaseFromJSON() {
 	ShoppingItem.insertNewItems(from: jsonShoppingItems)
 	ShoppingItem.saveChanges()
 }
+
+// this is a way to find out where the CoreData database lives,
+// primarily for use in the simulator
+//func printCoreDataDBPath() {
+//	let path = FileManager
+//		.default
+//		.urls(for: .applicationSupportDirectory, in: .userDomainMask)
+//		.last?
+//		.absoluteString
+//		.replacingOccurrences(of: "file://", with: "")
+//		.removingPercentEncoding
+//
+//	print("Core Data DB Path :: \(path ?? "Not found")")
+//}
 
 //import SwiftUI
 //struct MyListStyle: ListStyle {

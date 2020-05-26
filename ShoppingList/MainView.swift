@@ -35,8 +35,8 @@ struct MainView: View {
 			}
 			.navigationBarTitle(tabTitle(selectedTab: selectedTab))
 			.onAppear(perform: doAppearanceCode)
-			//		}
-		}
+
+		} // end of NavigationView
 	}
 		
 		func tabTitle(selectedTab: Int) -> String {
@@ -54,8 +54,8 @@ struct MainView: View {
 			populateDatabaseFromJSON()
 		}
 		if kPerformJSONOutputDumpOnAppear {
-			writeAsJSON(items: ShoppingItem.allShoppingItems())
-			writeAsJSON(items: Location.allLocations())
+			writeAsJSON(items: ShoppingItem.allShoppingItems(), to: kShoppingItemsFilename)
+			writeAsJSON(items: Location.allLocations(), to: kLocationsFilename)
 		}
 	}
 	

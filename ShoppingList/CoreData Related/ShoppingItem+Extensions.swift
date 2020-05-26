@@ -94,3 +94,9 @@ extension ShoppingItem: Identifiable {
 		visitationOrder = location.visitationOrder
 	}
 }
+
+extension ShoppingItem: JSONRepresentable {
+	var jsonProxy: some Decodable & Encodable {
+		return ShoppingItemJSON(from: self)
+	}
+}
