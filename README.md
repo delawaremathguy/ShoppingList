@@ -1,6 +1,6 @@
 #  About "ShoppingList"
 
-My Last Update was **May 25, 2020**.
+My Last Update was **May 27, 2020**.
 
 This is a simple, in-progress iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
@@ -43,6 +43,6 @@ The project is what it is -- it's an on-going, out-in-public offering of code th
 
 I place no claim to copyright on this material (all of the code is original, it did not come from someone else, and It's yours if you want it).
 
-By the way: what you see today may not look anything like what it looks like tomorrow.  I've already gotten something to work, then found it didn't work from there, and I've gone back and re-architected.  The CoreData model has changed 3 or four times -- but I do not rely on data migrations (yes, they were working correctly), but at this stage, it's easier to just dump the database as JSON; delete the app; change the data model; and reload the data in code at startup (which may change some coding changes to the code that loads it).  you'll find the code to do this in Global.swift, along with two booleans to control whether to load at startup if the database is empty, and whether data should be dumped at startup. (note: "dump" means to write out all the JSON to a file on my Mac's desktop if i am running in the simulator, or to print to the console if i'm running on a device.)
+By the way: what you see today may not look anything like what it looks like tomorrow.  I've already gotten something to work, then found it didn't work from there, and I've gone back and re-architected.  The CoreData model has changed 3 or four times -- but I do not rely on data migrations (yes, they were working correctly), but at this stage, it's easier to just dump the database as JSON; delete the app; change the data model; and reload the data in code at startup (which may change some coding changes to the code that loads it).  you'll find the code to do this in Development.swift, along with two booleans to control whether to load at startup if the database is empty, and whether data should be dumped at startup. (note: "dump" means to write out all the JSON to a file on my Mac's desktop if i am running in the simulator, or to print to the console if i'm running on a device.)
 
 Feel free to contact me about questions and comments.

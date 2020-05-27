@@ -9,17 +9,33 @@
 import SwiftUI
 
 struct AddorModifyShoppingItemView: View {
-	@Environment(\.managedObjectContext) var managedObjectContext
 	@Environment(\.presentationMode) var presentationMode
+
+	// editableItem is either a ShoppingItem to edit, or nil to signify
+	// that we're creating a new ShoppingItem in this View.
 	var editableItem: ShoppingItem? = nil
+
+	// a paremter for who calls us.  if we try to add a new item from
+	// the shopping list tab (value true), then we want the new item on the shopping list.
+	// use the value false when calling from the purchased item list view
+	var placeOnShoppingList: Bool = true // assume we want new items on shopping list, set to false when adding a new item
 	
-	@State private var itemName: String = "" // these are suitable defaults for a new shoppiing item
+	// all of these @State values are suitable defaults for a new ShoppingItem
+	// so if editableItem is nil, these are the values we start with
+	// but if editableItem is not nil, we'll set these in .onAppear()
+	// from the editableItem
+	@State private var itemName: String = "" // these are suitable defaults for a new shopping item
 	@State private var itemQuantity: Int = 1
 	@State private var selectedLocationIndex: Int = 0
 	
+	// this indicates dataHasBeenLoaded from an incoming editableItem
+	// it will be flipped to true once .onAppear() has been called
 	@State private var dataLoaded = false
+	
+	// showDeleteConfirmation controls whether an Alert will appear
+	// to confirm deletion of a ShoppingItem
 	@State private var showDeleteConfirmation: Bool = false
-	var placeOnShoppingList: Bool = true // assume we want new items on shopping list, set to false if adding a new item
+
 
 	// we need access to the complete list of Locations to populate the picker
 	@FetchRequest(entity: Location.entity(),

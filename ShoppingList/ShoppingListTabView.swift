@@ -88,7 +88,7 @@ struct ShoppingListTabView: View {
 			
 		}  // end of List
 			.listStyle(GroupedListStyle())
-			.onAppear(perform: doAppearanceCode)
+//			.onAppear(perform: doAppearanceCode)
 	}
 	
 	func sectionTitle(for items: [ShoppingItem]) -> Text {
@@ -131,10 +131,10 @@ struct ShoppingListTabView: View {
 	//		}
 	//	}
 	
-	func doAppearanceCode() {
-		print(".onAppear in ShoppingListView")
-		//		buildSections()
-	}
+//	func doAppearanceCode() {
+//		print(".onAppear in ShoppingListView")
+//		//		buildSections()
+//	}
 	
 	
 	

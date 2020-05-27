@@ -17,8 +17,3 @@ struct MyFormLabelText: View {
 	}
 }
 
-struct MyFormLabelText_Previews: PreviewProvider {
-    static var previews: some View {
-			MyFormLabelText(labelText: "Fred")
-    }
-}
