@@ -22,7 +22,7 @@ struct PurchasedTabView: View {
 		List {
 			
 			// add new item stays at top
-			NavigationLink(destination: AddorModifyShoppingItemView(placeOnShoppingList: false)) {
+			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: false)) {
 				HStack {
 					Spacer()
 					Text("Add New Item")
@@ -33,7 +33,7 @@ struct PurchasedTabView: View {
 			
 			Section(header: Text("Items Listed: \(purchasedItems.count)")) {
 				ForEach(purchasedItems) { item in // , id:\.self
-					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item, placeOnShoppingList: false)) {
+					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 						ShoppingItemView(item: item)
 					} // end of NavigationLink
 				} // end of ForEach

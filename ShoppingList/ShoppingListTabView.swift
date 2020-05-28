@@ -35,7 +35,7 @@ struct ShoppingListTabView: View {
 		List {
 			
 			// add new item "button" is at top
-			NavigationLink(destination: AddorModifyShoppingItemView()) {
+			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
 				HStack {
 					Spacer()
 					Text("Add New Item")
@@ -88,7 +88,6 @@ struct ShoppingListTabView: View {
 			
 		}  // end of List
 			.listStyle(GroupedListStyle())
-//			.onAppear(perform: doAppearanceCode)
 	}
 	
 	func sectionTitle(for items: [ShoppingItem]) -> Text {
@@ -130,13 +129,7 @@ struct ShoppingListTabView: View {
 	//			sections.append(d[key]!)
 	//		}
 	//	}
-	
-//	func doAppearanceCode() {
-//		print(".onAppear in ShoppingListView")
-//		//		buildSections()
-//	}
-	
-	
+		
 	
 	func textColor(for item: ShoppingItem) -> Color {
 		if let location = item.location {

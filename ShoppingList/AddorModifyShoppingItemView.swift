@@ -14,19 +14,21 @@ struct AddorModifyShoppingItemView: View {
 	// editableItem is either a ShoppingItem to edit, or nil to signify
 	// that we're creating a new ShoppingItem in this View.
 	var editableItem: ShoppingItem? = nil
-
-	// a paremter for who calls us.  if we try to add a new item from
-	// the shopping list tab (value true), then we want the new item on the shopping list.
-	// use the value false when calling from the purchased item list view
-	var placeOnShoppingList: Bool = true // assume we want new items on shopping list, set to false when adding a new item
+	// defaultOnListValue just says that, if you're expecting us to add
+	// a new item, tell me wether to add it to the shopping list or
+	// the purchased list
+	var addItemToShoppingList: Bool = true // assume true ... item goes to shopping list
 	
 	// all of these @State values are suitable defaults for a new ShoppingItem
-	// so if editableItem is nil, these are the values we start with
-	// but if editableItem is not nil, we'll set these in .onAppear()
-	// from the editableItem
+	// so if editableItem is nil, the values below are the right default values
+	// but note, loadData() will tweak the onList default value to false if called from
+	// the purchased list for adding a new item
+	//
+	// but if editableItem is not nil, all of these will be updated in loadData()
 	@State private var itemName: String = "" // these are suitable defaults for a new shopping item
 	@State private var itemQuantity: Int = 1
 	@State private var selectedLocationIndex: Int = 0
+	@State private var onList: Bool = true
 	
 	// this indicates dataHasBeenLoaded from an incoming editableItem
 	// it will be flipped to true once .onAppear() has been called
@@ -62,7 +64,12 @@ struct AddorModifyShoppingItemView: View {
 						Text(self.locations[index].name!)
 					}
 				}
-			}
+				HStack(alignment: .firstTextBaseline) {
+					Toggle(isOn: $onList) {
+						MyFormLabelText(labelText: "On Shopping List: ")
+					}
+				}
+			} // end of Section
 			
 			// 2 -- operational buttons
 			Section(header: Text("Shopping Item Management")) {
@@ -77,17 +84,16 @@ struct AddorModifyShoppingItemView: View {
 
 				if editableItem != nil {
 					HStack {
-					Spacer()
-					Button("Delete This Shopping Item") {
-						self.showDeleteConfirmation = true
-						// self.deleteItem()
+						Spacer()
+						Button("Delete This Shopping Item") {
+							self.showDeleteConfirmation = true
+						}
+						.foregroundColor(Color.red)
+						Spacer()
 					}
-					.foregroundColor(Color.red)
-					Spacer()
 				}
-				}
-
-			}
+				
+			} // end of Form
 			.onAppear(perform: loadData)
 			.alert(isPresented: $showDeleteConfirmation) {
 				Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
@@ -129,6 +135,7 @@ struct AddorModifyShoppingItemView: View {
 			} else {
 				selectedLocationIndex = locations.count - 1 // index of Unknown Location
 			}
+			onList = item.onList
 		}
 		// and be sure we don't do this again (!)
 		dataLoaded = true
@@ -147,7 +154,7 @@ struct AddorModifyShoppingItemView: View {
 		// fill in basic info fields
 		itemForCommit.name = itemName
 		itemForCommit.quantity = Int32(itemQuantity)
-		itemForCommit.onList = placeOnShoppingList
+		itemForCommit.onList = onList
 		// if existing object, remove its reference from its locations (notice ?.?.!)
 		editableItem?.location?.removeFromItems(editableItem!)
 		// then update location info

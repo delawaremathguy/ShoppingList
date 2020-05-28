@@ -51,12 +51,7 @@ struct LocationsTabView: View {
 			
 		} // end of List
 			.listStyle(GroupedListStyle())
-//			.onAppear(perform: doAppearanceCode)
 	}
-	
-//	func doAppearanceCode() {
-//		//print(".onAppear in LocationsView")
-//	}
 	
 	func textColor(for location: Location) -> Color {
 		return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
