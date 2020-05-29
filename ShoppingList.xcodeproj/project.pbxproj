@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D606197F2481510E005CE575 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D606197E2481510E005CE575 /* SearchBarView.swift */; };
+		D606198124815F8C005CE575 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D606198024815F8C005CE575 /* LICENSE */; };
 		D60F14A724686BA80077AD3F /* ShoppingItemJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A624686BA80077AD3F /* ShoppingItemJSON.swift */; };
 		D60F14A924686D710077AD3F /* LocationJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A824686D710077AD3F /* LocationJSON.swift */; };
 		D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		D606197E2481510E005CE575 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
+		D606198024815F8C005CE575 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		D60F14A624686BA80077AD3F /* ShoppingItemJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemJSON.swift; sourceTree = "<group>"; };
 		D60F14A824686D710077AD3F /* LocationJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationJSON.swift; sourceTree = "<group>"; };
 		D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingItem+Extensions.swift"; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				D65A15D22465A137004ACCBB /* README.md */,
+				D606198024815F8C005CE575 /* LICENSE */,
 				D62B88292451162D0051A7CE /* ShoppingList */,
 				D62B88282451162D0051A7CE /* Products */,
 			);
@@ -198,6 +201,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D606198124815F8C005CE575 /* LICENSE in Resources */,
 				D62B883A2451162E0051A7CE /* LaunchScreen.storyboard in Resources */,
 				D62B88372451162E0051A7CE /* Preview Assets.xcassets in Resources */,
 				D6ADB3B4247C267900376271 /* shoppingItems.json in Resources */,
