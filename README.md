@@ -1,13 +1,18 @@
 #  About "ShoppingList"
 
-My Last Update was **May 27, 2020**.
+My Last Update of note was **May 29, 2020**.
 
 This is a simple, in-progress iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
-I'm making this repo publicly available, mostly because I think i'll want to ask some questions (e.g., in the Apple Developer forums, on the HackingWithSwift forums) -- and it's easier to do that if I expose all the source for inspection.  However, be warned: 
+I'm making this repo publicly available.  I may be interested in asking some questions abuot what I am doing (e.g., in the Apple Developer forums, on the HackingWithSwift forums), and it's easier to do that if I expose all the source for inspection.  There was also a recent question on the Apple Developer's forum, "Example using Core Data between views" (see https://forums.developer.apple.com/thread/133370) that expressed some frustration in not being able to find enough examples of working with CoreData and getting list updates done correctly (that whole thing about Identifiable, id:\.self, @ObservedObject, etc).  My hope is this project will fill some of that need.
 
-* the project source is likely to change often, sometimes even more than once a day; and 
-* this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping) - but I have run into a number of either errors of my own in learning/using SwiftUI, or when I find what I see as shortcomings of SwiftUI.  I really am hoping things improve at WWDC20.
+However, be warned: 
+
+* the project source is likely to change often -- this is an ongoing project for me get more familiar with SwiftUI; 
+* there may be errors in the code, or some areas of the code might need with regard to best practices; yet
+* this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
+
+Note. The SearchBarView that I added today in the Purchased items view was created by Simon Ng.  It appeared in an article in AppCode and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCode/SwiftUISearchBar.  Otherwise, I place no claim of copyright on this material (all of the code is original, it did not come from someone else, and It's yours if you want it -- even without attribution -- although a note of appreciation would be nice). 
 
 That said ...
 
@@ -21,12 +26,11 @@ Locations have an id (UUID), a name, a visitationOrder (an integer, as in, go to
 
 Swiping an item in either the shopping list of the already-purchased list moves it to the other list (exposing an issue in SwiftUI: the swipe UI calls the motion a "Delete," and the view modifier is .onDelete, but nothing is being deleted in this code.  i know about a contextMenu as an option, but i'd rather swipe now and wait for SwiftUI 2.0 to let me do this with a swipe with the right name.).  Tapping on any item in either list lets you edit it for name, quantity, and assign/edit the store location in which it is found.
 
-* by the way, how do you delete a ShoppingItem?  go to the Modify View and tap the Delete button. (same for deleting Locations ...)
+* by the way, how do you really delete a ShoppingItem?  go to the Modify View and tap the Delete button. (same for deleting Locations ...)
 
 The third tab shows a list of all locations, listed in visitationOrder (an integer from 1...100).  One special Location is the "Unknown Location" which, in programming terms, has the highest of all visitationOrder values, so that it comes last in the list of Locations, and shopping items with an unassigned/unknown location will come at the bottom of the shopping list.  Tapping on a Location in the list lets you edit location information, including reassigning the visitation order. QUESTION: Why not let the user drag the Locations around to reset the order -- well, it's partly a SwiftUI thing, but persisting the order the way I'd like to do (using visitationOrder markers) has a few wrinkles that seem to conflict with SwiftUI's @FetchRequest.
 
 The shopping list is sorted by the visitation order of the location in which it is found (and alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered.  QUESTION: Why don't you let me drag these items to reorder them, you ask?  Why can't you section this list out? Well, I did the reordering thing one time, and dicovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  And i tried the sectioning thing (you'll see some commented-out code that "almost" does this right), but you cannot drag an item from one section to another; i cannot control the section header appearance (it takes way too much space in groupedListStyle and i'd like to customize it); and when items are moved from one section to another (by editing the shopping item), the shopping list sectioning goes nuts if a section becomes empty.
-
 
 
 ## Some Things I'm Fighting With
@@ -41,7 +45,6 @@ The shopping list is sorted by the visitation order of the location in which it 
 
 The project is what it is -- it's an on-going, out-in-public offering of code that may be of use to some; it might be something you'd like to play with or even develop on your own (fixing some things that are currently broken, or adding better design elements); or it might be something you'll look at and realize you've done something similar and run into similar problems.
 
-I place no claim to copyright on this material (all of the code is original, it did not come from someone else, and It's yours if you want it).
 
 By the way: what you see today may not look anything like what it looks like tomorrow.  I've already gotten something to work, then found it didn't work from there, and I've gone back and re-architected.  The CoreData model has changed 3 or four times -- but I do not rely on data migrations (yes, they were working correctly), but at this stage, it's easier to just dump the database as JSON; delete the app; change the data model; and reload the data in code at startup (which may change some coding changes to the code that loads it).  you'll find the code to do this in Development.swift, along with two booleans to control whether to load at startup if the database is empty, and whether data should be dumped at startup. (note: "dump" means to write out all the JSON to a file on my Mac's desktop if i am running in the simulator, or to print to the console if i'm running on a device.)
 

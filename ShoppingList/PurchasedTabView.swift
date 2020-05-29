@@ -17,10 +17,13 @@ struct PurchasedTabView: View {
 								predicate: NSPredicate(format: "onList == false")
 	) var purchasedItems: FetchedResults<ShoppingItem>
 	
+	@State private var searchText: String = ""
 	
 	var body: some View {
-		List {
 			
+		VStack {
+			SearchBarView(text: $searchText)
+
 			// add new item stays at top
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: false)) {
 				HStack {
@@ -29,10 +32,14 @@ struct PurchasedTabView: View {
 						.foregroundColor(Color.blue)
 					Spacer()
 				}
+				.padding(.bottom, 10)
 			}
 			
+			List {
+			
+
 			Section(header: Text("Items Listed: \(purchasedItems.count)")) {
-				ForEach(purchasedItems) { item in // , id:\.self
+				ForEach(purchasedItems.filter({ itemNameContainsSearchText($0.name!) })) { item in // , id:\.self
 					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 						ShoppingItemView(item: item)
 					} // end of NavigationLink
@@ -42,6 +49,7 @@ struct PurchasedTabView: View {
 			
 		}  // end of List
 			.listStyle(GroupedListStyle())
+		}
 	}
 	
 	func moveToShoppingList(indexSet: IndexSet) {
@@ -50,6 +58,15 @@ struct PurchasedTabView: View {
 			item.onList = true
 		}
 		ShoppingItem.saveChanges()
+	}
+	
+	// i added this so that the search is not case sensistive, and also just to
+	// simplify the original coding of the filter function used in ForEach
+	func itemNameContainsSearchText(_ name: String) -> Bool {
+		if searchText.isEmpty {
+			return true
+		}
+		return name.lowercased().contains(searchText.lowercased())
 	}
 	
 }

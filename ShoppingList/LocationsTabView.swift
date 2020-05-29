@@ -16,8 +16,7 @@ struct LocationsTabView: View {
 	var locations: FetchedResults<Location>
 	
 	var body: some View {
-		List {
-			
+		VStack {
 			// first item is an add new location "button"
 			NavigationLink(destination: AddorModifyLocationView()) {
 				HStack {
@@ -26,7 +25,11 @@ struct LocationsTabView: View {
 						.foregroundColor(Color.blue)
 					Spacer()
 				}
+				.padding(.bottom, 10)
 			}
+			
+
+			List {
 			
 			// then come all the locations
 			Section(header: Text("Location Listed: \(locations.count)")) {
@@ -51,6 +54,7 @@ struct LocationsTabView: View {
 			
 		} // end of List
 			.listStyle(GroupedListStyle())
+		} // end of VStack
 	}
 	
 	func textColor(for location: Location) -> Color {

@@ -32,8 +32,7 @@ struct ShoppingListTabView: View {
 	//	@State private var sections = [[ShoppingItem]]()
 	
 	var body: some View {
-		List {
-			
+		VStack {
 			// add new item "button" is at top
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
 				HStack {
@@ -42,7 +41,10 @@ struct ShoppingListTabView: View {
 						.foregroundColor(Color.blue)
 					Spacer()
 				}
+				.padding(.bottom, 10)
 			}
+			
+		List {
 			
 			// one main section, showing all items
 			Section(header: Text("Items Listed: \(shoppingItems.count)")) {
@@ -88,6 +90,7 @@ struct ShoppingListTabView: View {
 			
 		}  // end of List
 			.listStyle(GroupedListStyle())
+		} // end of VStack
 	}
 	
 	func sectionTitle(for items: [ShoppingItem]) -> Text {

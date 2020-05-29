@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D606197F2481510E005CE575 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D606197E2481510E005CE575 /* SearchBarView.swift */; };
 		D60F14A724686BA80077AD3F /* ShoppingItemJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A624686BA80077AD3F /* ShoppingItemJSON.swift */; };
 		D60F14A924686D710077AD3F /* LocationJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A824686D710077AD3F /* LocationJSON.swift */; };
 		D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D606197E2481510E005CE575 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		D60F14A624686BA80077AD3F /* ShoppingItemJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemJSON.swift; sourceTree = "<group>"; };
 		D60F14A824686D710077AD3F /* LocationJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationJSON.swift; sourceTree = "<group>"; };
 		D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingItem+Extensions.swift"; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				D6B8A95324636711005F8EF2 /* MainView.swift */,
 				D62B88312451162D0051A7CE /* ShoppingListTabView.swift */,
 				D6EF557C246D7421007D636B /* PurchasedTabView.swift */,
+				D606197E2481510E005CE575 /* SearchBarView.swift */,
 				D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */,
 				D6EF5584246D964C007D636B /* ShoppingItemView.swift */,
 				D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */,
@@ -220,6 +223,7 @@
 				D62B88322451162D0051A7CE /* ShoppingListTabView.swift in Sources */,
 				D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */,
 				D6EF5587246D97C3007D636B /* Development.swift in Sources */,
+				D606197F2481510E005CE575 /* SearchBarView.swift in Sources */,
 				D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */,
 				D6B8A9562463693D005F8EF2 /* LocationsTabView.swift in Sources */,
 				D6FC7A0A24635D950096F018 /* ShoppingList.xcdatamodeld in Sources */,
