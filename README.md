@@ -4,12 +4,12 @@ My Last Update of note was **May 29, 2020**.
 
 This is a simple, in-progress iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
-I'm making this repo publicly available.  I may be interested in asking some questions abuot what I am doing (e.g., in the Apple Developer forums, on the HackingWithSwift forums), and it's easier to do that if I expose all the source for inspection.  There was also a recent question on the Apple Developer's forum, "Example using Core Data between views" (see https://forums.developer.apple.com/thread/133370) that expressed some frustration in not being able to find enough examples of working with CoreData and getting list updates done correctly (that whole thing about Identifiable, id:\.self, @ObservedObject, etc).  My hope is this project will fill some of that need.
+I'm making this repo publicly available.  I may be interested in asking some questions abuot what I am doing (e.g., in the Apple Developer forums, on the HackingWithSwift forums), and it's easier to do that if I expose all the source for inspection.  There was also a recent question on the Apple Developer's forum, *[Example using Core Data between views](https://forums.developer.apple.com/thread/133370)* that expressed some frustration in not being able to find enough examples of working with CoreData and getting list updates done correctly (that whole thing about Identifiable, id:\.self, @ObservedObject, etc).  My hope is this project will fill some of that need.
 
 However, be warned: 
 
 * the project source is likely to change often -- this is an ongoing project for me get more familiar with SwiftUI; 
-* there may be errors in the code, or some areas of the code might need with regard to best practices; yet
+* there may be errors in the code, or some areas of the code might need help with regard to best practices; yet
 * this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
 
 Note. The SearchBarView that I added today in the Purchased items view was created by Simon Ng.  It appeared in an article in AppCoda and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCoda/SwiftUISearchBar.  Otherwise, all of the code is original,  and It's yours if you want it -- please see LICENSE for the usual details and disclaimers.
