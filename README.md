@@ -12,7 +12,7 @@ However, be warned:
 * there may be errors in the code, or some areas of the code might need with regard to best practices; yet
 * this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
 
-Note. The SearchBarView that I added today in the Purchased items view was created by Simon Ng.  It appeared in an article in AppCode and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCode/SwiftUISearchBar.  Otherwise, I place no claim of copyright on this material (all of the code is original, it did not come from someone else, and It's yours if you want it -- even without attribution -- although a note of appreciation would be nice). 
+Note. The SearchBarView that I added today in the Purchased items view was created by Simon Ng.  It appeared in an article in AppCoda and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCoda/SwiftUISearchBar.  Otherwise, all of the code is original,  and It's yours if you want it -- please see LICENSE for the usual details and disclaimers.
 
 That said ...
 
