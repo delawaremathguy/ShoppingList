@@ -48,7 +48,7 @@ extension ShoppingItem: Identifiable {
 	}
 
 	
-	static func insertNewItems(from jsonShoppingItems: [ShoppingItemJSON]) { // }, using uuid2Location: [UUID : [Location]]) {
+	static func insertNewItems(from jsonShoppingItems: [ShoppingItemJSON]) {
 		
 		// get all Locations
 		var locations: [Location]
@@ -71,7 +71,7 @@ extension ShoppingItem: Identifiable {
 			newItem.name = jsonShoppingItem.name
 			newItem.quantity = jsonShoppingItem.quantity
 			newItem.onList = jsonShoppingItem.onList
-			let location = uuid2Location[jsonShoppingItem.locationID]!.first! //locations.filter({ $0.id! == jsonShoppingItem.locationID }).first!
+			let location = uuid2Location[jsonShoppingItem.locationID]!.first!
 			newItem.setLocation(location)
 			count += 1
 		}

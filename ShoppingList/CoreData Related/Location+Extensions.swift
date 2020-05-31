@@ -50,6 +50,10 @@ extension Location: Identifiable {
 	}
 
 	static func unknownLocation() -> Location? {
+		// we only keep one "UnknownLocation" in the data store.  you can
+		// find it because its visitationOrder is the larget 32-bit integer.
+		// return nil if no such thing exists, which means that the data store
+		// is empty (since all ShoppingItems have an assigned Location).
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "visitationOrder == %d", kUnknownLocationVisitationOrder)
 		do {
@@ -63,6 +67,7 @@ extension Location: Identifiable {
 		return nil
 	}
 	
+	// used to insert data from JSON files in the app bundle
 	static func insertNewLocations(from jsonLocations: [LocationJSON]) {
 		var count = 0
 		for jsonLocation in jsonLocations {

@@ -17,6 +17,7 @@ import CoreData
 
 struct ShoppingListTabView: View {
 	// Core Data access for items on shopping list
+//	@Environment(\.managedObjectContext) var moc
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
 									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
@@ -24,9 +25,12 @@ struct ShoppingListTabView: View {
 								predicate: NSPredicate(format: "onList == true")
 	) var shoppingItems: FetchedResults<ShoppingItem>
 	
-	// boolean state to control whether to show the history section
-	@State private var isHistorySectionShowing: Bool = true
 	@State private var performInitialDataLoad = kPerformInitialDataLoad
+	
+	
+	// this for experimenting with sheet
+	@State private var addModifyShoppingItemSheetIsShowing = false
+	@State private var editableItem: ShoppingItem?
 	
 	// sections
 	//	@State private var sections = [[ShoppingItem]]()
@@ -43,6 +47,15 @@ struct ShoppingListTabView: View {
 				}
 				.padding(.bottom, 10)
 			}
+			
+//			Button("Add New Item") {
+//				self.editableItem = nil
+//				self.addModifyShoppingItemSheetIsShowing.toggle()
+//			}
+//			.sheet(isPresented: $addModifyShoppingItemSheetIsShowing) {
+//				AddorModifyShoppingItemView()
+//					.environment(\.managedObjectContext, self.moc)
+//			}
 			
 		List {
 			
