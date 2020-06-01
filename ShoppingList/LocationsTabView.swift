@@ -17,43 +17,28 @@ struct LocationsTabView: View {
 	
 	var body: some View {
 		VStack {
-			// first item is an add new location "button"
+			
+			// first item is an add new location "button."  this will stay at the
+			// top of the view, and the list beow will scroll underneath it.
 			NavigationLink(destination: AddorModifyLocationView()) {
-				HStack {
-					Spacer()
 					Text("Add New Location")
 						.foregroundColor(Color.blue)
-					Spacer()
 				}
-				.padding(.bottom, 10)
-			}
-			
+				.padding(10)
 
+			// then the list of items
 			List {
+				Section(header: Text("Location Listed: \(locations.count)")) {
+					ForEach(locations, id:\.self) { location in
+						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
+							LocationRowView(location: location)
+						} // end of NavigationLink
+							.listRowBackground(self.textColor(for: location))
+					} // end of ForEach
+				} // end of Section
+			} // end of List
+				.listStyle(GroupedListStyle())
 			
-			// then come all the locations
-			Section(header: Text("Location Listed: \(locations.count)")) {
-				ForEach(locations, id:\.self) { location in
-					NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
-						HStack {
-							VStack(alignment: .leading) {
-								Text(location.name!)
-									.font(.headline)
-								Text("\(location.items!.count) items")
-									.font(.caption)
-							}
-							if location.visitationOrder != kUnknownLocationVisitationOrder {
-								Spacer()
-								Text(String(location.visitationOrder))
-							}
-						}
-					} // end of NavigationLink
-						.listRowBackground(self.textColor(for: location))
-				} // end of ForEach
-			} // end of Section
-			
-		} // end of List
-			.listStyle(GroupedListStyle())
 		} // end of VStack
 	}
 	

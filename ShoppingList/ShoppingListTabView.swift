@@ -17,7 +17,7 @@ import CoreData
 
 struct ShoppingListTabView: View {
 	// Core Data access for items on shopping list
-//	@Environment(\.managedObjectContext) var moc
+	@Environment(\.managedObjectContext) var moc
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
 									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
@@ -30,26 +30,29 @@ struct ShoppingListTabView: View {
 	
 	// this for experimenting with sheet
 	@State private var addModifyShoppingItemSheetIsShowing = false
-	@State private var editableItem: ShoppingItem?
+//	@State private var editableItem: ShoppingItem?
 	
 	// sections
 	//	@State private var sections = [[ShoppingItem]]()
 	
 	var body: some View {
 		VStack {
+			
 			// add new item "button" is at top
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
-				HStack {
-					Spacer()
-					Text("Add New Item")
-						.foregroundColor(Color.blue)
-					Spacer()
-				}
-				.padding(.bottom, 10)
+				Text("Add New Item")
+					.foregroundColor(Color.blue)
+					.padding(10)
 			}
 			
-//			Button("Add New Item") {
-//				self.editableItem = nil
+// at one time, i naively though you could just do the "New Item"
+// as a sheet, but it crashed.  then i found out that the sheet did
+// not get the managedObjectContext passed in its environment, and it
+// worked except for the Picker being disabled; and
+// then i found out that a Picker in a sheet is diasabled
+// if it's in a View that doesn't have a navigationBar.
+// AARRGGHH
+//			Button("Add New Item Using Sheet") {
 //				self.addModifyShoppingItemSheetIsShowing.toggle()
 //			}
 //			.sheet(isPresented: $addModifyShoppingItemSheetIsShowing) {
@@ -58,14 +61,16 @@ struct ShoppingListTabView: View {
 //			}
 			
 		List {
-			
 			// one main section, showing all items
 			Section(header: Text("Items Listed: \(shoppingItems.count)")) {
-				ForEach(shoppingItems) { item in // , id:\.self
+				ForEach(shoppingItems) { item in
 					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-						ShoppingItemView(item: item)
+						ShoppingItemRowView(item: item)
 					}
 					.listRowBackground(self.textColor(for: item))
+//							.onTapGesture {
+//								self.addModifyShoppingItemSheetIsShowing.toggle()
+//					}
 				} // end of ForEach
 					.onDelete(perform: moveToPurchased)
 				
@@ -87,7 +92,9 @@ struct ShoppingListTabView: View {
 				//				} // end of ForEach
 				
 				
-				// clear shopping list
+				// clear shopping list button (yes, it's the last thing in the list
+				// but i don't want it at the bottom, in case you accidentally hit
+				// it while moving to the purchased item list
 				if !shoppingItems.isEmpty {
 					HStack {
 						Spacer()
@@ -100,7 +107,6 @@ struct ShoppingListTabView: View {
 				}
 				
 			} // end of Section
-			
 		}  // end of List
 			.listStyle(GroupedListStyle())
 		} // end of VStack

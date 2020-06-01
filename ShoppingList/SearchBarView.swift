@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct SearchBarView: View {
+struct SearchBarView: View { // the only change i made to this file is to rename this as SearchBarView
 	@Binding var text: String
 	
 	@State private var isEditing = false

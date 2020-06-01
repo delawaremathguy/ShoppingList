@@ -93,8 +93,7 @@ struct AddorModifyShoppingItemView: View {
 					}
 				}
 				
-			} // end of Form
-			.onAppear(perform: loadData)
+			} // end of Section
 			.alert(isPresented: $showDeleteConfirmation) {
 				Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
 							message: Text("Are you sure you want to delete this item?"),
@@ -111,6 +110,8 @@ struct AddorModifyShoppingItemView: View {
 			}){
 				Text("Cancel")
 			})
+			.onAppear(perform: loadData)
+
 
 	}
 	

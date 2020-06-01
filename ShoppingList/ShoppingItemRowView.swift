@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ShoppingItemView: View {
+struct ShoppingItemRowView: View {
 	// shows one line in a list for a shopping item, used for consistency
 	// note: we must have the parameter as an @ObservedObject, otherwise
 	// edits made to an item involving the name or quantity or location

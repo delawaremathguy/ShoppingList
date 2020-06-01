@@ -83,7 +83,9 @@ func populateDatabaseFromJSON() {
 //	print("Core Data DB Path :: \(path ?? "Not found")")
 //}
 
-//import SwiftUI
+// the stuff below is needed to implement my own ListStyle, e.g., so
+// section headers in a grouped style are better controlled
+
 //struct MyListStyle: ListStyle {
 //	static func _makeView<SelectionValue>(value: _GraphValue<_ListValue<MyListStyle, SelectionValue>>, inputs: _ViewInputs) -> _ViewOutputs where SelectionValue : Hashable {
 //		<#code#>

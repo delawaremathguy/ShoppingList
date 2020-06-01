@@ -26,30 +26,24 @@ struct PurchasedTabView: View {
 
 			// add new item stays at top
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: false)) {
-				HStack {
-					Spacer()
-					Text("Add New Item")
-						.foregroundColor(Color.blue)
-					Spacer()
-				}
-				.padding(.bottom, 10)
+				Text("Add New Item")
+					.foregroundColor(Color.blue)
+					.padding(10)
 			}
 			
 			List {
+				Section(header: Text("Items Listed: \(purchasedItems.count)")) {
+					ForEach(purchasedItems.filter({ itemNameContainsSearchText($0.name!) })) { item in // , id:\.self
+						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+							ShoppingItemRowView(item: item)
+						} // end of NavigationLink
+					} // end of ForEach
+						.onDelete(perform: moveToShoppingList)
+				} // end of Section
+			}  // end of List
+				.listStyle(GroupedListStyle())
 			
-
-			Section(header: Text("Items Listed: \(purchasedItems.count)")) {
-				ForEach(purchasedItems.filter({ itemNameContainsSearchText($0.name!) })) { item in // , id:\.self
-					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-						ShoppingItemView(item: item)
-					} // end of NavigationLink
-				} // end of ForEach
-					.onDelete(perform: moveToShoppingList)
-			} // end of Section
-			
-		}  // end of List
-			.listStyle(GroupedListStyle())
-		}
+		} // end of VStack
 	}
 	
 	func moveToShoppingList(indexSet: IndexSet) {
