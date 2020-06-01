@@ -33,7 +33,7 @@ struct PurchasedTabView: View {
 			
 			List {
 				Section(header: Text("Items Listed: \(purchasedItems.count)")) {
-					ForEach(purchasedItems.filter({ itemNameContainsSearchText($0.name!) })) { item in // , id:\.self
+					ForEach(purchasedItems.filter({ itemNameContainsSearchText($0.name!) })) { item in 
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							ShoppingItemRowView(item: item)
 						} // end of NavigationLink

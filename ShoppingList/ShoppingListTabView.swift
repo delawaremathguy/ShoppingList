@@ -65,7 +65,7 @@ struct ShoppingListTabView: View {
 			Section(header: Text("Items Listed: \(shoppingItems.count)")) {
 				ForEach(shoppingItems) { item in
 					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-						ShoppingItemRowView(item: item)
+						ShoppingItemRowView(item: item) 
 					}
 					.listRowBackground(self.textColor(for: item))
 //							.onTapGesture {
