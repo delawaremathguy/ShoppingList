@@ -19,8 +19,8 @@ import Foundation
 // (it doesn't make much sense that both would be true)
 // in the case of the simulator, data goes to a file on the Desktop
 // in the case of a device, it gets printed to the console
-let kPerformJSONOutputDumpOnAppear = false // true = dump JSON output in MainView.onAppear()
-let kPerformInitialDataLoad = false // true = force initial data loading in MainView.onAppear()
+var kPerformJSONOutputDumpOnAppear = false // true = dump JSON output in MainView.onAppear()
+var kPerformInitialDataLoad = false // true = force initial data loading in MainView.onAppear()
 
 // use these filenames for debug output and initial load from bundle
 let kShoppingItemsFilename = "shoppingItems.json"

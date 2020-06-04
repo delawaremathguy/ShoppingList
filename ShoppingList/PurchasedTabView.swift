@@ -33,7 +33,7 @@ struct PurchasedTabView: View {
 			
 			List {
 				Section(header: Text("Items Listed: \(purchasedItems.count)")) {
-					ForEach(purchasedItems.filter({ itemNameContainsSearchText($0.name!) })) { item in 
+					ForEach(purchasedItems.filter({ searchTextContainsItemName($0.name!) })) { item in 
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							ShoppingItemRowView(item: item)
 						} // end of NavigationLink
@@ -56,7 +56,7 @@ struct PurchasedTabView: View {
 	
 	// i added this so that the search is not case sensistive, and also just to
 	// simplify the original coding of the filter function used in ForEach
-	func itemNameContainsSearchText(_ name: String) -> Bool {
+	func searchTextContainsItemName(_ name: String) -> Bool {
 		if searchText.isEmpty {
 			return true
 		}

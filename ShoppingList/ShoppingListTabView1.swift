@@ -9,31 +9,14 @@
 import SwiftUI
 import CoreData
 
-// DEVELOPMENT NOTE: the section coding almost works: can change names and
-// quantities, even move to Purchased list, without a problem.  but if you
-// changed a location, then big boom.  even though .onAppear kicks in, the
-// section recomputation does not happen soon enough, apparently?  besides,
-// it's not clear i liked the sectioning anyway -- colors work for now.
-
-struct ShoppingListTabView: View {
+struct ShoppingListTabView1: View {
 	// Core Data access for items on shopping list
-	@Environment(\.managedObjectContext) var moc
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
 									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
 								predicate: NSPredicate(format: "onList == true")
 	) var shoppingItems: FetchedResults<ShoppingItem>
-	
-	@State private var performInitialDataLoad = kPerformInitialDataLoad
-	
-	
-	// this for experimenting with sheet
-	@State private var addModifyShoppingItemSheetIsShowing = false
-//	@State private var editableItem: ShoppingItem?
-	
-	// sections
-	//	@State private var sections = [[ShoppingItem]]()
 	
 	var body: some View {
 		VStack {
@@ -44,22 +27,7 @@ struct ShoppingListTabView: View {
 					.foregroundColor(Color.blue)
 					.padding(10)
 			}
-			
-// at one time, i naively though you could just do the "New Item"
-// as a sheet, but it crashed.  then i found out that the sheet did
-// not get the managedObjectContext passed in its environment, and it
-// worked except for the Picker being disabled; and
-// then i found out that a Picker in a sheet is diasabled
-// if it's in a View that doesn't have a navigationBar.
-// AARRGGHH
-//			Button("Add New Item Using Sheet") {
-//				self.addModifyShoppingItemSheetIsShowing.toggle()
-//			}
-//			.sheet(isPresented: $addModifyShoppingItemSheetIsShowing) {
-//				AddorModifyShoppingItemView()
-//					.environment(\.managedObjectContext, self.moc)
-//			}
-			
+						
 		List {
 			// one main section, showing all items
 			Section(header: Text("Items Listed: \(shoppingItems.count)")) {
@@ -68,30 +36,9 @@ struct ShoppingListTabView: View {
 						ShoppingItemRowView(item: item) 
 					}
 					.listRowBackground(self.textColor(for: item))
-//							.onTapGesture {
-//								self.addModifyShoppingItemSheetIsShowing.toggle()
-//					}
 				} // end of ForEach
 					.onDelete(perform: moveToPurchased)
-				
-				// here's some working code for separate sections
-				//				ForEach(sections, id:\.self) { sectionItems in
-				//					Section(header: self.sectionTitle(for: sectionItems)) {
-				//
-				//						ForEach(sectionItems, id:\.self) { item in
-				//							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-				//								ShoppingItemView(item: item)
-				//							}
-				//							.listRowBackground(self.textColor(for: item))
-				//						} // end of ForEach
-				//							.onDelete(perform: { offsets in
-				//								self.moveToPurchased2(at: offsets, in: sectionItems)
-				//								})
-				//
-				//					} // end of Section
-				//				} // end of ForEach
-				
-				
+								
 				// clear shopping list button (yes, it's the last thing in the list
 				// but i don't want it at the bottom, in case you accidentally hit
 				// it while moving to the purchased item list
@@ -132,7 +79,6 @@ struct ShoppingListTabView: View {
 			item.onList = false
 		}
 		ShoppingItem.saveChanges()
-		//		buildSections()
 	}
 	
 	func moveToPurchased(indexSet: IndexSet) {
@@ -142,16 +88,6 @@ struct ShoppingListTabView: View {
 		}
 		ShoppingItem.saveChanges()
 	}
-	
-	//	func buildSections() {
-	//		sections.removeAll()
-	//		let d = Dictionary(grouping: shoppingItems, by: { $0.visitationOrder })
-	//		let sortedKeys = d.keys.sorted()
-	//		for key in sortedKeys {
-	//			sections.append(d[key]!)
-	//		}
-	//	}
-		
 	
 	func textColor(for item: ShoppingItem) -> Color {
 		if let location = item.location {

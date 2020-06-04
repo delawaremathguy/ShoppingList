@@ -102,3 +102,9 @@ extension Location: JSONRepresentable {
 	}
 }
 	
+extension Location: Comparable {
+	public static func < (lhs: Location, rhs: Location) -> Bool {
+		lhs.visitationOrder < rhs.visitationOrder
+	}
+	
+}

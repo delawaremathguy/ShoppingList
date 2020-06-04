@@ -24,7 +24,7 @@ struct MainView: View {
 	var body: some View {
 		NavigationView {
 			TabView(selection: $selectedTab) {
-				ShoppingListTabView()
+				ShoppingListTabView1()
 					.tabItem {
 						Image(systemName: "cart")
 						Text("Shopping List")
@@ -68,10 +68,12 @@ struct MainView: View {
 
 		if kPerformInitialDataLoad && Location.unknownLocation() == nil {
 				populateDatabaseFromJSON()
+				kPerformInitialDataLoad = false // don't do this again
 		}
 		if kPerformJSONOutputDumpOnAppear {
 			writeAsJSON(items: ShoppingItem.allShoppingItems(), to: kShoppingItemsFilename)
 			writeAsJSON(items: Location.allLocations(), to: kLocationsFilename)
+			kPerformJSONOutputDumpOnAppear = false // don't do this again
 		}
 	}
 	
