@@ -22,6 +22,7 @@
 		D6450BD7245F49DB0074DA16 /* AddorModifyShoppingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */; };
 		D648D349246388C100CD881B /* Location+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D648D348246388C100CD881B /* Location+Extensions.swift */; };
 		D65721B32464591700E4AAAF /* AddorModifyLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */; };
+		D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */; };
 		D6ADB3B2247C266F00376271 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B1247C266E00376271 /* locations.json */; };
 		D6ADB3B4247C267900376271 /* shoppingItems.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B3247C267900376271 /* shoppingItems.json */; };
 		D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */; };
@@ -54,6 +55,7 @@
 		D648D348246388C100CD881B /* Location+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Extensions.swift"; sourceTree = "<group>"; };
 		D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddorModifyLocationView.swift; sourceTree = "<group>"; };
 		D65A15D22465A137004ACCBB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingListTabView2.swift; sourceTree = "<group>"; };
 		D6ADB3B1247C266E00376271 /* locations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 		D6ADB3B3247C267900376271 /* shoppingItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = shoppingItems.json; sourceTree = "<group>"; };
 		D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				D6EF5583246D9489007D636B /* CoreData Related */,
 				D6B8A95324636711005F8EF2 /* MainView.swift */,
 				D62B88312451162D0051A7CE /* ShoppingListTabView1.swift */,
+				D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */,
 				D6EF557C246D7421007D636B /* PurchasedTabView.swift */,
 				D606197E2481510E005CE575 /* SearchBarView.swift */,
 				D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */,
@@ -229,6 +232,7 @@
 				D6DE39BD247314B40013F9B4 /* MyFormLabelText.swift in Sources */,
 				D6F375D62485593D005559E6 /* LocationRowView.swift in Sources */,
 				D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */,
+				D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */,
 				D60F14A924686D710077AD3F /* LocationJSON.swift in Sources */,
 				D62B882B2451162D0051A7CE /* AppDelegate.swift in Sources */,
 				D62B88322451162D0051A7CE /* ShoppingListTabView1.swift in Sources */,

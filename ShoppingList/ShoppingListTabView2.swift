@@ -52,6 +52,7 @@ class ShoppingList: ObservableObject {
 			items = []
 		}
 	}
+	
 }
 
 struct ShoppingListTabView2: View {
@@ -115,15 +116,11 @@ struct ShoppingListTabView2: View {
 			
 		} // end of VStack
 			.onAppear(perform: rebuildSections)
-			.onReceive(shoppingList) {
-				rebuildSections()
-		}
-			
 	} // end of body: some View
 	
 	func rebuildSections() {
 		itemGroups.removeAll()
-		let d = Dictionary(grouping: shoppingItems, by: { $0.location })
+		let d = Dictionary(grouping: shoppingList.items, by: { $0.location })
 		let sortedKeys = d.keys.sorted(by: {$0!.visitationOrder < $1!.visitationOrder })
 		for location in sortedKeys where d[location]!.count > 0 {
 			itemGroups.append(LocationGroupedItems(items: d[location]!, location: location!))
@@ -140,7 +137,7 @@ struct ShoppingListTabView2: View {
 	}
 
 	func clearShoppingList() {
-		for item in shoppingItems {
+		for item in shoppingList.items {
 			item.onList = false
 		}
 		ShoppingItem.saveChanges()
