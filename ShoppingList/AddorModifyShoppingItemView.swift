@@ -11,13 +11,17 @@ import SwiftUI
 struct AddorModifyShoppingItemView: View {
 	@Environment(\.presentationMode) var presentationMode
 
+
 	// editableItem is either a ShoppingItem to edit, or nil to signify
 	// that we're creating a new ShoppingItem in this View.
 	var editableItem: ShoppingItem? = nil
-	// defaultOnListValue just says that, if you're expecting us to add
-	// a new item, tell me wether to add it to the shopping list or
-	// the purchased list
-	var addItemToShoppingList: Bool = true // assume true ... item goes to shopping list
+	// addItemToShoppingList just means that if we are adding a new item
+	// (editableItem == nil), this tells us whether to put it on the shopping
+	// list or not.  the default is true: a new item goes on the shopping list.
+	// however, if inserting a new item from the Purchased list,
+	// this will be set to false at entry to mean "put the new item on
+	// the Purchased list," which the user can override if they wish.  so
+	var addItemToShoppingList: Bool = true
 	
 	// all of these @State values are suitable defaults for a new ShoppingItem
 	// so if editableItem is nil, the values below are the right default values
@@ -137,6 +141,10 @@ struct AddorModifyShoppingItemView: View {
 				selectedLocationIndex = locations.count - 1 // index of Unknown Location
 			}
 			onList = item.onList
+		} else {
+			// set up to be true if adding a new item to shoppinglist,
+			// but false if adding to purchased list. (user can override on screen)
+			onList = addItemToShoppingList
 		}
 		// and be sure we don't do this again (!)
 		dataLoaded = true
@@ -169,6 +177,7 @@ struct AddorModifyShoppingItemView: View {
 			let location = item.location
 			location?.removeFromItems(item)
 			ShoppingItem.delete(item: item)
+			ShoppingItem.saveChanges()
 			presentationMode.wrappedValue.dismiss()
 		}
 	}
