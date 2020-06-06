@@ -9,12 +9,18 @@
 import SwiftUI
 import CoreData
 
-// MAJOR OPENING COMMENT.  THIS IS WHERE EVERYTHING BREAKS IN TRYING TO SECTION-OUT
-// THE SHOPPING LIST BY LOCATION.  WHATEVER YOU SEE HERE IS NOT WORKING EXACTLY
-// BUT IT'S VERY CLOSE.  THIS WHOLE SECTION OF CODE IS MY PLAYGROUND.
-// I WOULD NOT TELL YOU THAT IT'S THE RIGHT WAY TO DO IT, I'M WORKING
-// ON IT, BUT THE CURRENT VERSION OCCASIONALLY (AND NOT PREDICTABLY THAT I CAN TELL)
-// WILL CRASH UPON A TRUE DELETE OF SOME ITEMS WHEN RETURNING TO THIS VIEW.
+// MAJOR OPENING COMMENT.  This is about the most solid version of sectioning
+// code that i have come up with.  however, since this whole project is a
+// work in progress, you should know this code for sections has been written, rewritten,
+// and then thrown out and i started all over again.  the key to this was
+// getting the right ForEach argument at the start of the List, and the function
+// locations(for: shoppingItems) makes it clear that the entire visual layout is
+// dependent on shoppingItems, and that seems to be what guarantees that things
+// really do get updated visually after editing.
+
+// ALSO A MAJOR BUG (this is true of ShoppingListTabView1 as well).  the program will
+// crash if you truly delete an item from the list which causes it to become empty.
+// i'm still looking for a fix, in case you know one!
 
 
 struct ShoppingListTabView2: View {
@@ -29,21 +35,23 @@ struct ShoppingListTabView2: View {
 	var body: some View {
 		VStack {
 			
-			// add new item "button" is at top
+			// 1. add new item "button" is at top
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
 				Text("Add New Item")
 					.foregroundColor(Color.blue)
 					.padding(10)
 			}
 			
-			// now comes the sectioned list of items, by Location
+			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
 			if shoppingItems.isEmpty {
 				Text("There are no items on your Shopping List.")
 				Spacer()
 			} else {
+				
 				List {
 					ForEach(locations(for: shoppingItems)) { location in
 						Section(header: Text(location.name!)) {
+							
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 									ShoppingItemRowView(item: item)
@@ -57,19 +65,13 @@ struct ShoppingListTabView2: View {
 						} // end of Section
 					} // end of ForEach
 					
-					
-					// clear shopping list button (yes, it's the last thing in the list
-					// but i don't want it at the bottom, in case you accidentally hit
-					// it while moving to the purchased item list
-					if !shoppingItems.filter({ $0.onList }).isEmpty {
-						HStack {
-							Spacer()
-							Button("Move All Items off-list") {
-								self.clearShoppingList()
-							}
-							.foregroundColor(Color.blue)
-							Spacer()
+					// clear shopping list button
+					HStack {
+						Spacer()
+						Button("Move All Items off-list") {
+							self.clearShoppingList()
 						}
+						Spacer()
 					}
 					
 				}  // end of List
@@ -80,9 +82,15 @@ struct ShoppingListTabView2: View {
 	} // end of body: some View
 		
 	func locations(for items: FetchedResults<ShoppingItem>) -> [Location] {
+		// we need to pick out all the locations represented in the shopping items.
+		// using this Dictionary construct, we get a dictionary of (not quite
+		// exacly, but close enough) [Location : [ShoppingItem]].  but in fact,
+		// i then only want the keys that are the Locations
 		let d = Dictionary(grouping: items, by: { $0.location })
-		let sortedKeys = d.keys.sorted(by: {$0!.visitationOrder < $1!.visitationOrder })
-		return sortedKeys.map({ $0! })
+		// we need a force unwrap here to turn the keys into real Locations
+		let locations = d.keys.map({ $0! })
+		// and then we want them sorted in visitationOrder (Location is Comparable)
+		return locations.sorted(by: <)
 	}
 
 	func moveToPurchased(at indexSet: IndexSet, in items: [ShoppingItem]) {
@@ -101,9 +109,7 @@ struct ShoppingListTabView2: View {
 	}
 
 	func textColor(for item: ShoppingItem) -> Color {
-		if let location = item.location {
-			return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
-		}
-		return Color.red
+		let location = item.location!
+		return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
 	}
 }

@@ -100,10 +100,8 @@ struct ShoppingListTabView1: View {
 	}
 	
 	func textColor(for item: ShoppingItem) -> Color {
-		if let location = item.location {
-			return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
-		}
-		return Color.red
+		let location = item.location!
+		return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
 	}
 }
 
