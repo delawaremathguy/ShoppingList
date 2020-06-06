@@ -23,8 +23,15 @@ struct MainView: View {
 	
 	var body: some View {
 		NavigationView {
+			
+			// the first tabView is the shopping list.  change ShoppingListTabView1 to ShoppingListTabView2
+			// to see what happens with my current investigation into sectioning the list of shopping items.
+			// there seems to be a major problem -- surely with View2 when deleting some, but not all, of
+			// the items in some sections; and maybe this happened one time in View1 when the list went
+			// empty (although i think the database was inconsistent at that point)
+			// -- it goes BOOM.  i'm working on it.
 			TabView(selection: $selectedTab) {
-				ShoppingListTabView1()
+				ShoppingListTabView2()		// <--- see note above about the 1 or 2 that appears here
 					.tabItem {
 						Image(systemName: "cart")
 						Text("Shopping List")
@@ -41,7 +48,8 @@ struct MainView: View {
 						Image(systemName: "map")
 						Text("Locations")
 				}.tag(3)
-			}
+				
+			} // end of TabView
 			.navigationBarTitle(tabTitle(selectedTab: selectedTab))
 			.onAppear(perform: doAppearanceCode)
 

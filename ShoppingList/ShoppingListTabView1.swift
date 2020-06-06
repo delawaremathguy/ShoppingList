@@ -9,6 +9,26 @@
 import SwiftUI
 import CoreData
 
+// This is just a straightforward list display of items on the shopping list.
+// a simple @FetchRequest gets these items, arranged by their location's
+// visitation order, a copy of which is kept in the shopping item itself.
+// why is this kept here, as duplicate information?  if you change a Location's
+// visitation order, copying that to the items in the location makes sure that
+// this sees the changes.
+
+// MAJOR NOTE HERE: remember that the .onDelete() swipe action is not really
+// doing a delete, but just a simple "move this item to the purchased category."
+// to delete an item, tap to go to the edit screen, and then tap "Delete this
+// Item."  i like the swipe action, but it does not make sense at this point
+// in SwiftUI that swipe means delete.  perhaps SwiftUI 2.0 will have an
+// .onSwipeTrailing() and .onSwipeLeading() modifier to allow what we're doing.
+
+// AND ONE OTHER MAJOR ITEM.  my method of deleting (tap, go to edit screen,
+// tap "Delete This Item," and then returning works EXCEPT FOR ONE CASE:
+// if the list has only one item and you use this delete methodology,
+// the program crashes.  THIS IS EITHER MY BUG, SWIFTUI'S BUG, OR MY SERIOUS
+// MISUNDERSTANDING OF HOW THINGS WORK.  (don't know which yet!)
+
 struct ShoppingListTabView1: View {
 	// Core Data access for items on shopping list
 	@FetchRequest(entity: ShoppingItem.entity(),
@@ -24,58 +44,48 @@ struct ShoppingListTabView1: View {
 			// add new item "button" is at top
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
 				Text("Add New Item")
-					.foregroundColor(Color.blue)
 					.padding(10)
 			}
+			
+			if shoppingItems.isEmpty {
+				Text("There are no items on your Shopping List.")
+				Spacer()
+			} else {
+				List {
+					// one main section, showing all items
+					Section(header: Text("Items Listed: \(shoppingItems.count)")) {
+						ForEach(shoppingItems) { item in
+							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+								ShoppingItemRowView(item: item)
+							}
+							.listRowBackground(self.textColor(for: item))
+						} // end of ForEach
+							.onDelete(perform: moveToPurchased)
 						
-		List {
-			// one main section, showing all items
-			Section(header: Text("Items Listed: \(shoppingItems.count)")) {
-				ForEach(shoppingItems) { item in
-					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-						ShoppingItemRowView(item: item) 
-					}
-					.listRowBackground(self.textColor(for: item))
-				} // end of ForEach
-					.onDelete(perform: moveToPurchased)
-								
-				// clear shopping list button (yes, it's the last thing in the list
-				// but i don't want it at the bottom, in case you accidentally hit
-				// it while moving to the purchased item list
-				if !shoppingItems.isEmpty {
-					HStack {
-						Spacer()
-						Button("Move All Items off-list") {
-							self.clearShoppingList()
+						// clear shopping list button (yes, it's the last thing in the list
+						// but i don't want it at the bottom, in case you accidentally hit
+						// it while moving to the purchased item list
+						if !shoppingItems.isEmpty {
+							HStack {
+								Spacer()
+								Button("Move All Items off-list") {
+									self.clearShoppingList()
+								}
+								.foregroundColor(Color.blue)
+								Spacer()
+							}
 						}
-						.foregroundColor(Color.blue)
-						Spacer()
-					}
-				}
-				
-			} // end of Section
-		}  // end of List
-			.listStyle(GroupedListStyle())
+						
+					} // end of Section
+				}  // end of List
+					.listStyle(GroupedListStyle())
+			} // end of else
+			
 		} // end of VStack
 	}
-	
-	func sectionTitle(for items: [ShoppingItem]) -> Text {
-		if let firstItem = items.first {
-			return Text(firstItem.location!.name!)
-		}
-		return Text("Title")
-	}
-	
+		
 	func clearShoppingList() {
 		for item in shoppingItems {
-			item.onList = false
-		}
-		ShoppingItem.saveChanges()
-	}
-	
-	func moveToPurchased2(at indexSet: IndexSet, in items: [ShoppingItem]) {
-		for index in indexSet {
-			let item = items[index]
 			item.onList = false
 		}
 		ShoppingItem.saveChanges()

@@ -27,7 +27,6 @@ struct PurchasedTabView: View {
 			// add new item stays at top
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: false)) {
 				Text("Add New Item")
-					.foregroundColor(Color.blue)
 					.padding(10)
 			}
 			

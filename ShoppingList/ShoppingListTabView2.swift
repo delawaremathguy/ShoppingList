@@ -8,67 +8,24 @@
 
 import SwiftUI
 import CoreData
-import UIKit
 
-// THIS IS NONSENSE FOR NOW, BUT I'M CLOSE TO DOING SECTIONS IN THE SHOPPING LIST.
-// PLEASE IGNORE
+// MAJOR OPENING COMMENT.  THIS IS WHERE EVERYTHING BREAKS IN TRYING TO SECTION-OUT
+// THE SHOPPING LIST BY LOCATION.  WHATEVER YOU SEE HERE IS NOT WORKING EXACTLY
+// BUT IT'S VERY CLOSE.  THIS WHOLE SECTION OF CODE IS MY PLAYGROUND.
+// I WOULD NOT TELL YOU THAT IT'S THE RIGHT WAY TO DO IT, I'M WORKING
+// ON IT, BUT THE CURRENT VERSION OCCASIONALLY (AND NOT PREDICTABLY THAT I CAN TELL)
+// WILL CRASH UPON A TRUE DELETE OF SOME ITEMS WHEN RETURNING TO THIS VIEW.
 
-// defines the ViewModel for this View.  this is where we interpret how to
-// use the @FetchRequest var shoppingItems to break the items into sections
-// so we need a definition of what is SectionData first, which will be
-// all ShoppingItems that share a common Location.
-
-class LocationGroupedItems: Identifiable {
-	
-	var id = UUID()
-	// the items that share a common location and the location they share
-	var items = [ShoppingItem]()
-	private(set) var location: Location
-	// the title for this section = the location's title
-	func title() -> String {
-		return location.name!
-	}
-	
-	init(items: [ShoppingItem], location: Location) {
-		self.items = items
-		self.location = location
-	}
-}
-
-class ShoppingList: ObservableObject {
-	@Published var items: [ShoppingItem]
-	
-	init() {
-		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
-		fetchRequest.sortDescriptors = [
-			NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
-			NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)]
-		fetchRequest.predicate = NSPredicate(format: "onList == true")
-		do {
-			let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-			items = try context.fetch(fetchRequest)
-		} catch let error as NSError {
-			print("Error getting ShoppingItems: \(error.localizedDescription), \(error.userInfo)")
-			items = []
-		}
-	}
-	
-}
 
 struct ShoppingListTabView2: View {
 	// Core Data access for items on shopping list
-	// and for Locations where associated items have at least one
-	// item on the shopping list
-//	@FetchRequest(entity: ShoppingItem.entity(),
-//								sortDescriptors: [
-//									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
-//									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
-//								predicate: NSPredicate(format: "onList == true")
-//	) var shoppingItems: FetchedResults<ShoppingItem>
+	@FetchRequest(entity: ShoppingItem.entity(),
+								sortDescriptors: [
+									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
+									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
+								predicate: NSPredicate(format: "onList == true")
+	) var shoppingItems: FetchedResults<ShoppingItem>
 		
-	@ObservedObject var shoppingList = ShoppingList()
-	@State private var itemGroups = [LocationGroupedItems]()
-	
 	var body: some View {
 		VStack {
 			
@@ -80,68 +37,67 @@ struct ShoppingListTabView2: View {
 			}
 			
 			// now comes the sectioned list of items, by Location
-			List {
-				ForEach(itemGroups) { itemGroup in
-					Section(header: Text(itemGroup.title())) {
-						ForEach(itemGroup.items) { item in
-							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-								ShoppingItemRowView(item: item)
+			if shoppingItems.isEmpty {
+				Text("There are no items on your Shopping List.")
+				Spacer()
+			} else {
+				List {
+					ForEach(locations(for: shoppingItems)) { location in
+						Section(header: Text(location.name!)) {
+							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
+								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+									ShoppingItemRowView(item: item)
+								}
+								.listRowBackground(self.textColor(for: item))
+							} // end of ForEach
+								.onDelete(perform: { offsets in
+									self.moveToPurchased(at: offsets, in: self.shoppingItems.filter({ $0.location! == location }))
+								})
+							
+						} // end of Section
+					} // end of ForEach
+					
+					
+					// clear shopping list button (yes, it's the last thing in the list
+					// but i don't want it at the bottom, in case you accidentally hit
+					// it while moving to the purchased item list
+					if !shoppingItems.filter({ $0.onList }).isEmpty {
+						HStack {
+							Spacer()
+							Button("Move All Items off-list") {
+								self.clearShoppingList()
 							}
-							.listRowBackground(self.textColor(for: item))
-						} // end of ForEach
-							.onDelete(perform: { offsets in
-								self.moveToPurchased(at: offsets, in: itemGroup)
-							})
-						
-					} // end of Section
-				} // end of ForEach
-				
-				
-				// clear shopping list button (yes, it's the last thing in the list
-				// but i don't want it at the bottom, in case you accidentally hit
-				// it while moving to the purchased item list
-				if !shoppingList.items.isEmpty {
-					HStack {
-						Spacer()
-						Button("Move All Items off-list") {
-							self.clearShoppingList()
+							.foregroundColor(Color.blue)
+							Spacer()
 						}
-						.foregroundColor(Color.blue)
-						Spacer()
 					}
-				}
-				
-			}  // end of List
-				.listStyle(GroupedListStyle())
+					
+				}  // end of List
+					.listStyle(GroupedListStyle())
+			} // end of else
 			
 		} // end of VStack
-			.onAppear(perform: rebuildSections)
 	} // end of body: some View
-	
-	func rebuildSections() {
-		itemGroups.removeAll()
-		let d = Dictionary(grouping: shoppingList.items, by: { $0.location })
+		
+	func locations(for items: FetchedResults<ShoppingItem>) -> [Location] {
+		let d = Dictionary(grouping: items, by: { $0.location })
 		let sortedKeys = d.keys.sorted(by: {$0!.visitationOrder < $1!.visitationOrder })
-		for location in sortedKeys where d[location]!.count > 0 {
-			itemGroups.append(LocationGroupedItems(items: d[location]!, location: location!))
-		}
+		return sortedKeys.map({ $0! })
 	}
 
-	func moveToPurchased(at indexSet: IndexSet, in itemGroup: LocationGroupedItems) {
+	func moveToPurchased(at indexSet: IndexSet, in items: [ShoppingItem]) {
 		for index in indexSet.reversed() {
-			let item = itemGroup.items[index]
+			let item = items[index]
 			item.onList = false
 		}
 		ShoppingItem.saveChanges()
-		rebuildSections()
 	}
 
 	func clearShoppingList() {
-		for item in shoppingList.items {
+		for item in shoppingItems {
 			item.onList = false
 		}
 		ShoppingItem.saveChanges()
-		rebuildSections()
 	}
 
 	func textColor(for item: ShoppingItem) -> Color {
@@ -151,24 +107,3 @@ struct ShoppingListTabView2: View {
 		return Color.red
 	}
 }
-
-//struct sectionView: View {
-//	@ObservedObject var sectionData: SectionData
-//	@ObservedObject var viewModel: ViewModel
-//	
-//	var body: some View {
-//		Section(header: Text(sectionData.title())) {
-//			ForEach(sectionData.items, id:\.self) { item in
-//				NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item).environmentObject(self.viewModel)) {
-//					ShoppingItemRowView(item: item)
-//				}
-//				.listRowBackground(self.textColor(for: item))
-//			} // end of ForEach
-//				.onDelete(perform: { offsets in
-//					self.viewModel.moveToPurchased(at: offsets, in: sectionData)
-//				})
-//			
-//		} // end of Section
-//
-//	}
-//}

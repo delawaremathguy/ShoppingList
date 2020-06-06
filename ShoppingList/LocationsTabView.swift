@@ -22,9 +22,8 @@ struct LocationsTabView: View {
 			// top of the view, and the list beow will scroll underneath it.
 			NavigationLink(destination: AddorModifyLocationView()) {
 					Text("Add New Location")
-						.foregroundColor(Color.blue)
+						.padding(10)
 				}
-				.padding(10)
 
 			// then the list of items
 			List {
