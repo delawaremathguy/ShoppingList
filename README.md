@@ -1,6 +1,6 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 7, 2020**, when I started releasing some snippets of code for dynamically sectioning the shopping list with GroupedListStyle().
+* My Last Update of note was **June 7, 2020**, when I started releasing some snippets of code for dynamically sectioning the shopping list with GroupedListStyle() and also fixed a bug related to moving items from the *filtered* purchased item list to the shopping list.
 
 This is a simple, in-progress iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
