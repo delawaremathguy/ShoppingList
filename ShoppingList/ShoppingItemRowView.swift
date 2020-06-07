@@ -15,14 +15,17 @@ struct ShoppingItemRowView: View {
 	// will not show when the ShoppingListView or PurchasedListView
 	// is brought back on screen.
 	@ObservedObject var item: ShoppingItem
+	var showLocation: Bool = true
 	
 	var body: some View {
 		HStack {
 			VStack(alignment: .leading) {
 				Text(item.name!)
 					.font(.headline)
-				Text(item.location!.name!)
+				if showLocation {
+					Text(item.location!.name!)
 					.font(.caption)
+				}
 			}
 			Spacer()
 			Text(String(item.quantity))

@@ -54,12 +54,12 @@ struct ShoppingListTabView2: View {
 							
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-									ShoppingItemRowView(item: item)
+									ShoppingItemRowView(item: item, showLocation: false)
 								}
 								.listRowBackground(self.textColor(for: item))
 							} // end of ForEach
 								.onDelete(perform: { offsets in
-									self.moveToPurchased(at: offsets, in: self.shoppingItems.filter({ $0.location! == location }))
+									self.moveToPurchased(at: offsets, within: location)
 								})
 							
 						} // end of Section
@@ -91,9 +91,12 @@ struct ShoppingListTabView2: View {
 		return Set(allLocations).sorted(by: <)
 	}
 
-	func moveToPurchased(at indexSet: IndexSet, in items: [ShoppingItem]) {
+	func moveToPurchased(at indexSet: IndexSet, within location: Location) {
+		// recreate list of items on the shopping list in this location
+		// -- relies on this order being the same as the order in the ForEach above
+		let itemsInThisLocation = shoppingItems.filter({ $0.location! == location })
 		for index in indexSet.reversed() {
-			let item = items[index]
+			let item = itemsInThisLocation[index]
 			item.onList = false
 		}
 		ShoppingItem.saveChanges()

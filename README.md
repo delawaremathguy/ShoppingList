@@ -1,6 +1,6 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 6, 2020**, when I started releasing some snippets of code for dynamically sectioning a list with GroupedListStyle().
+My Last Update of note was **June 6, 2020**, when I started releasing some snippets of code for dynamically sectioning the shopping list with GroupedListStyle().
 
 This is a simple, in-progress iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
@@ -37,8 +37,8 @@ The third tab shows a list of all locations, listed in visitationOrder (an integ
 The shopping list is sorted by the visitation order of the location in which it is found (and alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered, although all items in the same Location have the same color as a form of grouping.
 
 * Why don't you let me drag these items to reorder them, you ask?  Well, I did the reordering thing one time, and dicovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  
-* Why can't you section this list out, you ask?  i tried the sectioning thing (you'll see some commented-out code that "almost" does this right), but you cannot drag an item from one section to another; i cannot control the section header appearance (it takes way too much space in groupedListStyle and i'd like to customize it); and when items are moved from one section to another (by editing the shopping item), the shopping list sectioning code i'm trying out goes nuts if a section becomes empty.
-* About color: using color to distinguish different Locations is not a good UI, since a significant portion of users cannot distinguish color very well.  At some point, I'll go to a true sectioning of items, but I need more help from SwiftUI to do it.
+* The current code offers you the choice to see the shopping list either as one big list (use ShoppingListTabView1) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2).  both seem to work fine, but with one edge-case bug still unresolved (see below and in the code).
+* About color: using color to distinguish different Locations is not a good UI, since a significant portion of users cannot distinguish color very well. 
 
 
 ## Some Things I'm Working On
@@ -46,14 +46,14 @@ The shopping list is sorted by the visitation order of the location in which it 
 * With this update, i provide two options for the ShoppingListTabView, named, suprisingly, ShoppingListTabView1 and ShoppingListTabView2.  Just change the MainView code to use one or the other.  The latter is what I am working on, so that's what I have coded in MainView, but if you're poking around in the code, try each one of them.
 * **ShoppingListTabView1** is a single list of items as described above, with items listed by their location's visitationOrder (and then alphabetically for each location).  Since Locations have different colors, the list is manageable, but not ideal.  Be forewarned: THERE IS A BUG IN THIS CODE: IT CRASHES IF YOU (truly) DELETE THE LAST REMAINING ITEM ON THE LIST (see comments in code about this).
 **NEW: ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After about 3,000 attempts and coding and recoding, this version seems to be working almost pretty well so far. Be forewarned: THERE IS A BUG IN THIS CODE: THIS VIEW ALSO CRASHES IF YOU (truly) DELETE THE LAST REMAINING ITEM ON THE LIST (see comments in code about this).
-* I still get a few console messages at runtime about tables laying out outside the view hierarchy and so forth; I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
+* I still get a few console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
 * Moving items around in a list in SwiftUI by dragging (using .onMove()) is a real, visual nightmare.  If you've tried .onMove(), you'll see that dragged items resize, the item you press on may move underneath you as does the list itself, sometimes the last item will just not move, etc.
 * I have been constantly struggling with visual updates in putting this together.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been updated.  I know about @ObservedObject and such, and i have mostly everything working correctly right now.  But I seem to havevisual updated just about all working properly now. You may see a comment or two in the code about this.
 * If you've got a List with a ForEach, and if you collect the visual code inside the ForEach into another, smaller View  (like a RowView(for: item) to keep the code readable), beware the updating issue mentioned above.  You really want to pass along an ObservableObject or Binding to be sure that visual updates are made in the RowView.
 * Getting a viewpoint on SwifUI.  It seems to be a combination of a future direction of iOS et. al. programming, a decent prototyping tool for now, and beta software with many limitations.  Paul Hudson and other top devs he's interviewed recently all seem to think of SwiftUI as the future, so this project is my getting ready for what's next.
 * Bugs have come and gone in SwiftUI (and come back again) since WWDC2019.  Perhaps WWDC2020 will give us SwiftUI 2.0 or something, and then maybe things will look better.  and in comparison with the introduction of Swift itself -- i doubt there were few apps that were pure Swift1.0; but these days, almost every new project will be done in Swift.
 
-## Where Do Things Go From Here?
+## Anything Else?
 
 The project is what it is -- it's an on-going, out-in-public offering of code that may be of use to some; it might be something you'd like to play with or even develop on your own (fixing some things that are currently broken, or adding better design elements); or it might be something you'll look at and realize you've done something similar and run into similar problems.
 
