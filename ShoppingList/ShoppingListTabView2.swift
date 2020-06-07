@@ -82,15 +82,13 @@ struct ShoppingListTabView2: View {
 	} // end of body: some View
 		
 	func locations(for items: FetchedResults<ShoppingItem>) -> [Location] {
-		// we need to pick out all the locations represented in the shopping items.
-		// using this Dictionary construct, we get a dictionary of (not quite
-		// exacly, but close enough) [Location : [ShoppingItem]].  but in fact,
-		// i then only want the keys that are the Locations
-		let d = Dictionary(grouping: items, by: { $0.location })
-		// we need a force unwrap here to turn the keys into real Locations
-		let locations = d.keys.map({ $0! })
-		// and then we want them sorted in visitationOrder (Location is Comparable)
-		return locations.sorted(by: <)
+		// we first get the locations of each of the shopping items.
+		// compactMap seems a better choice than map because of the FetchResults issue
+		// -- the result will be [Location]
+		let allLocations = items.compactMap({ $0.location })
+		// then turn these into a Set (which causes all duplicates to be removed)
+		// and sort by visitationOrder
+		return Set(allLocations).sorted(by: <)
 	}
 
 	func moveToPurchased(at indexSet: IndexSet, in items: [ShoppingItem]) {
