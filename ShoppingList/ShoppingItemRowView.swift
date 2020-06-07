@@ -24,7 +24,7 @@ struct ShoppingItemRowView: View {
 					.font(.headline)
 				if showLocation {
 					Text(item.location!.name!)
-					.font(.caption)
+						.font(.caption)
 				}
 			}
 			Spacer()

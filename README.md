@@ -1,6 +1,6 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 6, 2020**, when I started releasing some snippets of code for dynamically sectioning the shopping list with GroupedListStyle().
+My Last Update of note was **June 7, 2020**, when I started releasing some snippets of code for dynamically sectioning the shopping list with GroupedListStyle().
 
 This is a simple, in-progress iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
@@ -61,6 +61,6 @@ By the way: what you see today may not look anything like what it looks like tom
 
 Finally, a story. I have another sizeable UIKit-based project, completely unrelated to this Shopping List project, that I had every intention of moving to the App Store. But it lacked a couple of features (mostly synching with the Cloud across devices). And curiously, I had originally used CoreData to persist data when i started building it, when there was some cloud integration; but Apple pulled the rug out on it's sort-of-support for the cloud with CoreData somewhere around iOS 10.  So I rearchitected the app to use a database singleton to abstract the persistence specifics from the app, and then changed the persistence back-end to use UIDocuments with autosaving, which seemed to be an easier, supported path to the cloud.
 
-I was very close to having what I wanted, but then WWDC2019 happened.  I saw two things I: CoreData and CloudKit working together (which I had really wanted a long time ago) and SwiftUI (that was a BIG WOW). I have since rebuilt that app with CoreData (it was easier than you think -- I had done it before), and I am now actively building the project in parallel in SwiftUI.  But I ran into a few roadblocks (e.g., where's CollectionView, etc.) and kept finding myself with the same basic visual updating issues that have been discussed above.  So I am glad I built Shopping List (again, I had a need since I was doing almost all of the shopping during the pandemic) and confronted these same issues. I am waiting for WWDC2020 and Swift 2.0 that I can move forward and eventually take that app to the App Store.
+I was very close to having what I wanted, but then WWDC2019 happened.  I saw two things: CoreData and CloudKit working together (which I had really wanted a long time ago) and SwiftUI (that was a BIG WOW). I have since rebuilt that app with CoreData (it was easier than you think -- I had done it before), and I am now actively building the project in parallel in SwiftUI.  But I ran into a few roadblocks (e.g., where's CollectionView, etc.) and kept finding myself with the same basic visual updating issues that have been discussed above.  So I am glad I built Shopping List (again, I had a need since I was doing almost all of the shopping during the pandemic) and confronted these same issues. I am waiting for WWDC2020 and Swift 2.0 that I can move forward and eventually take that app to the App Store.
 
 Feel free to contact me about questions and comments.

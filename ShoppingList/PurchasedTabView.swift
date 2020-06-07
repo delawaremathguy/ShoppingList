@@ -46,8 +46,10 @@ struct PurchasedTabView: View {
 	}
 	
 	func moveToShoppingList(indexSet: IndexSet) {
+		// the indexSet refers to indices in what's showing -- the filtered list
+		let itemsShowing = purchasedItems.filter({ searchTextContainsItemName($0.name!) })
 		for index in indexSet {
-			let item = purchasedItems[index]
+			let item = itemsShowing[index]
 			item.onList = true
 		}
 		ShoppingItem.saveChanges()
