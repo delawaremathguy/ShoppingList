@@ -71,8 +71,11 @@ extension ShoppingItem: Identifiable {
 			newItem.name = jsonShoppingItem.name
 			newItem.quantity = jsonShoppingItem.quantity
 			newItem.onList = jsonShoppingItem.onList
-			let location = uuid2Location[jsonShoppingItem.locationID]!.first!
-			newItem.setLocation(location)
+			if let location = uuid2Location[jsonShoppingItem.locationID]?.first { // we should have a matching location
+				newItem.setLocation(location)
+			} else { // but in case the data doesn't match, put this item in the unknown location
+				newItem.setLocation(Location.unknownLocation()!)
+			}
 			count += 1
 		}
 		print("Inserted \(count) shopping items")

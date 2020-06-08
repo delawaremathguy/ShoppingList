@@ -8,6 +8,14 @@
 
 import SwiftUI
 
+// ONE MAJOR ITEM.  my method of deleting (tap, go to edit screen,
+// tap "Delete This Item," and then returning was working EXCEPT FOR ONE CASE:
+// if the list has only one item and you use this delete methodology,
+// the program would crash.  I'm still interested in resolving this bug, but I
+// have for now patched the code that was crashing in ShoppingItemRowView.
+// you can see a note there
+
+
 struct PurchasedTabView: View {
 	
 	// CoreData setup
@@ -31,7 +39,7 @@ struct PurchasedTabView: View {
 			}
 			
 			List {
-				Section(header: Text("Items Listed: \(purchasedItems.count)")) {
+				Section(header: sectionHeaderText()) {
 					ForEach(purchasedItems.filter({ searchTextContainsItemName($0.name!) })) { item in 
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							ShoppingItemRowView(item: item)
@@ -43,6 +51,14 @@ struct PurchasedTabView: View {
 				.listStyle(GroupedListStyle())
 			
 		} // end of VStack
+	}
+	
+	func sectionHeaderText() -> Text {
+		if searchText.isEmpty {
+			return Text("Items Listed: \(purchasedItems.count)")
+		}
+		let itemsShowing = purchasedItems.filter({ searchTextContainsItemName($0.name!) })
+		return Text("Items Matching \"\(searchText)\": \(itemsShowing.count)")
 	}
 	
 	func moveToShoppingList(indexSet: IndexSet) {

@@ -24,10 +24,11 @@ import CoreData
 // .onSwipeTrailing() and .onSwipeLeading() modifier to allow what we're doing.
 
 // AND ONE OTHER MAJOR ITEM.  my method of deleting (tap, go to edit screen,
-// tap "Delete This Item," and then returning works EXCEPT FOR ONE CASE:
-// if the list has only one item and you use this delete methodology,
-// the program crashes.  THIS IS EITHER MY BUG, SWIFTUI'S BUG, OR MY SERIOUS
-// MISUNDERSTANDING OF HOW THINGS WORK.  (don't know which yet!)
+// tap "Delete This Item," and then returning was working EXCEPT FOR ONE CASE:
+// if the list had only one item and you use this delete methodology,
+// the program would crash.  I'm still interested in resolving this bug, but I
+// have for now patched the code that was crashing in ShoppingItemRowView.
+// you can see a note there
 
 struct ShoppingListTabView1: View {
 	// Core Data access for items on shopping list
@@ -48,7 +49,9 @@ struct ShoppingListTabView1: View {
 			}
 			
 			if shoppingItems.isEmpty {
-				Text("There are no items on your Shopping List.")
+				Spacer()
+				Text("There are currently no items")
+				Text("on your Shopping List.")
 				Spacer()
 			} else {
 				List {

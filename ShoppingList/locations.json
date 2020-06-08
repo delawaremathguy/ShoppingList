@@ -36,15 +36,6 @@
     "name" : "Back Wall"
   },
   {
-    "green" : 0.83526009321212769,
-    "id" : "EED80E88-F874-4253-B4C0-5EB300D2C411",
-    "blue" : 0.83236992359161377,
-    "red" : 0.82947975397109985,
-    "opacity" : 1,
-    "visitationOrder" : 2147483647,
-    "name" : "Unknown Location"
-  },
-  {
     "green" : 0.10000000000000001,
     "id" : "D39CA2D3-A0AC-4C9A-A2B6-846C7E41CA9C",
     "blue" : 0.10000000000000001,

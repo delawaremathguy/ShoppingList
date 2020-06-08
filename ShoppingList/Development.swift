@@ -11,14 +11,16 @@ import Foundation
 // Use these constants and routines during development to import and
 // export shoppingItems and Locations via JSON
 //
-// usually, these will both be false for established database.  change only for debugging
+// usually, these will both be false for established database.  change only for debugging.
+// I use this stuff to offload existing data from a device to my Mac, and then can use
+// that data to load into the simulator or even another device.
 //
 // -- make the first one true to dump an existing database
 // -- make the second one true to load a new database from the main bundle
 //
 // (it doesn't make much sense that both would be true)
-// in the case of the simulator, data goes to a file on the Desktop
-// in the case of a device, it gets printed to the console
+// in the case of the simulator, data is dumped to a file on the Desktop
+// in the case of a device, it gets dumped to the console
 var kPerformJSONOutputDumpOnAppear = false // true = dump JSON output in MainView.onAppear()
 var kPerformInitialDataLoad = false // true = force initial data loading in MainView.onAppear()
 
@@ -61,7 +63,7 @@ func writeAsJSON<T>(items: [T], to filename: String) where T: JSONRepresentable 
 
 
 func populateDatabaseFromJSON() {
-	// it sure is easy to do with HSW's Bundle extension (!)
+	// it sure is easy to do with HWS's Bundle extension (!)
 	let jsonLocations: [LocationJSON] = Bundle.main.decode(from: kLocationsFilename)
 	Location.insertNewLocations(from: jsonLocations)
 	let jsonShoppingItems: [ShoppingItemJSON] = Bundle.main.decode(from: kShoppingItemsFilename)

@@ -18,9 +18,12 @@ import CoreData
 // dependent on shoppingItems, and that seems to be what guarantees that things
 // really do get updated visually after editing.
 
-// ALSO A MAJOR BUG (this is true of ShoppingListTabView1 as well).  the program will
-// crash if you truly delete an item from the list which causes it to become empty.
-// i'm still looking for a fix, in case you know one!
+// AND ONE OTHER MAJOR ITEM.  my method of deleting (tap, go to edit screen,
+// tap "Delete This Item," and then returning was working EXCEPT FOR ONE CASE:
+// if the list had only one item and you use this delete methodology,
+// the program would crash.  I'm still interested in resolving this bug, but I
+// have for now patched the code that was crashing in ShoppingItemRowView.
+// you can see a note there
 
 
 struct ShoppingListTabView2: View {
@@ -44,7 +47,9 @@ struct ShoppingListTabView2: View {
 			
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
 			if shoppingItems.isEmpty {
-				Text("There are no items on your Shopping List.")
+				Spacer()
+				Text("There are currently no items")
+				Text("on your Shopping List.")
 				Spacer()
 			} else {
 				

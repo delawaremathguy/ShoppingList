@@ -19,6 +19,7 @@
 		D62B88342451162E0051A7CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D62B88332451162E0051A7CE /* Assets.xcassets */; };
 		D62B88372451162E0051A7CE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D62B88362451162E0051A7CE /* Preview Assets.xcassets */; };
 		D62B883A2451162E0051A7CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D62B88382451162E0051A7CE /* LaunchScreen.storyboard */; };
+		D63B1A09248E7149001CA309 /* unknownLocation.json in Resources */ = {isa = PBXBuildFile; fileRef = D63B1A08248E7149001CA309 /* unknownLocation.json */; };
 		D6450BD7245F49DB0074DA16 /* AddorModifyShoppingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */; };
 		D648D349246388C100CD881B /* Location+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D648D348246388C100CD881B /* Location+Extensions.swift */; };
 		D65721B32464591700E4AAAF /* AddorModifyLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */; };
@@ -51,6 +52,7 @@
 		D62B88362451162E0051A7CE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D62B88392451162E0051A7CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D62B883B2451162E0051A7CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D63B1A08248E7149001CA309 /* unknownLocation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = unknownLocation.json; sourceTree = "<group>"; };
 		D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddorModifyShoppingItemView.swift; sourceTree = "<group>"; };
 		D648D348246388C100CD881B /* Location+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Extensions.swift"; sourceTree = "<group>"; };
 		D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddorModifyLocationView.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				D62B88382451162E0051A7CE /* LaunchScreen.storyboard */,
 				D62B883B2451162E0051A7CE /* Info.plist */,
 				D6ADB3B1247C266E00376271 /* locations.json */,
+				D63B1A08248E7149001CA309 /* unknownLocation.json */,
 				D6ADB3B3247C267900376271 /* shoppingItems.json */,
 				D62B88352451162E0051A7CE /* Preview Content */,
 			);
@@ -214,6 +217,7 @@
 				D62B883A2451162E0051A7CE /* LaunchScreen.storyboard in Resources */,
 				D62B88372451162E0051A7CE /* Preview Assets.xcassets in Resources */,
 				D6ADB3B4247C267900376271 /* shoppingItems.json in Resources */,
+				D63B1A09248E7149001CA309 /* unknownLocation.json in Resources */,
 				D6ADB3B2247C266F00376271 /* locations.json in Resources */,
 				D62B88342451162E0051A7CE /* Assets.xcassets in Resources */,
 			);

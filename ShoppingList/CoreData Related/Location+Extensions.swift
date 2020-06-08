@@ -12,6 +12,7 @@ import CoreData
 // constants
 let kUnknownLocationName = "Unknown Location"
 let kUnknownLocationVisitationOrder: Int32 = INT32_MAX
+let kUnknownLocationFilename = "unknownLocation.json"
 
 extension Location: Identifiable {
 	
@@ -31,14 +32,15 @@ extension Location: Identifiable {
 		return 0
 	}
 
-	static func allLocations() -> [Location] {
+	static func allUserLocations() -> [Location] {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
 		do {
 			let items = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
 			return items
 		}
 		catch let error as NSError {
-			print("Error getting ShoppingItems: \(error.localizedDescription), \(error.userInfo)")
+			print("Error getting User Locations: \(error.localizedDescription), \(error.userInfo)")
 		}
 		return [Location]()
 	}
@@ -47,6 +49,17 @@ extension Location: Identifiable {
 		let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
 		newLocation.id = UUID()
 		return newLocation
+	}
+	
+	static func creatUnknownLocation() {
+		let unknownLocation = Location(context: appDelegate.persistentContainer.viewContext)
+		unknownLocation.id = UUID()
+		unknownLocation.name = kUnknownLocationName
+		unknownLocation.red = 0.5
+		unknownLocation.green = 0.5
+		unknownLocation.blue = 0.5
+		unknownLocation.opacity = 0.5
+		unknownLocation.visitationOrder = kUnknownLocationVisitationOrder
 	}
 
 	static func unknownLocation() -> Location? {

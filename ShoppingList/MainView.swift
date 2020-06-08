@@ -14,10 +14,12 @@ import CoreData
 // than to track the selected tab (1, 2, or 3) so that we can set
 // the navigation title appropriately.
 
-// one programming note: the .onAppear() modifier is nothing you'd use
-// in a production situation.  it's only here for development and
-// debugging purposes, to either load default data on startup, or to
-// dump the current state of of the CoreData database to JSON.
+// one programming note: the .onAppear() modifier is used here for two reasons:
+// (1) if the database is empty (determined by whether there's a special "Unknown Location"
+// already in the database), then we create that location.
+// (2) loading an initial database if requested in Development.swift
+// (3) dumping the current CoreData database to JSON if requested in Development.swift
+
 struct MainView: View {
 	@State private var selectedTab = 1
 	
@@ -67,20 +69,23 @@ struct MainView: View {
 		}
 	
 	func doAppearanceCode() {
-		// again, this is used only for development purposes, since i
-		// know the CoreData database is set up properly when called.
-		// it will either load up a default database (if the database
-		// is empty), or dump the existing database to JSON.
-		// whether either of these things happens is controlled by
-		// booleans you see below, defined in Development.swift
-
-		if kPerformInitialDataLoad && Location.unknownLocation() == nil {
-				populateDatabaseFromJSON()
-				kPerformInitialDataLoad = false // don't do this again
+		// do we have a working database yet?  if not, create the Unknown Location
+		// so that we have a working database (1 location, no items)
+		if Location.unknownLocation() == nil {
+			let jsonLocations: [LocationJSON] = Bundle.main.decode(from: kUnknownLocationFilename)
+			Location.insertNewLocations(from: jsonLocations)
 		}
+	
+		// do we want to load data to populate the database? (see Development.swift)
+		if kPerformInitialDataLoad {
+			populateDatabaseFromJSON()
+			kPerformInitialDataLoad = false // don't do this again
+		}
+		
+		// do we want to dump the database as JSON?  (see Development.swift)
 		if kPerformJSONOutputDumpOnAppear {
 			writeAsJSON(items: ShoppingItem.allShoppingItems(), to: kShoppingItemsFilename)
-			writeAsJSON(items: Location.allLocations(), to: kLocationsFilename)
+			writeAsJSON(items: Location.allUserLocations(), to: kLocationsFilename)
 			kPerformJSONOutputDumpOnAppear = false // don't do this again
 		}
 	}
