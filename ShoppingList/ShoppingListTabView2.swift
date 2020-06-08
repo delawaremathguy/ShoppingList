@@ -59,8 +59,8 @@ struct ShoppingListTabView2: View {
 							
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-//									FlawedShoppingItemRowView(item: item, showLocation: false)
-									ShoppingItemRowView(name: item.name!, locationName: item.location!.name!, quantity: item.quantity, showLocation: false)
+									FlawedShoppingItemRowView(item: item, showLocation: false)
+//									ShoppingItemRowView(name: item.name!, locationName: item.location!.name!, quantity: item.quantity, showLocation: false)
 								}
 								.listRowBackground(self.textColor(for: item))
 							} // end of ForEach

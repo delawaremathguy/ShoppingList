@@ -47,32 +47,3 @@ struct FlawedShoppingItemRowView: View {
 	}
 }
 
-// BUT THEN: THIS AVOIDS THE PROBLEM ALTOGETHER ...
-// this replaces what i did above.  rather than latch on to the @ObservedObject
-// shopping item and extract fields, i just copied in the values we need.
-// there is no more crash, although it's a little bothersome to have to do it this
-// way.
-
-struct ShoppingItemRowView: View {
-	var name: String
-	var locationName: String
-	var quantity: Int32
-	var showLocation: Bool = true
-	
-	var body: some View {
-		HStack {
-			VStack(alignment: .leading) {
-				Text(name)
-					.font(.headline)
-				if showLocation {
-					Text(locationName)
-						.font(.caption)
-				}
-			}
-			Spacer()
-			Text(String(quantity))
-				.font(.headline)
-				.foregroundColor(Color.blue)
-		}
-	}
-}
