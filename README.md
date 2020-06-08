@@ -46,6 +46,8 @@ The shopping list is sorted by the visitation order of the location in which it 
 * The current code offers you the choice to see the shopping list either as one big list (use ShoppingListTabView1) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2).  both seem to work fine, but with one edge-case bug still unresolved, but the code does have a work-around (see below and in the code).
 * About color: using color to distinguish different Locations is not a good UI, since a significant portion of users either cannot distinguish color or choose visually compatible colors very well. 
 
+If you plan to play with or use this app, the app will start with an empty shopping list; from there you can create your own shopping items and locations associated with those items.  That's always a problem: to get the sense of the app, you really want some data to work with.  There's a boolean defined in Development.swift that, if set to true, will load up a sample shopping list with store locations at startup.
+
 
 ## Some Things I'm Working On
 
