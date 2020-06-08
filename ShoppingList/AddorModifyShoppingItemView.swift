@@ -31,7 +31,7 @@ struct AddorModifyShoppingItemView: View {
 	// but if editableItem is not nil, all of these will be updated in loadData()
 	@State private var itemName: String = "" // these are suitable defaults for a new shopping item
 	@State private var itemQuantity: Int = 1
-	@State private var selectedLocationIndex: Int = 0
+	@State private var selectedLocationIndex: Int = 0 // but this one's not right; we'll fix in loadData()
 	@State private var onList: Bool = true
 	
 	// this indicates dataHasBeenLoaded from an incoming editableItem
@@ -145,6 +145,7 @@ struct AddorModifyShoppingItemView: View {
 			// set up to be true if adding a new item to shoppinglist,
 			// but false if adding to purchased list. (user can override on screen)
 			onList = addItemToShoppingList
+			selectedLocationIndex = locations.count - 1 // index of Unknown Location
 		}
 		// and be sure we don't do this again (!)
 		dataLoaded = true
