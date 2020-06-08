@@ -4,7 +4,7 @@ My Last Update of note was **June 8, 2020**, when
 * I started releasing some snippets of code for dynamically sectioning the shopping list with GroupedListStyle(), 
 * I fixed a bug related to moving items from the *filtered* purchased item list to the shopping list, 
 * I fixed a startup bug where the program would crash in some cases, so you really can use this without having to load sample data from json, and 
-* I put in a work-around for a subtle edge-case bug.
+* ~~I put in a work-around for a subtle edge-case bug.~~ This bug has been fixed, finally.
 
 * * * * * *
 
@@ -34,7 +34,7 @@ Locations have an id (UUID), a name, a visitationOrder (an integer, as in, go to
 
 Swiping an item in either the shopping list or the already-purchased list moves it to the other list.  This exposes an issue in SwiftUI: the swipe UI calls the motion a "Delete," and the view modifier is .onDelete, but nothing is being deleted in this case.  i know about a contextMenu as an option, but i'd rather swipe now and wait for SwiftUI 2.0 to let me do this with a swipe with the right name.  Tapping on any item in either list lets you edit it for name, quantity, and assign/edit the store location in which it is found.
 
-* by the way, how do you really delete a ShoppingItem?  go to the Edit/Modify View and tap the Delete button. (same for deleting Locations ...)  However, there is a latent bug I'm still trying to work out, although I have put together a work-around for it in the code so that I don't think you'll see its effect.
+* by the way, how do you really delete a ShoppingItem?  go to the Edit/Modify View and tap the Delete button. (same for deleting Locations ...)  ~~However, there is a latent bug I'm still trying to work out, although I have put together a work-around for it in the code so that I don't think you'll see its effect.~~
 
 The third tab shows a list of all locations, listed in visitationOrder (an integer from 1...100).  One special Location is the "Unknown Location" which serves as the default location for all new items, which means "I don't really know where this item is yet, but I'll figure it out at the store." In programming terms, this location has the highest of all visitationOrder values, so that it comes last in the list of Locations, and shopping items with an unassigned/unknown location will come at the bottom of the shopping list.  
 
@@ -45,7 +45,7 @@ Tapping on a Location in the list lets you edit location information, including 
 The shopping list is sorted by the visitation order of the location in which it is found (and alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered, although all items in the same Location have the same color as a form of grouping.
 
 * Why don't you let me drag these items to reorder them, you ask?  Well, I did the reordering thing one time, and discovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  
-* The current code offers you the choice to see the shopping list either as one big list (use ShoppingListTabView1) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2).  both seem to work fine, but with one edge-case bug still unresolved, but the code does have a work-around (see below and in the code).
+* The current code offers you the choice to see the shopping list either as one big list (use ShoppingListTabView1) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2).  both seem to work fine, ~~but with one edge-case bug still unresolved, but the code does have a work-around (see below and in the code)~~.
 * About color: using color to distinguish different Locations is not a good UI, since a significant portion of users either cannot distinguish color or choose visually compatible colors very well. 
 
 If you plan to play with or use this app, the app will start with an empty shopping list; from there you can create your own shopping items and locations associated with those items.  That's always a problem: to get the sense of the app, you really want some data to work with.  There's a boolean defined in Development.swift that, if set to true, will load up a sample shopping list with store locations at startup.

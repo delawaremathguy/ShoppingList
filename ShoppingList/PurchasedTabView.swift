@@ -42,7 +42,8 @@ struct PurchasedTabView: View {
 				Section(header: sectionHeaderText()) {
 					ForEach(purchasedItems.filter({ searchTextContainsItemName($0.name!) })) { item in 
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-							ShoppingItemRowView(item: item)
+//							FlawedShoppingItemRowView(item: item)
+							ShoppingItemRowView(name: item.name!, locationName: item.location!.name!, quantity: item.quantity)
 						} // end of NavigationLink
 					} // end of ForEach
 						.onDelete(perform: moveToShoppingList)

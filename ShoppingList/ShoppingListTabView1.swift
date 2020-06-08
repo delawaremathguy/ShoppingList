@@ -59,7 +59,8 @@ struct ShoppingListTabView1: View {
 					Section(header: Text("Items Listed: \(shoppingItems.count)")) {
 						ForEach(shoppingItems) { item in
 							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-								ShoppingItemRowView(item: item)
+//								FlawedShoppingItemRowView(item: item)
+								ShoppingItemRowView(name: item.name!, locationName: item.location!.name!, quantity: item.quantity)
 							}
 							.listRowBackground(self.textColor(for: item))
 						} // end of ForEach
