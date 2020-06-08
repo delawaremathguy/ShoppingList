@@ -54,13 +54,13 @@ struct ShoppingListTabView1: View {
 				Text("on your Shopping List.")
 				Spacer()
 			} else {
+				
 				List {
 					// one main section, showing all items
-					Section(header: Text("Items Listed: \(shoppingItems.count)")) {
+					Section(header: MySectionHeaderView(title: "Items Listed: \(shoppingItems.count)")) {
 						ForEach(shoppingItems) { item in
 							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 								FlawedShoppingItemRowView(item: item)
-//								ShoppingItemRowView(name: item.name!, locationName: item.location!.name!, quantity: item.quantity)
 							}
 							.listRowBackground(self.textColor(for: item))
 						} // end of ForEach
@@ -87,7 +87,7 @@ struct ShoppingListTabView1: View {
 			
 		} // end of VStack
 	}
-		
+	
 	func clearShoppingList() {
 		for item in shoppingItems {
 			item.onList = false

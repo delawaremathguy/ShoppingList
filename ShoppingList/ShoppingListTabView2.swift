@@ -55,12 +55,11 @@ struct ShoppingListTabView2: View {
 				
 				List {
 					ForEach(locations(for: shoppingItems)) { location in
-						Section(header: Text(location.name!)) {
+						Section(header: MySectionHeaderView(title: location.name!)) {
 							
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 									FlawedShoppingItemRowView(item: item, showLocation: false)
-//									ShoppingItemRowView(name: item.name!, locationName: item.location!.name!, quantity: item.quantity, showLocation: false)
 								}
 								.listRowBackground(self.textColor(for: item))
 							} // end of ForEach
@@ -86,7 +85,7 @@ struct ShoppingListTabView2: View {
 			
 		} // end of VStack
 	} // end of body: some View
-		
+			
 	func locations(for items: FetchedResults<ShoppingItem>) -> [Location] {
 		// we first get the locations of each of the shopping items.
 		// compactMap seems a better choice than map because of the FetchResults issue

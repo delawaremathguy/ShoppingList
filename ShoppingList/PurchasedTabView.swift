@@ -39,11 +39,10 @@ struct PurchasedTabView: View {
 			}
 			
 			List {
-				Section(header: sectionHeaderText()) {
-					ForEach(purchasedItems.filter({ searchTextContainsItemName($0.name!) })) { item in 
+				Section(header: MySectionHeaderView(title: sectionHeaderTitle())) {
+					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in 
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							FlawedShoppingItemRowView(item: item)
-//							ShoppingItemRowView(name: item.name!, locationName: item.location!.name!, quantity: item.quantity)
 						} // end of NavigationLink
 					} // end of ForEach
 						.onDelete(perform: moveToShoppingList)
@@ -54,17 +53,17 @@ struct PurchasedTabView: View {
 		} // end of VStack
 	}
 	
-	func sectionHeaderText() -> Text {
+	func sectionHeaderTitle() -> String {
 		if searchText.isEmpty {
-			return Text("Items Listed: \(purchasedItems.count)")
+			return "Items Listed: \(purchasedItems.count)"
 		}
-		let itemsShowing = purchasedItems.filter({ searchTextContainsItemName($0.name!) })
-		return Text("Items Matching \"\(searchText)\": \(itemsShowing.count)")
+		let itemsShowing = purchasedItems.filter({ searchTextAppears(in: $0.name!) })
+		return "Items Matching \"\(searchText)\": \(itemsShowing.count)"
 	}
 	
 	func moveToShoppingList(indexSet: IndexSet) {
 		// the indexSet refers to indices in what's showing -- the filtered list
-		let itemsShowing = purchasedItems.filter({ searchTextContainsItemName($0.name!) })
+		let itemsShowing = purchasedItems.filter({ searchTextAppears(in: $0.name!) })
 		for index in indexSet {
 			let item = itemsShowing[index]
 			item.onList = true
@@ -74,11 +73,12 @@ struct PurchasedTabView: View {
 	
 	// i added this so that the search is not case sensistive, and also just to
 	// simplify the original coding of the filter function used in ForEach
-	func searchTextContainsItemName(_ name: String) -> Bool {
-		if searchText.isEmpty {
+	func searchTextAppears(in name: String) -> Bool {
+		let cleanedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+		if cleanedSearchText.isEmpty {
 			return true
 		}
-		return name.lowercased().contains(searchText.lowercased())
+		return name.localizedCaseInsensitiveContains(cleanedSearchText.lowercased())
 	}
 	
 }

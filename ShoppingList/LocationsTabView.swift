@@ -27,7 +27,7 @@ struct LocationsTabView: View {
 
 			// then the list of items
 			List {
-				Section(header: Text("Locations Listed: \(locations.count)")) {
+				Section(header: MySectionHeaderView(title: "Locations Listed: \(locations.count)")) {
 					ForEach(locations) { location in
 						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
 							LocationRowView(location: location)

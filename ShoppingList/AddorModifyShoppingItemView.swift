@@ -51,7 +51,7 @@ struct AddorModifyShoppingItemView: View {
 	var body: some View {
 		Form {
 			// 1
-			Section(header: Text("Basic Information")) {
+			Section(header: MySectionHeaderView(title: "Basic Information")) {
 				HStack(alignment: .firstTextBaseline) {
 					MyFormLabelText(labelText: "Name: ")
 					TextField("Item name", text: $itemName, onCommit: { self.commitDataEntry() })
@@ -76,7 +76,7 @@ struct AddorModifyShoppingItemView: View {
 			} // end of Section
 			
 			// 2 -- operational buttons
-			Section(header: Text("Shopping Item Management")) {
+			Section(header: MySectionHeaderView(title: "Shopping Item Management")) {
 				HStack {
 					Spacer()
 					Button("Save") {
@@ -118,7 +118,7 @@ struct AddorModifyShoppingItemView: View {
 
 
 	}
-	
+		
 	func barTitle() -> Text {
 		return editableItem == nil ? Text("Add New Item") : Text("Modify Item")
 	}

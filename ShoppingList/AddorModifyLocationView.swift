@@ -37,7 +37,7 @@ struct AddorModifyLocationView: View {
 	var body: some View {
 		Form {
 			// 1: Name, Visitation Order, Colors
-			Section(header: Text("Basic Information")) {
+			Section(header: MySectionHeaderView(title: "Basic Information")) {
 				HStack {
 					MyFormLabelText(labelText: "Name: ")
 					TextField("Location name", text: $locationName)
@@ -104,7 +104,7 @@ struct AddorModifyLocationView: View {
 			} // end of Section 1
 			
 			// Section 2: Save and Delete buttons
-			Section(header: Text("Location Management")) {
+			Section(header: MySectionHeaderView(title: "Location Management")) {
 				HStack {
 					Spacer()
 					Button("Save") {
@@ -127,7 +127,7 @@ struct AddorModifyLocationView: View {
 			}  // end of Section 2
 			
 			// Section 3: Items assigned to this Location
-			Section(header: Text("Items in the Location: \(editableLocation?.items?.count ?? 0) items")) {
+			Section(header: MySectionHeaderView(title: "Items in the Location: \(editableLocation?.items?.count ?? 0) items")) {
 				ForEach(itemsArray(at: editableLocation)) { item in
 					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 						Text(item.name!)
@@ -155,7 +155,6 @@ struct AddorModifyLocationView: View {
 	func barTitle() -> Text {
 		return editableLocation == nil ? Text("Add New Location") : Text("Modify Location")
 	}
-
 	
 	func deleteLocation() {
 		// we will move all items in this location to the Unknown Location
