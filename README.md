@@ -36,9 +36,11 @@ Swiping an item in either the shopping list or the already-purchased list moves 
 
 * by the way, how do you really delete a ShoppingItem?  go to the Edit/Modify View and tap the Delete button. (same for deleting Locations ...)  However, there is a latent bug I'm still trying to work out, although I have put together a work-around for it in the code so that I don't think you'll see its effect.
 
-The third tab shows a list of all locations, listed in visitationOrder (an integer from 1...100).  One special Location is the "Unknown Location" which, in programming terms, has the highest of all visitationOrder values, so that it comes last in the list of Locations, and shopping items with an unassigned/unknown location will come at the bottom of the shopping list.  Tapping on a Location in the list lets you edit location information, including reassigning the visitation order. 
+The third tab shows a list of all locations, listed in visitationOrder (an integer from 1...100).  One special Location is the "Unknown Location" which serves as the default location for all new items, which means "I don't really know where this item is yet, but I'll figure it out at the store." In programming terms, this location has the highest of all visitationOrder values, so that it comes last in the list of Locations, and shopping items with an unassigned/unknown location will come at the bottom of the shopping list.  
 
-* Why not let the user drag the Locations around to reset the order -- well, it's partly a SwiftUI thing, but persisting the order the way I'd like to do (using visitationOrder markers) has a few wrinkles that seem to conflict with SwiftUI's @FetchRequest.
+Tapping on a Location in the list lets you edit location information, including reassigning the visitation order. 
+
+* Why not let the user drag the Locations around to reset the order -- well, it's partly a SwiftUI thing with .onMove(), but persisting the order the way I'd like to do (using visitationOrder markers) has a few wrinkles that seem to conflict with SwiftUI's @FetchRequest.
 
 The shopping list is sorted by the visitation order of the location in which it is found (and alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered, although all items in the same Location have the same color as a form of grouping.
 
