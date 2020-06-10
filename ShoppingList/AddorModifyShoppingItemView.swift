@@ -33,6 +33,7 @@ struct AddorModifyShoppingItemView: View {
 	@State private var itemQuantity: Int = 1
 	@State private var selectedLocationIndex: Int = 0 // but this one's not right; we'll fix in loadData()
 	@State private var onList: Bool = true
+	@State private var isAvailable = true
 	
 	// this indicates dataHasBeenLoaded from an incoming editableItem
 	// it will be flipped to true once .onAppear() has been called
@@ -71,6 +72,11 @@ struct AddorModifyShoppingItemView: View {
 				HStack(alignment: .firstTextBaseline) {
 					Toggle(isOn: $onList) {
 						MyFormLabelText(labelText: "On Shopping List: ")
+					}
+				}
+				HStack(alignment: .firstTextBaseline) {
+					Toggle(isOn: $isAvailable) {
+						MyFormLabelText(labelText: "Is Available: ")
 					}
 				}
 			} // end of Section
@@ -141,6 +147,7 @@ struct AddorModifyShoppingItemView: View {
 				selectedLocationIndex = locations.count - 1 // index of Unknown Location
 			}
 			onList = item.onList
+			isAvailable = item.isAvailable
 		} else {
 			// set up to be true if adding a new item to shoppinglist,
 			// but false if adding to purchased list. (user can override on screen)
@@ -165,6 +172,7 @@ struct AddorModifyShoppingItemView: View {
 		itemForCommit.name = itemName
 		itemForCommit.quantity = Int32(itemQuantity)
 		itemForCommit.onList = onList
+		itemForCommit.isAvailable = isAvailable
 		// if existing object, remove its reference from its locations (notice ?.?.!)
 		editableItem?.location?.removeFromItems(editableItem!)
 		// then update location info

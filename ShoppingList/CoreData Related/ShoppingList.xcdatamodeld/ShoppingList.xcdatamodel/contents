@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Location" representedClassName="Location" syncable="YES" codeGenerationType="class">
         <attribute name="blue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="green" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -12,6 +12,7 @@
     </entity>
     <entity name="ShoppingItem" representedClassName="ShoppingItem" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isAvailable" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="onList" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="quantity" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -20,6 +21,6 @@
     </entity>
     <elements>
         <element name="Location" positionX="184.453125" positionY="-2.875" width="128" height="163"/>
-        <element name="ShoppingItem" positionX="-63" positionY="-18" width="128" height="133"/>
+        <element name="ShoppingItem" positionX="-63" positionY="-18" width="128" height="148"/>
     </elements>
 </model>

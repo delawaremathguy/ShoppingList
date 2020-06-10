@@ -12,6 +12,7 @@ struct ShoppingItemJSON: Codable {
 	var id: UUID
 	var name: String
 	var onList: Bool
+	var isAvailable: Bool
 	var quantity: Int32
 	var locationID: UUID
 	
@@ -19,6 +20,7 @@ struct ShoppingItemJSON: Codable {
 		id = item.id!
 		name = item.name!
 		onList = item.onList
+		isAvailable = item.isAvailable
 		quantity = item.quantity
 		locationID = item.location!.id!
 	}

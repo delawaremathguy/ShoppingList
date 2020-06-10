@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import CoreData
+import UIKit
 
 // Use these constants and routines during development to import and
 // export shoppingItems and Locations via JSON
@@ -60,7 +62,6 @@ func writeAsJSON<T>(items: [T], to filename: String) where T: JSONRepresentable 
 		print("Error with \(filename): \(error.localizedDescription), \(error.userInfo)")
 	}
 }
-
 
 func populateDatabaseFromJSON() {
 	// it sure is easy to do with HWS's Bundle extension (!)

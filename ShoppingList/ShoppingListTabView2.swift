@@ -60,6 +60,18 @@ struct ShoppingListTabView2: View {
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 									FlawedShoppingItemRowView(item: item, showLocation: false)
+										.contextMenu {
+											Button("Mark Purchased") {
+												item.moveToPuchased(saveChanges: true)
+											}
+											Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
+												if item.isAvailable {
+													item.markUnavailable(saveChanges: true)
+												} else {
+													item.markAvailable(saveChanges: true)
+												}
+											}
+									}
 								}
 								.listRowBackground(self.textColor(for: item))
 							} // end of ForEach
@@ -78,7 +90,6 @@ struct ShoppingListTabView2: View {
 						}
 						Spacer()
 					}
-					
 				}  // end of List
 					.listStyle(GroupedListStyle())
 			} // end of else
@@ -102,14 +113,14 @@ struct ShoppingListTabView2: View {
 		let itemsInThisLocation = shoppingItems.filter({ $0.location! == location })
 		for index in indexSet.reversed() {
 			let item = itemsInThisLocation[index]
-			item.onList = false
+			item.moveToPuchased()
 		}
 		ShoppingItem.saveChanges()
 	}
 
 	func clearShoppingList() {
 		for item in shoppingItems {
-			item.onList = false
+			item.moveToPuchased()
 		}
 		ShoppingItem.saveChanges()
 	}

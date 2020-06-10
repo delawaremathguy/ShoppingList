@@ -37,8 +37,14 @@ struct FlawedShoppingItemRowView: View {
 	var body: some View {
 		HStack {
 			VStack(alignment: .leading) {
+				if !item.isAvailable {
 				Text(item.name ?? "NO NAME")
 					.font(.body)
+					.overlay(Rectangle().frame(height: 1.0))
+				} else {
+					Text(item.name ?? "NO NAME")
+						.font(.body)
+				}
 				if showLocation {
 					Text(item.location?.name ?? "NO LOCATION")
 						.font(.caption)

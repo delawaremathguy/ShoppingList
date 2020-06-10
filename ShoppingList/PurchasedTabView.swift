@@ -43,6 +43,18 @@ struct PurchasedTabView: View {
 					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in 
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							FlawedShoppingItemRowView(item: item)
+								.contextMenu {
+									Button("Move to Shopping List") {
+										item.moveToShoppingList(saveChanges: true)
+									}
+									Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
+										if item.isAvailable {
+											item.markUnavailable(saveChanges: true)
+										} else {
+											item.markAvailable(saveChanges: true)
+										}
+									}
+							}
 						} // end of NavigationLink
 					} // end of ForEach
 						.onDelete(perform: moveToShoppingList)
@@ -66,7 +78,7 @@ struct PurchasedTabView: View {
 		let itemsShowing = purchasedItems.filter({ searchTextAppears(in: $0.name!) })
 		for index in indexSet {
 			let item = itemsShowing[index]
-			item.onList = true
+			item.moveToShoppingList()
 		}
 		ShoppingItem.saveChanges()
 	}

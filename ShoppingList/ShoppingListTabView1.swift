@@ -61,6 +61,18 @@ struct ShoppingListTabView1: View {
 						ForEach(shoppingItems) { item in
 							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 								FlawedShoppingItemRowView(item: item)
+									.contextMenu {
+										Button("Mark Purchased") {
+											item.moveToPuchased(saveChanges: true)
+										}
+										Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
+											if item.isAvailable {
+												item.markUnavailable(saveChanges: true)
+											} else {
+												item.markAvailable(saveChanges: true)
+											}
+										}
+								}
 							}
 							.listRowBackground(self.textColor(for: item))
 						} // end of ForEach
@@ -90,7 +102,7 @@ struct ShoppingListTabView1: View {
 	
 	func clearShoppingList() {
 		for item in shoppingItems {
-			item.onList = false
+			item.moveToPuchased()
 		}
 		ShoppingItem.saveChanges()
 	}
@@ -98,7 +110,7 @@ struct ShoppingListTabView1: View {
 	func moveToPurchased(indexSet: IndexSet) {
 		for index in indexSet {
 			let item = shoppingItems[index]
-			item.onList = false
+			item.moveToPuchased()
 		}
 		ShoppingItem.saveChanges()
 	}

@@ -3,17 +3,17 @@
 //  ShoppingList
 //
 //  Created by Jerry on 5/15/20.
-//  Copyright © 2020 Jerry. All rights reserved.
 //
 
 import Foundation
 
 extension Bundle {
 	
-	// code courtesy of Paul Hudson -- greatly simplifies loading json files from
+	// code courtesy of/copyright Paul Hudson -- greatly simplifies loading json files from
 	// the app bundle.  note that this code throws a fatal error if it there's a problem,
 	// under the thinking that the file we're reading must be there and this cannot fail.
-	// if it does fail, we want to know about it
+	// if it does fail, we want to know about it.  additionally, Paul recently added a number of
+	// catch handlers which might be helpful in diagnosing possible failures.
 	
 	func decode<T: Decodable>(from filename: String) -> T {
 		
@@ -27,10 +27,26 @@ extension Bundle {
 		
 		let decoder = JSONDecoder()
 		
-		guard let loadedData = try? decoder.decode(T.self, from: data) else {
-			fatalError("Failed to decode \(filename) from app bundle.")
+		do {
+			return try decoder.decode(T.self, from: data)
+		} catch DecodingError.keyNotFound(let key, let context) {
+			fatalError("Failed to decode \(filename) from bundle due to missing key '\(key.stringValue)' not found – \(context.debugDescription)")
+		} catch DecodingError.typeMismatch(_, let context) {
+			fatalError("Failed to decode \(filename) from bundle due to type mismatch – \(context.debugDescription)")
+		} catch DecodingError.valueNotFound(let type, let context) {
+			fatalError("Failed to decode \(filename) from bundle due to missing \(type) value – \(context.debugDescription)")
+		} catch DecodingError.dataCorrupted(_) {
+			fatalError("Failed to decode \(filename) from bundle because it appears to be invalid JSON")
+		} catch {
+			fatalError("Failed to decode \(filename) from bundle: \(error.localizedDescription)")
 		}
-		
-		return loadedData
 	}
+
+		
+//		guard let loadedData = try? decoder.decode(T.self, from: data) else {
+//			fatalError("Failed to decode \(filename) from app bundle.")
+//		}
+//
+//		return loadedData
+//	}
 }
