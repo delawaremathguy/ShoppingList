@@ -83,13 +83,11 @@ struct ShoppingListTabView2: View {
 					} // end of ForEach
 					
 					// clear shopping list button
-					HStack {
-						Spacer()
-						Button("Move All Items off-list") {
-							self.clearShoppingList()
-						}
-						Spacer()
+					if !shoppingItems.isEmpty {
+						CenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
+						CenteredButton(title: "Mark All Items Available", action: {self.markAllAvailable()})
 					}
+
 				}  // end of List
 					.listStyle(GroupedListStyle())
 			} // end of else
@@ -121,6 +119,13 @@ struct ShoppingListTabView2: View {
 	func clearShoppingList() {
 		for item in shoppingItems {
 			item.moveToPuchased()
+		}
+		ShoppingItem.saveChanges()
+	}
+	
+	func markAllAvailable() {
+		for item in shoppingItems {
+			item.markAvailable()
 		}
 		ShoppingItem.saveChanges()
 	}

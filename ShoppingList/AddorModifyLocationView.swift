@@ -105,24 +105,11 @@ struct AddorModifyLocationView: View {
 			
 			// Section 2: Save and Delete buttons
 			Section(header: MySectionHeaderView(title: "Location Management")) {
-				HStack {
-					Spacer()
-					Button("Save") {
-						self.commitData()
-					}
-					.disabled(locationName.isEmpty)
-					Spacer()
-				}
+				CenteredButton(title: "Save", action: self.commitData)
 				
 				if visitationOrder != kUnknownLocationVisitationOrder {
-					HStack {
-						Spacer()
-						Button("Delete This Location") {
-							self.showDeleteConfirmation = true
-						}
+					CenteredButton(title: "Delete This Location", action: { self.showDeleteConfirmation = true })
 						.foregroundColor(Color.red)
-						Spacer()
-					}
 				}
 			}  // end of Section 2
 			
@@ -228,4 +215,3 @@ struct AddorModifyLocationView: View {
 		return [ShoppingItem]()
 	}
 }
-

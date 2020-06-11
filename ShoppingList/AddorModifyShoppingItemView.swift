@@ -83,24 +83,11 @@ struct AddorModifyShoppingItemView: View {
 			
 			// 2 -- operational buttons
 			Section(header: MySectionHeaderView(title: "Shopping Item Management")) {
-				HStack {
-					Spacer()
-					Button("Save") {
-						self.commitDataEntry()
-					}
-					.disabled(itemName.isEmpty)
-					Spacer()
-				}
+				CenteredButton(title: "Save", action: self.commitDataEntry)
 
 				if editableItem != nil {
-					HStack {
-						Spacer()
-						Button("Delete This Shopping Item") {
-							self.showDeleteConfirmation = true
-						}
-						.foregroundColor(Color.red)
-						Spacer()
-					}
+					CenteredButton(title: "Delete This Shopping Item", action: { self.showDeleteConfirmation = true })
+					.foregroundColor(Color.red)
 				}
 				
 			} // end of Section
@@ -131,7 +118,9 @@ struct AddorModifyShoppingItemView: View {
 	
 	func loadData() {
 		// called on every .onAppear().  if dataLoaded is true, then we have
-		// already taken care of setting up the local state variables.
+		// already taken care of setting up the local state variables.  otherwise,
+		// we offload all the data of the editableItem (if there is one) to the
+		// state variables that control this view
 		if dataLoaded {
 			return
 		}
@@ -151,6 +140,7 @@ struct AddorModifyShoppingItemView: View {
 		} else {
 			// set up to be true if adding a new item to shoppinglist,
 			// but false if adding to purchased list. (user can override on screen)
+			// also sets default location to the unknownLocation
 			onList = addItemToShoppingList
 			selectedLocationIndex = locations.count - 1 // index of Unknown Location
 		}
