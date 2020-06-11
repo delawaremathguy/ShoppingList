@@ -83,10 +83,15 @@ extension ShoppingItem: Identifiable {
 		appDelegate.saveContext()
 	}
 
-	static func delete(item: ShoppingItem) {
+	static func delete(item: ShoppingItem, saveChanges: Bool = false) {
+		// remove reference to this item from its associated location first, then delete
+		let location = item.location
+		location?.removeFromItems(item)
 		let context = appDelegate.persistentContainer.viewContext
 		context.delete(item)
-		appDelegate.saveContext()
+		if saveChanges {
+			Self.saveChanges()
+		}
 	}
 	
 	// these functions coordinate state transitions of ShoppingItems,

@@ -39,7 +39,7 @@ extension Location: Identifiable {
 		return newLocation
 	}
 	
-	static func creatUnknownLocation() {
+	static func createUnknownLocation() {
 		let unknownLocation = Location(context: appDelegate.persistentContainer.viewContext)
 		unknownLocation.id = UUID()
 		unknownLocation.name = kUnknownLocationName
@@ -85,9 +85,23 @@ extension Location: Identifiable {
 		print("Inserted \(count) locations.")
 	}
 	
-	static func delete(item: Location) {
-		appDelegate.persistentContainer.viewContext.delete(item)
-		appDelegate.saveContext()
+	static func delete(location: Location, saveChanges: Bool = false) {
+		// you cannot delete the unknownLocation
+		guard let theUnknownLocation = unknownLocation(), location != theUnknownLocation else { return }
+		
+		// take all shopping items associated with this location and
+		// move then to the unknown location
+		if let shoppingItems = location.items as? Set<ShoppingItem> {
+			for item in shoppingItems {
+				location.removeFromItems(item)
+				item.setLocation(theUnknownLocation)
+			}
+		}
+		// and finish the deletion
+		appDelegate.persistentContainer.viewContext.delete(location)
+		if saveChanges {
+			appDelegate.saveContext()
+		}
 	}
 
 	

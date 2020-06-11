@@ -183,11 +183,7 @@ struct AddorModifyShoppingItemView: View {
 	
 	func deleteItem() {
 		if let item = editableItem {
-//			item.onList.toggle() // for now, just push to the other list to see what happens
-			let location = item.location
-			location?.removeFromItems(item)
-			ShoppingItem.delete(item: item)
-			ShoppingItem.saveChanges()
+			ShoppingItem.delete(item: item, saveChanges: true)
 			presentationMode.wrappedValue.dismiss()
 		}
 	}

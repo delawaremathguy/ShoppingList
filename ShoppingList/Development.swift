@@ -10,27 +10,22 @@ import Foundation
 import CoreData
 import UIKit
 
-// Use these constants and routines during development to import and
-// export shoppingItems and Locations via JSON
-//
-// usually, these will both be false for established database.  change only for debugging.
-// I use this stuff to offload existing data from a device to my Mac, and then can use
-// that data to load into the simulator or even another device.
-//
-// -- make the first one true to dump an existing database
-// -- make the second one true to load a new database from the main bundle
-//
-// (it doesn't make much sense that both would be true)
-// in the case of the simulator, data is dumped to a file on the Desktop
-// in the case of a device, it gets dumped to the console
-var kPerformJSONOutputDumpOnAppear = false // true = dump JSON output in MainView.onAppear()
-var kPerformInitialDataLoad = false // true = force initial data loading in MainView.onAppear()
+// i added what i call a "Demo Tools" tab so that if you want to use this
+// as a real app (device or simulator), access to all the debugging stuff that's
+// I have can be "controlled," so to speak, on a separate tabview, and that tab
+// view can be displayed or not by setting this global variable:
 
-// use these filenames for debug output and initial load from bundle
+let kShowDemoToolsTab = true
+
+// I used these constants and routines during development to import and
+// export shoppingItems and Locations via JSON
+// these are the filenames for JSON output when dumped from the simulator
+// (and also the filenames in the bundle used for sample data)
+let kJSONDumpPath = "/Users/keough/Desktop/"	// dumps to the Desktop: USE YOUR OWN NAME HERE
 let kShoppingItemsFilename = "shoppingItems.json"
 let kLocationsFilename = "locations.json"
 
-// to write stuff out -- a list of ShoppingItems and a list of Locations,
+// to write stuff out -- a list of ShoppingItems and a list of Locations --
 // the code is essentially the same except for the typing of the objects
 // in the list.  so we use the power of generics:  we introduce
 // (1) a protocol that demands that something be able to produce a simple
@@ -42,9 +37,9 @@ protocol JSONRepresentable {
 
 // and (2), knowing that ShoppingItem and Location are NSManagedObjects, we
 // don't want to write our own encoder, and we
-// only want to write out a few fields of data, we extend each to be able to
+// only want to write out a few fields of data, so we extend each to be able to
 // produce a simple, Codable struct holding only what we want to write out
-// (ShoppingItemJSON and LocationJSON structs, repsectively)
+// (ShoppingItemJSON and LocationJSON structs, respectively)
 func writeAsJSON<T>(items: [T], to filename: String) where T: JSONRepresentable {
 	let jsonizedItems = items.map() { $0.jsonProxy }
 	let encoder = JSONEncoder()
@@ -52,7 +47,7 @@ func writeAsJSON<T>(items: [T], to filename: String) where T: JSONRepresentable 
 	do {
 		let data = try encoder.encode(jsonizedItems)
 		#if targetEnvironment(simulator)
-			let filepath = "/Users/keough/Desktop/" + filename
+			let filepath = kJSONDumpPath + filename
 			try data.write(to: URL(fileURLWithPath: filepath))
 		#else
 			print(String(data: data, encoding: .utf8)!)
@@ -71,6 +66,21 @@ func populateDatabaseFromJSON() {
 	ShoppingItem.insertNewItems(from: jsonShoppingItems)
 	ShoppingItem.saveChanges()
 }
+
+func deleteAllData() {
+	let items1 = ShoppingItem.allShoppingItems()
+	for item in items1 {
+		ShoppingItem.delete(item: item)
+	}
+	
+	let items2 = Location.allUserLocations()
+	for item in items2 {
+		Location.delete(location: item)
+	}
+	
+	Location.saveChanges()
+}
+
 
 // this is a way to find out where the CoreData database lives,
 // primarily for use in the simulator

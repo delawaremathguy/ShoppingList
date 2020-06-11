@@ -157,23 +157,10 @@ struct AddorModifyLocationView: View {
 	}
 	
 	func deleteLocation() {
-		// we will move all items in this location to the Unknown Location
-		// only if we can find it, and if there is a current editableLocation
-		// (which should not happen anyway)
-		if let unknownLocation = Location.unknownLocation(),
-			let location = editableLocation {
-			
-			// need to move all items from the editableLocation! to Unknown
-			let shoppingItems = itemsArray(at: location)
-			for item in shoppingItems {
-				location.removeFromItems(item)
-				item.setLocation(unknownLocation)
-			}
-			
-			// now finish and dismiss
-			Location.delete(item: location)
-			presentationMode.wrappedValue.dismiss()
+		if let location = editableLocation {
+			Location.delete(location: location, saveChanges: true)
 		}
+		presentationMode.wrappedValue.dismiss()
 	}
 
 	func commitData() {

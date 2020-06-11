@@ -1,7 +1,7 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 10, 2020**, when 
-* Items on the shopping or purchased list can be marked either as the default "available," or as "unavailable" using a .contextMenu.  For an item on the shopping list, "unavailable" means that the item "could not be purchased because they didn't have it" and the item remains on the shopping list, with "strike through" text as an indication.  For an item on the purchased list, "unavailable" means only that it could not be purchased the last time around it was on the shopping list. This required changing the data model, so the json files and the code to load and dump the core data store have been updated to support reloading the database at startup.  The .contextMenu also allows the option to "move to Purchased" or "Move to Shopping List" as a convenience, in case you don't like using a traling swipe (which unfortunately says "Delete" as you'll see below).
+My Last Update of note was **June 11, 2020**, when 
+* All development/debugging aspects of the program are now controlled by the appearance of a fourth tab view, "Dev Tools," that gives button-pushing access to certain tools to load demo data, remove all data, and dump data to JSON.  Setting a simple Bool will remove the "Dev Tools" tab view.
 
 * * * * * *
 
@@ -27,7 +27,7 @@ ShoppingItems have an id (UUID), a name, a quantity, a boolean "onList" that ind
 
 Locations have an id (UUID), a name, a visitationOrder (an integer, as in, go to the dairy first, then the deli, then the canned vegetables, etc), and then values red, green, blue, opacity to define a color that is used to color every item listed in the shopping list.
 
-* A note on color.  There are some ColorPickers out there that could be used and i have tried one, but i'm hoping this arrives in SwiftUI 2.0.  Individually adjusting RGB and opacity is not the best UI.  
+* A note on color.  There are some ColorPickers out there that could be used and i have tried some, but i'm hoping this arrives in SwiftUI 2.0.  Individually adjusting RGB and Alpha is not the best UI.  
 
 Swiping an item (from trailing to leading) in either the shopping list or the already-purchased list moves it to the other list.  This exposes an issue in SwiftUI: the swipe UI calls the motion a "Delete," and the view modifier is .onDelete, but nothing is being deleted in this case.  i know about a contextMenu as an option, but i'd rather swipe now and wait for SwiftUI 2.0 to let me do this with a swipe with the right name.  Tapping on any item in either list lets you edit it for name, quantity, and assign/edit the store location in which it is found.  Long pressing on an item gives you a contextMenu to let you move items between lists, and also to toggle between the item being available and not available.
 
@@ -45,7 +45,7 @@ The shopping list is sorted by the visitation order of the location in which it 
 * The current code offers you the choice to see the shopping list either as one big list (use ShoppingListTabView1) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2).  both seem to work fine, but with one edge-case bug still unresolved, but the code does have a work-around (see below and in the code).
 * About color: using color to distinguish different Locations is not a good UI, since a significant portion of users either cannot distinguish color or choose visually compatible colors very well. 
 
-If you plan to play with or use this app, the app will start with an empty shopping list; from there you can create your own shopping items and locations associated with those items.  That's always a problem: to get the sense of the app, you really want some data to work with.  There's a boolean defined in Development.swift that, if set to true, will load up a sample shopping list with store locations at startup.
+If you plan to play with or use this app, the app will start with an empty shopping list; from there you can create your own shopping items and locations associated with those items.  To get the sense of the app, however, you really want some data to work with.  So go to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
 
 
 ## Some Things I'm Working On
@@ -54,15 +54,13 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
 * **ShoppingListTabView1** is a single list of items as described above, with items listed by their location's visitationOrder (and then alphabetically for each location).  Since Locations have different colors, the list is manageable, but not ideal.  
 
-**NEW: ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After about 3,000 attempts and coding and recoding, this version seems to be working almost pretty well so far. 
+**NEW: ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far. 
 
 * I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
 
-* Moving items around in a list in SwiftUI by dragging using .onMove() is a real, visual nightmare.  If you've tried .onMove() in a list of any size that extends beyond one screen, you'll see that dragged items resize, the item you press on may move wildly underneath you as does the list itself, sometimes the last item will just not move, etc.
+* I have been constantly struggling with visual updates in this project.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating -- I finally seem to have found the right mix of when @ObservedObect is necessary and when it isn't. You may see a comment or two in the code about this.
 
-* I have been constantly struggling with visual updates in putting this together.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating -- I finally seem to have found the right mix of when @ObservedObect is necessary and when it isn't. You may see a comment or two in the code about this.
-
-* I'm trying to get the right viewpoint on what is SwifUI.  It seems to be a combination of a future direction of iOS et. al. programming, a decent prototyping tool for now, and beta software with  limitations.  Paul Hudson (@twostraws, hackingwithswift.com) and other top devs he's interviewed recently all seem to think of SwiftUI as the future, so this project is my getting me ready for what's next.  
+* I'm still trying to get the right viewpoint on what is SwifUI.  It seems to be a combination of a future direction of iOS et. al. programming, a decent prototyping tool for now, and beta software with  limitations.  Paul Hudson (@twostraws, hackingwithswift.com) and other top devs he's interviewed recently all seem to think of SwiftUI as the future, so this project is my getting ready for what's next.  
 
 * Bugs have come and gone in SwiftUI (and come back again) since WWDC2019.  Perhaps WWDC2020 will give us SwiftUI 2.0 or something, and then maybe things will look better.  and in comparison with the introduction of Swift itself -- i doubt there were few apps that were pure Swift1.0; but these days, almost every new project will be done in Swift.
 
