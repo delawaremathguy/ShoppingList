@@ -9,8 +9,9 @@
 import SwiftUI
 
 // a simple view that contains a button that is horizontally centered onscreen
+// we have a few of these on-screen in views of items some add/modify screens
 
-struct CenteredButton: View {
+struct SLCenteredButton: View {
 	let title: String
 	let action: () -> Void
 	

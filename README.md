@@ -15,7 +15,7 @@ However, be warned:
 * there may be errors in the code, or some areas of the code might need help with regard to best practices; yet
 * nevertheless, this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
 
-Note. The SearchBarView in the Purchased items view was created by Simon Ng.  It appeared in [an article in AppCoda](https://www.appcoda.com/swiftui-search-bar/) and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCoda/SwiftUISearchBar.  The extension I use on Bundle to load JSON files is due to Paul Hudson (@twostraws, hackingwithswift.com) Otherwise, almost all of the code is original,  and It's yours if you want it -- please see LICENSE for the usual details and disclaimers.
+Note. The SearchBarView in the Purchased items view was created by Simon Ng.  It appeared in [an article in AppCoda](https://www.appcoda.com/swiftui-search-bar/) and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCoda/SwiftUISearchBar.  The extension I use on Bundle to load JSON files is due to Paul Hudson (@twostraws, [hackingwithswift.com](https://hackingwithswift.com)) Otherwise, almost all of the code is original,  and it's yours if you want it -- please see LICENSE for the usual details and disclaimers.
 
 That said ...
 
@@ -81,8 +81,8 @@ But Apple deprecated its sort-of-support for the cloud with CoreData somewhere a
 
 I was very close to having what I wanted, just waiting to flesh out the cloud integration, but then WWDC2019 happened.  I saw two things: CoreData and CloudKit working together (which I had really wanted a long time ago) and SwiftUI (that was a BIG WOW). 
 
-I have since rebuilt that app with CoreData (it was easier than you think -- I had done it before), and I am now actively building the project in parallel in SwiftUI.  But I ran into a few roadblocks (e.g., where's CollectionView, etc.) and kept finding myself with the same basic visual updating issues that have been discussed above.  So I am glad I built Shopping List (again, I had a need since I was doing almost all of the shopping during the pandemic) and confronted these same issues. 
+I have since rebuilt that app with CoreData (it was easier than you think -- I had done it before), and I am now actively building the project in parallel in SwiftUI.  But I ran into a few roadblocks (e.g., where's CollectionView, etc.) and kept finding myself with the same basic visual updating issues that have been discussed above.  So I am glad I built Shopping List (again, I had a need since I was doing almost all of the shopping during the pandemic) and confronted these issues. 
 
-So, I am waiting for WWDC2020 and Swift 2.0 that I can move forward and eventually take that app to the App Store.
+So, I am waiting for WWDC2020 and Swift 2.0 so that I can move forward and eventually take that other app to the App Store.
 
 Feel free to contact me about questions and comments.

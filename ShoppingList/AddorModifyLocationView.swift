@@ -39,76 +39,41 @@ struct AddorModifyLocationView: View {
 			// 1: Name, Visitation Order, Colors
 			Section(header: MySectionHeaderView(title: "Basic Information")) {
 				HStack {
-					MyFormLabelText(labelText: "Name: ")
+					SLFormLabelText(labelText: "Name: ")
 					TextField("Location name", text: $locationName)
 				}
 				
 				if visitationOrder != kUnknownLocationVisitationOrder {
 					Stepper(value: $visitationOrder, in: 1...100) {
 						HStack {
-							MyFormLabelText(labelText: "Visitation Order: ")
+							SLFormLabelText(labelText: "Visitation Order: ")
 							Text("\(visitationOrder)")
 						}
 					}
 				}
 
 				HStack {
-					MyFormLabelText(labelText: "Composite Color: ")
+					SLFormLabelText(labelText: "Composite Color: ")
 					Spacer()
 					RoundedRectangle(cornerRadius: 16)
 						.fill(Color(.sRGB, red: red, green: green, blue: blue, opacity: opacity))
 						.frame(width: 200)
 						.overlay(Capsule().stroke(Color.black, lineWidth: 1))
 				}
-				HStack {
-					Spacer()
-					HStack {
-						Text("Red: ")
-						Text(String(format: "%.2f", red))
-							.frame(width:40)
-					}
-					Slider(value: $red, in: 0 ... 1)
-						.frame(width: 200)
-				}
-				HStack {
-					Spacer()
-					HStack {
-						Text("Green: ")
-						Text(String(format: "%.2f", green))
-							.frame(width:40)
-					}
-					Slider(value: $green, in: 0 ... 1)
-						.frame(width: 200)
-				}
-				HStack {
-					Spacer()
-					HStack {
-						Text("Blue: ")
-						Text(String(format: "%.2f", blue))
-							.frame(width:40)
-					}
-					Slider(value: $blue, in: 0 ... 1)
-						.frame(width: 200)
-				}
-				HStack {
-					Spacer()
-					HStack {
-						Text("Opacity: ")
-						Text(String(format: "%.2f", opacity))
-							.frame(width:40)
-					}
-					Slider(value: $opacity, in: 0 ... 1)
-						.frame(width: 200)
-				}
-	
+
+				SLSliderControl(title: "Red: ", amount: $red)
+				SLSliderControl(title: "Green: ", amount: $green)
+				SLSliderControl(title: "Blue: ", amount: $blue)
+				SLSliderControl(title: "Opacity: ", amount: $opacity)
+
 			} // end of Section 1
 			
 			// Section 2: Save and Delete buttons
 			Section(header: MySectionHeaderView(title: "Location Management")) {
-				CenteredButton(title: "Save", action: self.commitData)
+				SLCenteredButton(title: "Save", action: self.commitData)
 				
-				if visitationOrder != kUnknownLocationVisitationOrder {
-					CenteredButton(title: "Delete This Location", action: { self.showDeleteConfirmation = true })
+				if visitationOrder != kUnknownLocationVisitationOrder && editableLocation != nil {
+					SLCenteredButton(title: "Delete This Location", action: { self.showDeleteConfirmation = true })
 						.foregroundColor(Color.red)
 				}
 			}  // end of Section 2
@@ -215,3 +180,5 @@ struct AddorModifyLocationView: View {
 		return [ShoppingItem]()
 	}
 }
+
+

@@ -23,15 +23,16 @@
 		D6450BD7245F49DB0074DA16 /* AddorModifyShoppingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */; };
 		D648D349246388C100CD881B /* Location+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D648D348246388C100CD881B /* Location+Extensions.swift */; };
 		D65721B32464591700E4AAAF /* AddorModifyLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */; };
+		D65B206C2493005600DB55F1 /* SLSliderControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65B206B2493005600DB55F1 /* SLSliderControl.swift */; };
 		D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */; };
 		D66FF35424926B6400B3ABC8 /* DevToolsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */; };
-		D66FF3562492E67100B3ABC8 /* CenteredButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF3552492E67100B3ABC8 /* CenteredButton.swift */; };
+		D66FF3562492E67100B3ABC8 /* SLCenteredButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */; };
 		D6ADB3B2247C266F00376271 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B1247C266E00376271 /* locations.json */; };
 		D6ADB3B4247C267900376271 /* shoppingItems.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B3247C267900376271 /* shoppingItems.json */; };
 		D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */; };
 		D6B8A95424636711005F8EF2 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A95324636711005F8EF2 /* MainView.swift */; };
 		D6B8A9562463693D005F8EF2 /* LocationsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */; };
-		D6DE39BD247314B40013F9B4 /* MyFormLabelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DE39BC247314B40013F9B4 /* MyFormLabelText.swift */; };
+		D6DE39BD247314B40013F9B4 /* SLFormLabelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */; };
 		D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF557C246D7421007D636B /* PurchasedTabView.swift */; };
 		D6EF5585246D964C007D636B /* ShoppingItemRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */; };
 		D6EF5587246D97C3007D636B /* Development.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF5586246D97C3007D636B /* Development.swift */; };
@@ -59,15 +60,16 @@
 		D648D348246388C100CD881B /* Location+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Extensions.swift"; sourceTree = "<group>"; };
 		D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddorModifyLocationView.swift; sourceTree = "<group>"; };
 		D65A15D22465A137004ACCBB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D65B206B2493005600DB55F1 /* SLSliderControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLSliderControl.swift; sourceTree = "<group>"; };
 		D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingListTabView2.swift; sourceTree = "<group>"; };
 		D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevToolsTabView.swift; sourceTree = "<group>"; };
-		D66FF3552492E67100B3ABC8 /* CenteredButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredButton.swift; sourceTree = "<group>"; };
+		D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLCenteredButton.swift; sourceTree = "<group>"; };
 		D6ADB3B1247C266E00376271 /* locations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 		D6ADB3B3247C267900376271 /* shoppingItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = shoppingItems.json; sourceTree = "<group>"; };
 		D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		D6B8A95324636711005F8EF2 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsTabView.swift; sourceTree = "<group>"; };
-		D6DE39BC247314B40013F9B4 /* MyFormLabelText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFormLabelText.swift; sourceTree = "<group>"; };
+		D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLFormLabelText.swift; sourceTree = "<group>"; };
 		D6EF557C246D7421007D636B /* PurchasedTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasedTabView.swift; sourceTree = "<group>"; };
 		D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemRowView.swift; sourceTree = "<group>"; };
 		D6EF5586246D97C3007D636B /* Development.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Development.swift; sourceTree = "<group>"; };
@@ -124,8 +126,9 @@
 				D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */,
 				D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */,
 				D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */,
-				D66FF3552492E67100B3ABC8 /* CenteredButton.swift */,
-				D6DE39BC247314B40013F9B4 /* MyFormLabelText.swift */,
+				D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */,
+				D65B206B2493005600DB55F1 /* SLSliderControl.swift */,
+				D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */,
 				D63B1A0A248EA769001CA309 /* MySectionHeaderView.swift */,
 				D62B88332451162E0051A7CE /* Assets.xcassets */,
 				D62B88382451162E0051A7CE /* LaunchScreen.storyboard */,
@@ -238,7 +241,7 @@
 				D6450BD7245F49DB0074DA16 /* AddorModifyShoppingItemView.swift in Sources */,
 				D60F14A724686BA80077AD3F /* ShoppingItemJSON.swift in Sources */,
 				D6B8A95424636711005F8EF2 /* MainView.swift in Sources */,
-				D6DE39BD247314B40013F9B4 /* MyFormLabelText.swift in Sources */,
+				D6DE39BD247314B40013F9B4 /* SLFormLabelText.swift in Sources */,
 				D6F375D62485593D005559E6 /* LocationRowView.swift in Sources */,
 				D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */,
 				D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */,
@@ -249,6 +252,7 @@
 				D612E16124898EBB007E1412 /* Array+Extensions.swift in Sources */,
 				D6EF5587246D97C3007D636B /* Development.swift in Sources */,
 				D66FF35424926B6400B3ABC8 /* DevToolsTabView.swift in Sources */,
+				D65B206C2493005600DB55F1 /* SLSliderControl.swift in Sources */,
 				D63B1A0B248EA76A001CA309 /* MySectionHeaderView.swift in Sources */,
 				D606197F2481510E005CE575 /* SearchBarView.swift in Sources */,
 				D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */,
@@ -256,7 +260,7 @@
 				D6FC7A0A24635D950096F018 /* ShoppingList.xcdatamodeld in Sources */,
 				D648D349246388C100CD881B /* Location+Extensions.swift in Sources */,
 				D62B882D2451162D0051A7CE /* SceneDelegate.swift in Sources */,
-				D66FF3562492E67100B3ABC8 /* CenteredButton.swift in Sources */,
+				D66FF3562492E67100B3ABC8 /* SLCenteredButton.swift in Sources */,
 				D6EF5585246D964C007D636B /* ShoppingItemRowView.swift in Sources */,
 				D65721B32464591700E4AAAF /* AddorModifyLocationView.swift in Sources */,
 			);

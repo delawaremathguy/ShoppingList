@@ -82,8 +82,8 @@ struct ShoppingListTabView1: View {
 						// but i don't want it at the bottom, in case you accidentally hit
 						// it while moving to the purchased item list
 						if !shoppingItems.isEmpty {
-							CenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
-							CenteredButton(title: "Mark All Items Available", action: {})
+							SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
+							SLCenteredButton(title: "Mark All Items Available", action: {})
 						}
 
 					} // end of Section

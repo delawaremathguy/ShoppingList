@@ -54,39 +54,39 @@ struct AddorModifyShoppingItemView: View {
 			// 1
 			Section(header: MySectionHeaderView(title: "Basic Information")) {
 				HStack(alignment: .firstTextBaseline) {
-					MyFormLabelText(labelText: "Name: ")
+					SLFormLabelText(labelText: "Name: ")
 					TextField("Item name", text: $itemName, onCommit: { self.commitDataEntry() })
 				}
 				Stepper(value: $itemQuantity, in: 1...10) {
 					HStack {
-						MyFormLabelText(labelText: "Quantity: ")
+						SLFormLabelText(labelText: "Quantity: ")
 						Text("\(itemQuantity)")
 					}
 				}
 				Picker(selection: $selectedLocationIndex,
-							 label: MyFormLabelText(labelText: "Location: ")) {
+							 label: SLFormLabelText(labelText: "Location: ")) {
 					ForEach(0 ..< locations.count, id:\.self) { index in
 						Text(self.locations[index].name!)
 					}
 				}
 				HStack(alignment: .firstTextBaseline) {
 					Toggle(isOn: $onList) {
-						MyFormLabelText(labelText: "On Shopping List: ")
+						SLFormLabelText(labelText: "On Shopping List: ")
 					}
 				}
 				HStack(alignment: .firstTextBaseline) {
 					Toggle(isOn: $isAvailable) {
-						MyFormLabelText(labelText: "Is Available: ")
+						SLFormLabelText(labelText: "Is Available: ")
 					}
 				}
+				
 			} // end of Section
 			
 			// 2 -- operational buttons
 			Section(header: MySectionHeaderView(title: "Shopping Item Management")) {
-				CenteredButton(title: "Save", action: self.commitDataEntry)
-
+				SLCenteredButton(title: "Save", action: self.commitDataEntry)
 				if editableItem != nil {
-					CenteredButton(title: "Delete This Shopping Item", action: { self.showDeleteConfirmation = true })
+					SLCenteredButton(title: "Delete This Shopping Item", action: { self.showDeleteConfirmation = true })
 					.foregroundColor(Color.red)
 				}
 				
@@ -97,7 +97,6 @@ struct AddorModifyShoppingItemView: View {
 							primaryButton: .cancel(Text("No")),
 							secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
 				)}
-	
 		
 		} // end of Form
 			.navigationBarTitle(barTitle(), displayMode: .inline)

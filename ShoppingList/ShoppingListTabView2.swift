@@ -84,8 +84,8 @@ struct ShoppingListTabView2: View {
 					
 					// clear shopping list button
 					if !shoppingItems.isEmpty {
-						CenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
-						CenteredButton(title: "Mark All Items Available", action: {self.markAllAvailable()})
+						SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
+						SLCenteredButton(title: "Mark All Items Available", action: {self.markAllAvailable()})
 					}
 
 				}  // end of List
