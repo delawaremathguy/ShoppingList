@@ -58,7 +58,6 @@ struct MainView: View {
 				
 			} // end of TabView
 			.navigationBarTitle(tabTitle(selectedTab: selectedTab))
-			.onAppear(perform: doAppearanceCode)
 
 		} // end of NavigationView
 	}
@@ -75,15 +74,6 @@ struct MainView: View {
 		}
 	}
 	
-	func doAppearanceCode() {
-		// regular startup point: do we have a working database yet?  if not, create the Unknown Location
-		// so that we have a default, empty database (1 location, no items)
-		if Location.unknownLocation() == nil {
-			Location.createUnknownLocation()
-			Location.saveChanges()
-		}
-	}
-
 }
 
 struct MainView_Previews: PreviewProvider {

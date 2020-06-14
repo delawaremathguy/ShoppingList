@@ -189,7 +189,7 @@
 		"quantity" : 1,
 		"locationID" : "855AC915-9B99-4FE8-9CC1-4807FB8B44F9",
 		"name" : "Ham steak (Giant brand)",
-		"isAvailable" : false
+		"isAvailable" : true
 	},
 	{
 		"onList" : false,
@@ -277,7 +277,7 @@
 		"quantity" : 1,
 		"locationID" : "DAC35E91-1A9C-4CA1-AB59-D42E9E10DB49",
 		"name" : "Panini bread",
-		"isAvailable" : false
+		"isAvailable" : true
 	},
 	{
 		"onList" : false,
@@ -533,7 +533,7 @@
 		"quantity" : 1,
 		"locationID" : "98BA7927-F8B1-4D53-9309-E128669CCD18",
 		"name" : "Creamed corn",
-		"isAvailable" : false
+		"isAvailable" : true
 	},
 	{
 		"onList" : false,
@@ -669,7 +669,7 @@
 		"quantity" : 1,
 		"locationID" : "77275861-8531-41F8-95EC-10F72436E933",
 		"name" : "Potatoes O’Brien (OreIda)",
-		"isAvailable" : false
+		"isAvailable" : true
 	},
 	{
 		"onList" : false,
@@ -757,7 +757,7 @@
 		"quantity" : 1,
 		"locationID" : "855AC915-9B99-4FE8-9CC1-4807FB8B44F9",
 		"name" : "Turkey breast",
-		"isAvailable" : false
+		"isAvailable" : true
 	},
 	{
 		"onList" : false,
@@ -773,6 +773,6 @@
 		"quantity" : 1,
 		"locationID" : "855AC915-9B99-4FE8-9CC1-4807FB8B44F9",
 		"name" : "Meatloaf mix",
-		"isAvailable" : false
+		"isAvailable" : true
 	}
 ]
