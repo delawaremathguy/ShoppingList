@@ -11,6 +11,7 @@ import SwiftUI
 struct DevToolsTabView: View {
 	
 	@State private var confirmDeleteAllDataShowing = false
+	@State private var confirmDataHasBeenAdded = false
 	
     var body: some View {
 			VStack(spacing: 20) {
@@ -20,11 +21,22 @@ struct DevToolsTabView: View {
 				
 				Button("Load sample data") {
 					populateDatabaseFromJSON()
+					self.confirmDataHasBeenAdded = true
 				}
-				
+				.alert(isPresented: $confirmDataHasBeenAdded) {
+					Alert(title: Text("Data Added"), message: Text("Sample data for the app has been added."),
+								dismissButton: .default(Text("OK")))
+				}
+
 				Button("Remove all data") {
 					self.confirmDeleteAllDataShowing = true
 				}
+				.alert(isPresented: $confirmDeleteAllDataShowing) {
+					Alert(title: Text("Remove All Data?"), message: Text("All application data will be cleared and this cannot be undone. Are you sure you want to delete all data?"),
+								primaryButton: .cancel(Text("No")),
+								secondaryButton: .destructive(Text("Yes"), action: { deleteAllData() }))
+				}
+
 				
 				Button("Write database as JSON") {
 					writeAsJSON(items: ShoppingItem.allShoppingItems(), to: kShoppingItemsFilename)
@@ -33,11 +45,6 @@ struct DevToolsTabView: View {
 				
 				Spacer()
 				
-			}
-			.alert(isPresented: $confirmDeleteAllDataShowing) {
-				Alert(title: Text("Remove All Data?"), message: Text("All application data will be cleared and this cannot be undone. Are you sure you want to delete all data?"),
-							primaryButton: .cancel(Text("No")),
-							secondaryButton: .destructive(Text("Yes"), action: { deleteAllData() }))
 			}
 
 	}

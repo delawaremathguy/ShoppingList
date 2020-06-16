@@ -72,8 +72,7 @@ extension Location: Identifiable {
 	static func insertNewLocations(from jsonLocations: [LocationJSON]) {
 		var count = 0
 		for jsonLocation in jsonLocations {
-			let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
-			newLocation.id = jsonLocation.id
+			let newLocation = addNewLocation() // new UUID created here
 			newLocation.name = jsonLocation.name
 			newLocation.visitationOrder = jsonLocation.visitationOrder
 			newLocation.red = jsonLocation.red

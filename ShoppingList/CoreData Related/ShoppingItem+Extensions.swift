@@ -33,7 +33,7 @@ extension ShoppingItem: Identifiable {
 		}
 		return [ShoppingItem]()
 	}
-
+	
 	// addNewItem is the user-facing add of a new entity.  since these are
 	// Identifiable objects, this makes sure we give the entity a unique id, then
 	// hand it back so the user can fill in what's important to them.
@@ -46,32 +46,24 @@ extension ShoppingItem: Identifiable {
 
 	static func insertNewItems(from jsonShoppingItems: [ShoppingItemJSON]) {
 		
-		// get all Locations
-		var locations: [Location]
-		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
-		let context = appDelegate.persistentContainer.viewContext
-		do {
-			let list = try context.fetch(fetchRequest)
-			locations = list
-		} catch let error as NSError {
-			print("Error looking up locations: \(error.localizedDescription), \(error.userInfo)")
-			locations = []
-		}
-		
-		// group by id for faster lookup below
-		let uuid2Location = Dictionary(grouping: locations, by: { $0.id! })
+		// get all Locations that are not the unknown location
+		// group by id for faster lookup below when adding an item to a location
+		let locations = Location.allUserLocations()
+		let name2Location = Dictionary(grouping: locations, by: { $0.name! })
 		
 		var count = 0
 		for jsonShoppingItem in jsonShoppingItems {
-			let newItem = ShoppingItem(context: context)
-			newItem.id = jsonShoppingItem.id
+			let newItem = addNewItem() // new UUID is created here
 			newItem.name = jsonShoppingItem.name
 			newItem.quantity = jsonShoppingItem.quantity
 			newItem.onList = jsonShoppingItem.onList
 			newItem.isAvailable = jsonShoppingItem.isAvailable
-			if let location = uuid2Location[jsonShoppingItem.locationID]?.first { // we should have a matching location
+			
+			// look up matching location by id
+			// anything that doesn't match goes to the unknown location.
+			if let location = name2Location[jsonShoppingItem.locationName]?.first {
 				newItem.setLocation(location)
-			} else { // but in case the data doesn't match, put this item in the unknown location
+			} else {
 				newItem.setLocation(Location.unknownLocation()!)
 			}
 			count += 1
@@ -131,7 +123,7 @@ extension ShoppingItem: Identifiable {
 }
 
 extension ShoppingItem: JSONRepresentable {
-	var jsonProxy: some Decodable & Encodable {
+	var jsonProxy: some Encodable & Decodable {
 		return ShoppingItemJSON(from: self)
 	}
 }

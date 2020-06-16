@@ -1,7 +1,7 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 11, 2020**, when 
-* All development/debugging aspects of the program are now controlled by the appearance of a fourth tab view, "Dev Tools," that gives button-pushing access to certain tools to load demo data, remove all data, and dump data to JSON.  Setting a simple Bool will remove the "Dev Tools" tab view.
+My Last Update of note was **June 16, 2020**, when 
+* The development operations of offloading all data to JSON and adding/restoring data from JSON (from the app bundle, as sample data) were tweaked so that no UUIDs are written out to JSON, and new UUIDs are generated when objects are loaded from JSON. Little else has changed since June 11 when i added a "Dev Tools" tab to more easily perform some maintenance and development tasks (without having to dig through the source code to find out how to use these).
 
 * * * * * *
 

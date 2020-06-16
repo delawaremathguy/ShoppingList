@@ -101,7 +101,7 @@ struct ShoppingListTabView2: View {
 		// -- the result will be [Location]
 		let allLocations = items.compactMap({ $0.location })
 		// then turn these into a Set (which causes all duplicates to be removed)
-		// and sort by visitationOrder
+		// and sort by visitationOrder (which gives an array)
 		return Set(allLocations).sorted(by: <)
 	}
 

@@ -9,20 +9,18 @@
 import Foundation
 
 struct ShoppingItemJSON: Codable {
-	var id: UUID
 	var name: String
 	var onList: Bool
 	var isAvailable: Bool
 	var quantity: Int32
-	var locationID: UUID
+	var locationName: String	// there's some assumption here that location names are unique
 	
 	init(from item: ShoppingItem) {
-		id = item.id!
 		name = item.name!
 		onList = item.onList
 		isAvailable = item.isAvailable
 		quantity = item.quantity
-		locationID = item.location!.id!
+		locationName = item.location!.name!
 	}
 	
 

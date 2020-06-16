@@ -9,7 +9,6 @@
 import Foundation
 
 struct LocationJSON: Codable {
-	var id: UUID
 	var name: String
 	var visitationOrder: Int32
 	var red: Double
@@ -19,7 +18,6 @@ struct LocationJSON: Codable {
 
 
 	init(from location: Location) {
-		id = location.id!
 		name = location.name!
 		visitationOrder = location.visitationOrder
 		red = location.red
