@@ -20,6 +20,19 @@ extension Location: Identifiable {
 		UIApplication.shared.delegate as! AppDelegate
 	}()
 
+	static func count() -> Int {
+		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
+		do {
+			let itemCount = try appDelegate.persistentContainer.viewContext.count(for: fetchRequest)
+			return itemCount
+		}
+		catch let error as NSError {
+			print("Error counting User Locations: \(error.localizedDescription), \(error.userInfo)")
+		}
+		return 0
+	}
+
 	static func allUserLocations() -> [Location] {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
@@ -70,7 +83,7 @@ extension Location: Identifiable {
 	
 	// used to insert data from JSON files in the app bundle
 	static func insertNewLocations(from jsonLocations: [LocationJSON]) {
-		var count = 0
+//		var count = 0
 		for jsonLocation in jsonLocations {
 			let newLocation = addNewLocation() // new UUID created here
 			newLocation.name = jsonLocation.name
@@ -79,9 +92,9 @@ extension Location: Identifiable {
 			newLocation.green = jsonLocation.green
 			newLocation.blue = jsonLocation.blue
 			newLocation.opacity = jsonLocation.opacity
-			count += 1
+//			count += 1
 		}
-		print("Inserted \(count) locations.")
+//		print("Inserted \(count) locations.")
 	}
 	
 	static func delete(location: Location, saveChanges: Bool = false) {

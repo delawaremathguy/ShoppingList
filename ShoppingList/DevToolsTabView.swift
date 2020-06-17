@@ -12,6 +12,8 @@ struct DevToolsTabView: View {
 	
 	@State private var confirmDeleteAllDataShowing = false
 	@State private var confirmDataHasBeenAdded = false
+	@State private var locationsAdded: Int = 0
+	@State private var shoppingItemsAdded: Int = 0
 	
     var body: some View {
 			VStack(spacing: 20) {
@@ -20,11 +22,15 @@ struct DevToolsTabView: View {
 					.padding(.horizontal)
 				
 				Button("Load sample data") {
+					self.locationsAdded = Location.count() // what it is now
+					self.shoppingItemsAdded = ShoppingItem.count() // what it is now
 					populateDatabaseFromJSON()
+					self.locationsAdded = Location.count() - self.locationsAdded // now the differential
+					self.shoppingItemsAdded = ShoppingItem.count() - self.shoppingItemsAdded // now the differential
 					self.confirmDataHasBeenAdded = true
 				}
 				.alert(isPresented: $confirmDataHasBeenAdded) {
-					Alert(title: Text("Data Added"), message: Text("Sample data for the app has been added."),
+					Alert(title: Text("Data Added"), message: Text("Sample data for the app (\(locationsAdded) locations and \(shoppingItemsAdded) shopping items) have been added."),
 								dismissButton: .default(Text("OK")))
 				}
 

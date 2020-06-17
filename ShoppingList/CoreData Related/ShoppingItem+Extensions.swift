@@ -21,6 +21,18 @@ extension ShoppingItem: Identifiable {
 		UIApplication.shared.delegate as! AppDelegate
 	}()
 	
+	static func count() -> Int {
+		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
+		do {
+			let itemCount = try appDelegate.persistentContainer.viewContext.count(for: fetchRequest)
+			return itemCount
+		}
+		catch let error as NSError {
+			print("Error counting ShoppingItems: \(error.localizedDescription), \(error.userInfo)")
+		}
+		return 0
+	}
+
 	static func allShoppingItems() -> [ShoppingItem] {
 		let context = appDelegate.persistentContainer.viewContext
 		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
@@ -51,7 +63,7 @@ extension ShoppingItem: Identifiable {
 		let locations = Location.allUserLocations()
 		let name2Location = Dictionary(grouping: locations, by: { $0.name! })
 		
-		var count = 0
+//		var count = 0
 		for jsonShoppingItem in jsonShoppingItems {
 			let newItem = addNewItem() // new UUID is created here
 			newItem.name = jsonShoppingItem.name
@@ -66,9 +78,9 @@ extension ShoppingItem: Identifiable {
 			} else {
 				newItem.setLocation(Location.unknownLocation()!)
 			}
-			count += 1
+//			count += 1
 		}
-		print("Inserted \(count) shopping items")
+//		print("Inserted \(count) shopping items")
 	}
 	
 	static func saveChanges() {
