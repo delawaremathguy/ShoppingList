@@ -20,7 +20,7 @@ import CoreData
 
 struct MainView: View {
 	@State private var selectedTab = 1
-	
+
 	var body: some View {
 		NavigationView {
 			
@@ -34,19 +34,19 @@ struct MainView: View {
 						Image(systemName: "cart")
 						Text("Shopping List")
 				}.tag(1)
-				
+
 				PurchasedTabView()
 					.tabItem {
 						Image(systemName: "purchased")
 						Text("Purchased")
 				}.tag(2)
-				
+
 				LocationsTabView()
 					.tabItem {
 						Image(systemName: "map")
 						Text("Locations")
 				}.tag(3)
-				
+
 				if kShowDemoToolsTab {
 					DevToolsTabView()
 						.tabItem {
@@ -57,11 +57,11 @@ struct MainView: View {
 
 				
 			} // end of TabView
-			.navigationBarTitle(tabTitle(selectedTab: selectedTab))
+				.navigationBarTitle(tabTitle(selectedTab: selectedTab))
 
 		} // end of NavigationView
 	}
-		
+	
 	func tabTitle(selectedTab: Int) -> String {
 		if selectedTab == 1 {
 			return "Shopping List"

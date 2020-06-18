@@ -34,7 +34,7 @@ struct ShoppingListTabView2: View {
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
 								predicate: NSPredicate(format: "onList == true")
 	) var shoppingItems: FetchedResults<ShoppingItem>
-		
+	
 	var body: some View {
 		VStack {
 			
@@ -44,7 +44,7 @@ struct ShoppingListTabView2: View {
 					.foregroundColor(Color.blue)
 					.padding(10)
 			}
-			
+
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
 			if shoppingItems.isEmpty {
 				Spacer()
@@ -82,7 +82,7 @@ struct ShoppingListTabView2: View {
 						} // end of Section
 					} // end of ForEach
 					
-					// clear shopping list button
+					// clear/ mark as unavailable shopping list buttons
 					if !shoppingItems.isEmpty {
 						SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
 						SLCenteredButton(title: "Mark All Items Available", action: {self.markAllAvailable()})
@@ -91,6 +91,7 @@ struct ShoppingListTabView2: View {
 				}  // end of List
 					.listStyle(GroupedListStyle())
 			} // end of else
+
 			
 		} // end of VStack
 	} // end of body: some View

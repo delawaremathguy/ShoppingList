@@ -61,7 +61,16 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
   - **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far. 
 
-- I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
+- At some point, I will need to use **sheets** for the Add/Modify screens, and I am working on that right now.  I have a pretty good idea about how that works.  But in using NavigationLinks to move to the Add/Modify views, I have found the following curiosities (that perhaps will go away in Swift 2.0) which seem to be in conflict (this was not the case in UIKit). 
+
+ - The MainView of this app is a TabView and is embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation to be configured.  
+
+ - On the other hand, if I "segue" (*to use a UIKit term*) to one of the Add/Modify views using a NavigationLink, the tab bar is removed -- which turns out to be the behaviour I want (in UIKit, there was a simple checkbox in IB to make this happen).
+ 
+ - And if the MainView is not in a NavigationView, and if each of the TabViews is inside their own NavigationViews, then the TabViews own their navigation bars and can set title and navbar items as they wish.  But it's no longer possible (?) to hide the tab bar when segueing to one of the Add/Modify Views.
+
+
+ - I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
 
 - I have been constantly struggling with visual updates in this project.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating -- I finally seem to have found the right mix of when @ObservedObect is necessary and when it isn't. You may see a comment or two in the code about this.
 
