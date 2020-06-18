@@ -114,15 +114,8 @@ extension ShoppingItem: Identifiable {
 		}
 	}
 	
-	func markAvailable(saveChanges: Bool = false) {
-		isAvailable = true
-		if saveChanges {
-			Self.saveChanges()
-		}
-	}
-	
-	func markUnavailable(saveChanges: Bool = false) { // only called in shopping list (!)
-		isAvailable = false
+	func mark(available: Bool, saveChanges: Bool = false) {
+		isAvailable = available
 		if saveChanges {
 			Self.saveChanges()
 		}

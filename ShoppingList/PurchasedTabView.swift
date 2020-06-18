@@ -48,11 +48,7 @@ struct PurchasedTabView: View {
 										item.moveToShoppingList(saveChanges: true)
 									}
 									Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
-										if item.isAvailable {
-											item.markUnavailable(saveChanges: true)
-										} else {
-											item.markAvailable(saveChanges: true)
-										}
+										item.mark(available: !item.isAvailable, saveChanges: true)
 									}
 							}
 						} // end of NavigationLink

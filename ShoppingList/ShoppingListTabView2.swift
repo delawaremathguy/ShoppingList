@@ -27,7 +27,8 @@ import CoreData
 
 
 struct ShoppingListTabView2: View {
-	// Core Data access for items on shopping list
+	// Core Data access for the context and the items on shopping list
+	@Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
 									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
@@ -35,15 +36,34 @@ struct ShoppingListTabView2: View {
 								predicate: NSPredicate(format: "onList == true")
 	) var shoppingItems: FetchedResults<ShoppingItem>
 	
+	@State private var isAddNewItemSheetShowing: Bool = false
+	
 	var body: some View {
 		VStack {
 			
-			// 1. add new item "button" is at top
+			// 1. add new item "button" is at top of the list
+			// Question: why not put this in the Navigation bar?  i can't do it here, because the
+			// MainView owns the Navigation bar.  i could work around this by not having the MainView
+			// not live inside a NavigationView, but then when i NavigationLink my way off to Add/Modify
+			// an item, i can't dismiss the tab bar
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
 				Text("Add New Item")
 					.foregroundColor(Color.blue)
 					.padding(10)
 			}
+
+//			// 1. add new item "button" is at top
+//			// Question: why is this not used?  because when you move to a Sheet,
+//			// the Picker (for setting a Location) will be inactive because it is
+//			// not inside a NavigationView
+//			Button(action: { self.isAddNewItemSheetShowing = true }) {
+//				Text("Add New Item")
+//					.foregroundColor(Color.blue)
+//					.padding(10)
+//			}
+//			.sheet(isPresented: $isAddNewItemSheetShowing) {
+//				AddorModifyShoppingItemView(addItemToShoppingList: true).environment(\.managedObjectContext, self.managedObjectContext)
+//			}
 
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
 			if shoppingItems.isEmpty {
@@ -65,11 +85,7 @@ struct ShoppingListTabView2: View {
 												item.moveToPuchased(saveChanges: true)
 											}
 											Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
-												if item.isAvailable {
-													item.markUnavailable(saveChanges: true)
-												} else {
-													item.markAvailable(saveChanges: true)
-												}
+												item.mark(available: !item.isAvailable, saveChanges: true)
 											}
 									}
 								}
@@ -85,7 +101,9 @@ struct ShoppingListTabView2: View {
 					// clear/ mark as unavailable shopping list buttons
 					if !shoppingItems.isEmpty {
 						SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
-						SLCenteredButton(title: "Mark All Items Available", action: {self.markAllAvailable()})
+						if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
+							SLCenteredButton(title: "Mark All Items Available", action: {self.markAllAvailable()})
+						}
 					}
 
 				}  // end of List
@@ -126,7 +144,7 @@ struct ShoppingListTabView2: View {
 	
 	func markAllAvailable() {
 		for item in shoppingItems {
-			item.markAvailable()
+			item.mark(available: true, saveChanges: true)
 		}
 		ShoppingItem.saveChanges()
 	}

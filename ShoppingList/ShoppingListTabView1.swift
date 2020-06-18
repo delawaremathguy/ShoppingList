@@ -66,12 +66,13 @@ struct ShoppingListTabView1: View {
 											item.moveToPuchased(saveChanges: true)
 										}
 										Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
-											if item.isAvailable {
-												item.markUnavailable(saveChanges: true)
-											} else {
-												item.markAvailable(saveChanges: true)
-											}
+											item.mark(available: !item.isAvailable, saveChanges: true)
 										}
+//										Button("Delete this Item") {
+//											// trigger item deletion confirmation here
+//											// but at the moment, this third item drives the layout system crazy
+//											// and the button does not appear.  undoubtedly, SwiftUI is to blame
+//										}
 								}
 							}
 							.listRowBackground(self.textColor(for: item))
