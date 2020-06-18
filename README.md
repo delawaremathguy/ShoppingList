@@ -1,7 +1,9 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 16, 2020**, when 
+My Last Update of note was **June 17, 2020**, when 
 * The development operations of offloading all data to JSON and adding/restoring data from JSON (from the app bundle, as sample data) were tweaked so that no UUIDs are written out to JSON, and new UUIDs are generated when objects are loaded from JSON. Little else has changed since June 11 when i added a "Dev Tools" tab to more easily perform some maintenance and development tasks (without having to dig through the source code to find out how to use these).
+
+* And I discovered a run-time crash while shopping in the grocery store today. I simply marked an item as "unAvailable."  AARRGGHH! No data was lost (Core Data is pretty resilient), the program restarted fine, and the crash log looked like it was deep inside the heart of SwiftUI when it died.  It may be the same intermittent crash I have seen recently in the simulator, but cannot reproduce on demand (and there are several comments in code about this). Gosh, do I look forward to next week and WWDC2020 (!)
 
 * * * * * *
 
