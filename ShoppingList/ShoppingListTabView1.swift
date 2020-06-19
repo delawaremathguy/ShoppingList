@@ -16,19 +16,8 @@ import CoreData
 // visitation order, copying that to the items in the location makes sure that
 // this sees the changes.
 
-// MAJOR NOTE HERE: remember that the .onDelete() swipe action is not really
-// doing a delete, but just a simple "move this item to the purchased category."
-// to delete an item, tap to go to the edit screen, and then tap "Delete this
-// Item."  i like the swipe action, but it does not make sense at this point
-// in SwiftUI that swipe means delete.  perhaps SwiftUI 2.0 will have an
-// .onSwipeTrailing() and .onSwipeLeading() modifier to allow what we're doing.
-
-// AND ONE OTHER MAJOR ITEM.  my method of deleting (tap, go to edit screen,
-// tap "Delete This Item," and then returning was working EXCEPT FOR ONE CASE:
-// if the list had only one item and you use this delete methodology,
-// the program would crash.  I'm still interested in resolving this bug, but I
-// have for now patched the code that was crashing in ShoppingItemRowView.
-// you can see a note there
+// See comments over in ShoppingListTabView2, since that's where i spend more of my
+// time tweaking the shopping list.
 
 struct ShoppingListTabView1: View {
 	// Core Data access for items on shopping list
@@ -71,7 +60,8 @@ struct ShoppingListTabView1: View {
 //										Button("Delete this Item") {
 //											// trigger item deletion confirmation here
 //											// but at the moment, this third item drives the layout system crazy
-//											// and the button does not appear.  undoubtedly, SwiftUI is to blame
+//											// and the button will not appear (apparently this is more about
+//											// SwiftUI than it is me and this code
 //										}
 								}
 							}

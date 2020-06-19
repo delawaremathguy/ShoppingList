@@ -10,13 +10,10 @@ import SwiftUI
 import CoreData
 
 // the MainView is where the app begins.  it is a tab view with three
-// tabs, all inside a NavigationView.  not much going on here, other
+// tabs, all inside a NavigationView.  a fourth tab also appears if kShowDevToolsTab
+// is true (this is set in code in Development.swift). not much happens here, other
 // than to track the selected tab (1, 2, 3, or 4) so that we can set
 // the navigation title appropriately.
-
-// one programming note: the .onAppear() modifier is used here to see
-// if the database is empty (determined by whether there's a special "Unknown Location"
-// already in the database), and if not, then we create that location.
 
 struct MainView: View {
 	@State private var selectedTab = 1
@@ -47,7 +44,7 @@ struct MainView: View {
 						Text("Locations")
 				}.tag(3)
 
-				if kShowDemoToolsTab {
+				if kShowDevToolsTab {
 					DevToolsTabView()
 						.tabItem {
 							Image(systemName: "wrench")
