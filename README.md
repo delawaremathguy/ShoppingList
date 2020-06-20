@@ -60,7 +60,7 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
 ## Some Things I'm Working On
 
-- I have provided two options for the ShoppingListTabView, named, suprisingly, ShoppingListTabView1 and ShoppingListTabView2.  Just change the MainView code to use one or the other.  The latter is what I am working with myself, so that's what I have coded in MainView.  But if you're poking around in the code, try each one of them.
+- I have provided two options for the ShoppingListTabView, named, suprisingly, *ShoppingListTabView1* and *ShoppingListTabView2*.  Just change the MainView code to use one or the other.  The latter is what I am working with myself, so that's what I have coded in MainView.  But if you're poking around in the code, try each one of them.
 
   - **ShoppingListTabView1** is a single list of items as described above, with items listed by their location's visitationOrder (and then alphabetically for each location).  Since Locations have different colors, the list is manageable, but not ideal.  
 
@@ -74,7 +74,7 @@ If you plan to play with or use this app, the app will start with an empty shopp
  
   - And if the MainView is not in a NavigationView, and if each of the TabViews is inside their own NavigationViews, then the TabViews own their navigation bars and can set title and navbar items as they wish.  But it's no longer possible (?) to hide the tab bar when segueing to one of the Add/Modify Views.
  
- - Finally, moving to a sheet means that we have to explicitly hand off the managedObjectContext to its environment (not a big thing); but worse, the Picker that's used to set a Location for a ShoppingItem will not be active, because Pickers are not active unless inside a NavigationView/have a Navigation bar.
+  - Finally, moving to a sheet means that we have to explicitly hand off the managedObjectContext to its environment (not a big thing); but worse, the Picker that's used to set a Location for a ShoppingItem will not be active, because Pickers are not active unless inside a NavigationView/have a Navigation bar.
 
 
  - I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
