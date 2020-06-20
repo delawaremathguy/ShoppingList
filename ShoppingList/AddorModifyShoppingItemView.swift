@@ -42,6 +42,12 @@ struct AddorModifyShoppingItemView: View {
 	// showDeleteConfirmation controls whether an Alert will appear
 	// to confirm deletion of a ShoppingItem
 	@State private var showDeleteConfirmation: Bool = false
+	
+	// this itemToDelete... variable is a place to stash an item to be deleted, if any,
+	// after the view has disappeared.  seems like a kludgy way to do this, but also seems
+	// to work without incident (instead of deleting first then popping this view back
+	// to its navigation parent.
+	@State private var itemToDeleteAfterDisappear: ShoppingItem?
 
 
 	// we need access to the complete list of Locations to populate the picker
@@ -107,8 +113,18 @@ struct AddorModifyShoppingItemView: View {
 				Text("Cancel")
 			})
 			.onAppear(perform: loadData)
+			.onDisappear(perform: deleteItemIfRequested)
 
 
+	}
+	
+	// called when view disappears, which is when the parent view has fully returned
+	// to the screen.  this way, we don't delete out from under the parent, which seems
+	// to have been the underlying bug i struggled with earlier
+	func deleteItemIfRequested() {
+		if let item = itemToDeleteAfterDisappear {
+			ShoppingItem.delete(item: item)
+		}
 	}
 		
 	func barTitle() -> Text {
@@ -170,9 +186,13 @@ struct AddorModifyShoppingItemView: View {
 		presentationMode.wrappedValue.dismiss()
 	}
 	
+	// called after confirmation to delete an item.  we only place this
+	// item to delete "on hold" and it will be deleted after this view disappears --
+	// which means that you'll see the deletion then take place in the parent view
 	func deleteItem() {
 		if let item = editableItem {
-			ShoppingItem.delete(item: item, saveChanges: true)
+			itemToDeleteAfterDisappear = item
+			// ShoppingItem.delete(item: item, saveChanges: true)
 			presentationMode.wrappedValue.dismiss()
 		}
 	}

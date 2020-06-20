@@ -98,15 +98,6 @@ struct ShoppingListTabView2: View {
 							
 						} // end of Section
 					} // end of ForEach
-					
-//					// clear/ mark as unavailable shopping list buttons
-//					if !shoppingItems.isEmpty {
-//						SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
-//						if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
-//							SLCenteredButton(title: "Mark All Items Available", action: {self.markAllAvailable()})
-//						}
-//					}
-
 				}  // end of List
 					.listStyle(GroupedListStyle())
 				

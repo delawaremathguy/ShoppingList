@@ -33,6 +33,9 @@ struct AddorModifyLocationView: View {
 	// showDeleteConfirmation controls whether an Alert will appear
 	// to confirm deletion of a Location
 	@State private var showDeleteConfirmation: Bool = false
+	
+	@State private var itemToDeleteAfterDisappear: Location?
+
 			
 	var body: some View {
 		Form {
@@ -102,17 +105,24 @@ struct AddorModifyLocationView: View {
 							primaryButton: .cancel(Text("No")),
 							secondaryButton: .destructive(Text("Yes"), action: self.deleteLocation)
 				)}
+			.onDisappear(perform: deleteItemIfRequested)
 	}
 	
+	func deleteItemIfRequested() {
+		if let item = itemToDeleteAfterDisappear {
+			Location.delete(location: item)
+		}
+	}
+
 	func barTitle() -> Text {
 		return editableLocation == nil ? Text("Add New Location") : Text("Modify Location")
 	}
 	
 	func deleteLocation() {
 		if let location = editableLocation {
-			Location.delete(location: location, saveChanges: true)
+			itemToDeleteAfterDisappear = location
+			presentationMode.wrappedValue.dismiss()
 		}
-		presentationMode.wrappedValue.dismiss()
 	}
 
 	func commitData() {

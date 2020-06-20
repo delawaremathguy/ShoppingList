@@ -1,9 +1,10 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 17, 2020**, when 
-* The development operations of offloading all data to JSON and adding/restoring data from JSON (from the app bundle, as sample data) were tweaked so that no UUIDs are written out to JSON, and new UUIDs are generated when objects are loaded from JSON. Little else has changed since June 11 when i added a "Dev Tools" tab to more easily perform some maintenance and development tasks (without having to dig through the source code to find out how to use these).
+My Last Update of note was **June 20, 2020**, when 
 
-* And I discovered a run-time crash while shopping in the grocery store today. I simply marked an item as "unAvailable."  AARRGGHH! No data was lost (Core Data is pretty resilient), the program restarted fine, and the crash log looked like it was deep inside the heart of SwiftUI when it died.  It may be the same intermittent crash I have seen recently in the simulator, but cannot reproduce on demand (and there are several comments in code about this). Gosh, do I look forward to next week and WWDC2020 (!)
+* I  made a change to the idea of "deletion" of a ShoppingItem or a Location.  Previously, asking to delete one of these in a "Modify" screen" caused the item to be deleted from Core Data, and then the view was popped off the navigation stack (*UIKit-based language*) to return to the parent.  Now, asking to delete one of these in a "Modify" screen" causes the item to be stashed away, the view is dismissed, and then the .onDisappear() view modifier kicks in to do the actual deletion.  This *appears* to fix the major "bug" that was out there and was only ever patched so the code would not break; but we shall see.
+
+
 
 * * * * * *
 
@@ -17,9 +18,11 @@ However, be warned:
 * there may be errors in the code, or some areas of the code might need help with regard to best practices; yet
 * nevertheless, this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
 
-Note. The SearchBarView in the Purchased items view was created by Simon Ng.  It appeared in [an article in AppCoda](https://www.appcoda.com/swiftui-search-bar/) and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCoda/SwiftUISearchBar.  The extension I use on Bundle to load JSON files is due to Paul Hudson (@twostraws, [hackingwithswift.com](https://hackingwithswift.com)) Otherwise, almost all of the code is original,  and it's yours if you want it -- please see LICENSE for the usual details and disclaimers.
+Nevertheless, feel free to use this as is, to develop further,  to completely ignore, or even just to inspect and then send me a note to tell me I am doing this all wrong.  
 
-That said ...
+## License
+
+The SearchBarView in the Purchased items view was created by Simon Ng.  It appeared in [an article in AppCoda](https://www.appcoda.com/swiftui-search-bar/) and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCoda/SwiftUISearchBar.  The extension I use on Bundle to load JSON files is due to Paul Hudson (@twostraws, [hackingwithswift.com](https://hackingwithswift.com)) Otherwise, almost all of the code is original,  and it's yours if you want it -- please see LICENSE for the usual details and disclaimers.
 
 ## General App Structure
 
@@ -38,7 +41,7 @@ The CoreData model has only two entities named "ShoppingItem" and "Location," wi
 
 Swiping an item (from trailing to leading) in either the shopping list or the already-purchased list moves it to the other list.  This exposes an issue in SwiftUI: the swipe UI calls the motion a "Delete," and the view modifier is .onDelete, but nothing is being deleted in this case.  Tapping on any item in either list lets you edit it for name, quantity, assign/edit the store location in which it is found, or even delete the item.  Long pressing on an item gives you a contextMenu to let you move items between lists, and also to toggle between the item being available and not available. (At some point, you will also be able to Delete the item in this contextMenu, but the third button is not shown because the layout system goes nuts ... some comments on SO seem to suggest this is a bug.)
 
-* A reminder:  to truly delete a ShoppingItem from the database, go to its Modify View and tap the Delete button. (same for deleting Locations below ...)  However, there is a latent bug I'm still trying to work out, although I have put together a work-around for it in the code so that I don't think you'll see its effect.
+* A reminder:  to truly delete a ShoppingItem from the database, go to its Modify View and tap the Delete button. (same for deleting Locations below ...)  ~~However, there is a latent bug I'm still trying to work out, although I have put together a work-around for it in the code so that I don't think you'll see its effect.~~
 
 The third tab shows a list of all locations, listed in visitationOrder (an integer from 1...100).  One special Location is the "Unknown Location" which serves as the default location for all new items, which means "I don't really know where this item is yet, but I'll figure it out at the store." In programming terms, this location has the highest of all visitationOrder values, so that it comes last in the list of Locations, and shopping items with an unassigned/unknown location will come at the bottom of the shopping list. 
 
@@ -49,7 +52,7 @@ Tapping on a Location in the list lets you edit location information, including 
 The shopping list is sorted by the visitation order of the location in which it is found (and then alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered, although all items in the same Location have the same color as a form of grouping.
 
 * Why don't you let me drag these items to reorder them, you ask?  Well, I did the reordering thing one time, and discovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  
-* The current code offers you the choice to see the shopping list either as one big list (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine, albeit with one edge-case bug still unresolved -- but the code does have a work-around in place (see below and in the code).
+* The current code offers you the choice to see the shopping list either as one big list (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine, ~~albeit with one edge-case bug still unresolved -- but the code does have a work-around in place (see below and in the code).~~
 * About color: using color to distinguish different Locations is not a good UI, since a significant portion of users either cannot distinguish color or cannot choose visually compatible colors very well. 
 
 If you plan to play with or use this app, the app will start with an empty shopping list; from there you can create your own shopping items and locations associated with those items.  To get the sense of the app, however, you really want some data to work with.  So go to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
@@ -63,9 +66,9 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
   - **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far. 
 
-- At some point, I will need to use **sheets** for the Add/Modify screens, and I am working on that right now.  I have a pretty good idea about how that works.  But in using NavigationLinks to move to the Add/Modify views, I have found the following curiosities (that perhaps will go away in Swift 2.0) which seem to be in conflict (this was not the case in UIKit). 
+- At some point, I may want to use **sheets** for the Add/Modify screens, and I am working on that right now.  I have a pretty good idea about how that works.  But in using NavigationLinks to move to the Add/Modify views, I have found the following curiosities (that perhaps will go away in Swift 2.0) which seem to be in conflict (this was not the case in UIKit). 
 
-  - The MainView of this app is a TabView and is embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation to be configured.  
+  - The MainView of this app is a TabView and is embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation to be configured.  
 
   - On the other hand, if I "segue" (*to use a UIKit term*) to one of the Add/Modify views using a NavigationLink, the tab bar is removed -- which turns out to be the behaviour I want (in UIKit, there was a simple checkbox in IB to make this happen).
  
@@ -86,7 +89,7 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
 The project is what it is -- it's an on-going, out-in-public offering of code that may be of use to some; it might be something you'd like to play with or even develop on your own (fixing some things that are currently broken, or adding better design elements); or it might be something you'll look at and realize you've done something similar and run into similar problems.
 
-By the way: what you see today may not look anything like what it looks like tomorrow.  I've already had cases of getting something to work, then found it didn't work after the next change, and I've gone back and re-architected.  The CoreData model has changed multiple times -- but I do not rely on data migrations. (Yes, they were working correctly and I've done them in other projects, but at this stage, it's easier to just dump the database as JSON; delete the app; change the data model; and reload the data in code at startup ... which may require some coding changes to the code that loads it.)  Please see the code and comments in Development.swift and look at the new "Dev Tools" tab view for some explanations about how to load sample data, or dump the CoreData database to JSON.
+By the way: what you see today may not look anything like what it looks like tomorrow.  I've already had cases of getting something to work, then found it didn't work after the next change, and I've gone back and re-architected.  The CoreData model has changed multiple times -- but I do not rely on data migrations. (Yes, migrations were working correctly and I've done them in other projects, but at this stage, it's easier to just dump the database as JSON; delete the app; change the data model; and reload the data in code at startup ... which may require some coding changes to the code that loads it.)  Please see the code and comments in Development.swift and look at the new "Dev Tools" tab view for some explanations about how to load sample data, or dump the CoreData database to JSON.
 
 Finally, a story. I have another sizeable UIKit-based project, completely unrelated to this Shopping List project. I had every intention of moving to the App Store. But it lacked a couple of features (mostly synching with the Cloud across devices). And curiously, I had originally used CoreData to persist data when i started building it, when there was some cloud integration.
 
