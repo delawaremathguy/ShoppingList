@@ -67,7 +67,7 @@ struct MainView: View {
 		} else if selectedTab == 3 {
 			return "Locations"
 		} else {
-			return "Demo Tools"
+			return "Dev Tools"
 		}
 	}
 	

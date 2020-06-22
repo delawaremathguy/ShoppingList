@@ -21,7 +21,7 @@ let kShowDevToolsTab = true
 // export shoppingItems and Locations via JSON
 // these are the filenames for JSON output when dumped from the simulator
 // (and also the filenames in the bundle used for sample data)
-let kJSONDumpPath = "/Users/keough/Desktop/"	// dumps to the Desktop: USE YOUR OWN NAME HERE
+let kJSONDumpDirectory = "/Users/YOUR_OWN_USERNAME_HERE/Desktop/"	// dumps to the Desktop: USE YOUR OWN USERNAME HERE
 let kShoppingItemsFilename = "shoppingItems.json"
 let kLocationsFilename = "locations.json"
 
@@ -44,19 +44,30 @@ func writeAsJSON<T>(items: [T], to filename: String) where T: JSONRepresentable 
 	let jsonizedItems = items.map() { $0.jsonProxy }
 	let encoder = JSONEncoder()
 	encoder.outputFormatting = .prettyPrinted
+	var data = Data()
 	do {
-		let data = try encoder.encode(jsonizedItems)
-		#if targetEnvironment(simulator)
-			let filepath = kJSONDumpPath + filename
-			try data.write(to: URL(fileURLWithPath: filepath))
-		#else
-			print(String(data: data, encoding: .utf8)!)
-		#endif
-		print("List of items dumped as JSON to " + filename)
+		data = try encoder.encode(jsonizedItems)
 	} catch let error as NSError {
-		print("Error with \(filename): \(error.localizedDescription), \(error.userInfo)")
+		print("Error converting items to JSON: \(error.localizedDescription), \(error.userInfo)")
+		return
 	}
+	
+	// if in simulator, dump to files somewhere on your Mac (check definition above)
+	// and otherwise if on device (or if file dump doesn't work) print to console.
+	#if targetEnvironment(simulator)
+		let filepath = kJSONDumpDirectory + filename
+		do {
+			try data.write(to: URL(fileURLWithPath: filepath))
+		} catch {
+			print(String(data: data, encoding: .utf8)!)
+		}
+	#else
+		print(String(data: data, encoding: .utf8)!)
+	#endif
+	
+	print("List of items dumped as JSON to " + filename)
 }
+
 
 func populateDatabaseFromJSON() {
 	// it sure is easy to do with HWS's Bundle extension (!)
@@ -97,7 +108,8 @@ func deleteAllData() {
 //}
 
 // the stuff below is needed to implement my own ListStyle, e.g., so
-// section headers in a grouped style are better controlled
+// section headers in a grouped style are better controlled.  i just don't know
+// yet how to do this ... waiting on some SwiftUI documentation (!)
 
 //struct MyListStyle: ListStyle {
 //	static func _makeView<SelectionValue>(value: _GraphValue<_ListValue<MyListStyle, SelectionValue>>, inputs: _ViewInputs) -> _ViewOutputs where SelectionValue : Hashable {
