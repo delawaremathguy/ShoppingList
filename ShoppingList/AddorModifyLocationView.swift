@@ -8,6 +8,35 @@
 
 import SwiftUI
 
+// *** see more detailed comments about the use of this
+// struct over in AddOrModifyShoppingItemView
+
+struct EditableLocationData {
+	// all of the values here provide suitable defaults for a new Location
+	var locationName: String = ""
+	var visitationOrder: Int = 50
+	var red: Double = 0.25
+	var green: Double = 0.25
+	var blue: Double = 0.25
+	var opacity: Double = 0.40
+
+	// this copies all the editable data from an incoming Location
+	init(location: Location) {
+		locationName = location.name!
+		visitationOrder = Int(location.visitationOrder)
+		red = location.red
+		green = location.green
+		blue = location.blue
+		opacity = location.opacity
+	}
+	
+	// provides simple, default init with values specified above
+	init() { }
+	
+}
+
+// MARK: - View Definition
+
 struct AddorModifyLocationView: View {
 	@Environment(\.presentationMode) var presentationMode
 	
@@ -15,16 +44,8 @@ struct AddorModifyLocationView: View {
 	// that we're creating a new Location in this View.
 	var editableLocation: Location? = nil
 	
-	// all of these @State values are suitable defaults for a new location
-	// so if editableLocation is nil, these are the values we start with
-	// but if editableLocation is not nil, we'll set these in .onAppear()
-	// from the editableLocation
-	@State private var locationName: String = ""
-	@State private var visitationOrder: Int = 50
-	@State private var red: Double = 0.25
-	@State private var green: Double = 0.25
-	@State private var blue: Double = 0.25
-	@State private var opacity: Double = 0.40
+	// all editableData is packaged here:
+	@State private var editableData = EditableLocationData()
 	
 	// this indicates dataHasBeenLoaded from an incoming editableLocation
 	// it will be flipped to true once .onAppear() has been called
@@ -43,14 +64,14 @@ struct AddorModifyLocationView: View {
 			Section(header: MySectionHeaderView(title: "Basic Information")) {
 				HStack {
 					SLFormLabelText(labelText: "Name: ")
-					TextField("Location name", text: $locationName)
+					TextField("Location name", text: $editableData.locationName)
 				}
 				
-				if visitationOrder != kUnknownLocationVisitationOrder {
-					Stepper(value: $visitationOrder, in: 1...100) {
+				if editableData.visitationOrder != kUnknownLocationVisitationOrder {
+					Stepper(value: $editableData.visitationOrder, in: 1...100) {
 						HStack {
 							SLFormLabelText(labelText: "Visitation Order: ")
-							Text("\(visitationOrder)")
+							Text("\(editableData.visitationOrder)")
 						}
 					}
 				}
@@ -59,15 +80,15 @@ struct AddorModifyLocationView: View {
 					SLFormLabelText(labelText: "Composite Color: ")
 					Spacer()
 					RoundedRectangle(cornerRadius: 16)
-						.fill(Color(.sRGB, red: red, green: green, blue: blue, opacity: opacity))
+						.fill(rgbColor())
 						.frame(width: 200)
 						.overlay(Capsule().stroke(Color.black, lineWidth: 1))
 				}
 
-				SLSliderControl(title: "Red: ", amount: $red)
-				SLSliderControl(title: "Green: ", amount: $green)
-				SLSliderControl(title: "Blue: ", amount: $blue)
-				SLSliderControl(title: "Opacity: ", amount: $opacity)
+				SLSliderControl(title: "Red: ", amount: $editableData.red)
+				SLSliderControl(title: "Green: ", amount: $editableData.green)
+				SLSliderControl(title: "Blue: ", amount: $editableData.blue)
+				SLSliderControl(title: "Opacity: ", amount: $editableData.opacity)
 
 			} // end of Section 1
 			
@@ -75,14 +96,14 @@ struct AddorModifyLocationView: View {
 			Section(header: MySectionHeaderView(title: "Location Management")) {
 				SLCenteredButton(title: "Save", action: self.commitData)
 				
-				if visitationOrder != kUnknownLocationVisitationOrder && editableLocation != nil {
+				if editableData.visitationOrder != kUnknownLocationVisitationOrder && editableLocation != nil {
 					SLCenteredButton(title: "Delete This Location", action: { self.showDeleteConfirmation = true })
 						.foregroundColor(Color.red)
 				}
 			}  // end of Section 2
 			
 			// Section 3: Items assigned to this Location
-			Section(header: MySectionHeaderView(title: "Items in the Location: \(editableLocation?.items?.count ?? 0) items")) {
+			Section(header: MySectionHeaderView(title: "At this Location: \(editableLocation?.items?.count ?? 0) items")) {
 				ForEach(itemsArray(at: editableLocation)) { item in
 					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 						Text(item.name!)
@@ -100,12 +121,16 @@ struct AddorModifyLocationView: View {
 				Text("Cancel")
 			})
 			.alert(isPresented: $showDeleteConfirmation) {
-				Alert(title: Text("Delete \'\(locationName)\'?"),
+				Alert(title: Text("Delete \'\(editableLocation!.name!)\'?"),
 							message: Text("Are you sure you want to delete this location?"),
 							primaryButton: .cancel(Text("No")),
 							secondaryButton: .destructive(Text("Yes"), action: self.deleteLocation)
 				)}
 			.onDisappear(perform: deleteItemIfRequested)
+	}
+	
+	func rgbColor() -> Color {
+		Color(.sRGB, red: editableData.red, green: editableData.green, blue: editableData.blue, opacity: editableData.opacity)
 	}
 	
 	func deleteItemIfRequested() {
@@ -134,23 +159,8 @@ struct AddorModifyLocationView: View {
 			locationForCommit = Location.addNewLocation()
 		}
 		
-		// move data over from state variables
-		locationForCommit.name = locationName
-		locationForCommit.visitationOrder = Int32(visitationOrder)
-		locationForCommit.red = red
-		locationForCommit.green = green
-		locationForCommit.blue = blue
-		locationForCommit.opacity = opacity
-		// THE PROBLEM: we now may have reordered the Locations by visitationOrder.
-		// and if we return to the list of Locations, that's cool.  but if we move
-		// over to the shopping list tab (or if we go back and then move over to the
-		// shopping list tab), we're screwed -- it has not seen this update.
-		// so we will update the parallel visitationOrder in all the shoppingList
-		// items to match this order
-		let shoppingItems = itemsArray(at: locationForCommit)
-		for item in shoppingItems {
-			item.visitationOrder = Int32(visitationOrder)
-		}
+		// copy edited data, save, and we're done
+		locationForCommit.updateValues(from: editableData)
 		Location.saveChanges()
 		presentationMode.wrappedValue.dismiss()
 	}
@@ -159,26 +169,13 @@ struct AddorModifyLocationView: View {
 		// called on every .onAppear().  if dataLoaded is true, then we have
 		// already taken care of setting up the local state variables.
 		if !dataHasBeenLoaded {
-			// if there is an incoming editable location, offload its
-			// values to the state variables
 			if let location = editableLocation {
-				locationName = location.name!
-				visitationOrder = Int(location.visitationOrder)
-				red = location.red
-				green = location.green
-				blue = location.blue
-				opacity = location.opacity
-			}
-						
-			// and be sure we don't do this again (!)
+				editableData = EditableLocationData(location: location)
+			} // else we already have default, editable data set up right
 			dataHasBeenLoaded = true
 		}
 	}
 	
-	/// Provides a simple way to turn the NSSet of items for a Location into
-	/// an array that's sorted by name.
-	/// - Parameter location: Location for which you want a sorted list of items
-	/// - Returns: [ShoppingItem]
 	func itemsArray(at location: Location?) -> [ShoppingItem] {
 		// note: we could add a sorted parameter, here, to indicated whether
 		// the array returned should be sorted, but it's not worth the
@@ -191,4 +188,24 @@ struct AddorModifyLocationView: View {
 	}
 }
 
+// MARK: - ShoppingItem Convenience Extension
 
+extension Location {
+	
+	func updateValues(from editableData: EditableLocationData) {
+		name = editableData.locationName
+		visitationOrder = Int32(editableData.visitationOrder)
+		red = editableData.red
+		green = editableData.green
+		blue = editableData.blue
+		opacity = editableData.opacity
+		
+		// make sure all shopping items at this location have the
+		// updated visitation information
+		if let items = items as? Set<ShoppingItem> {
+			for item in items {
+				item.visitationOrder = visitationOrder
+			}
+		}
+	}
+}

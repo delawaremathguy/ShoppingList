@@ -8,36 +8,64 @@
 
 import SwiftUI
 
+// this is a transitional struct in the sense that on the way in, all the data for
+// a shoppingItem that i want to edit is copied into one of these; and on the way
+// out, whatever data is here is copied to the shoppingItem.  so we don't do
+// live editing -- we can edit away, but none of those changes is saved until
+// you really click the Save button.
+
+struct EditableShoppingItemData {
+	 // all of the values here provide suitable defaults for a new shopping item
+	var itemName: String = ""
+	var itemQuantity: Int = 1
+	var selectedLocation = Location.unknownLocation()!
+	var onList: Bool = true
+	var isAvailable = true
+	
+	// this copies all the editable data from an incoming ShoppingItem
+	init(shoppingItem: ShoppingItem) {
+		itemName = shoppingItem.name!
+		itemQuantity = Int(shoppingItem.quantity)
+		selectedLocation = shoppingItem.location!
+		onList = shoppingItem.onList
+		isAvailable = shoppingItem.onList
+	}
+	
+	// provides simple, default init with values specified above
+	init() { }
+	
+	// provides special case init when we adding a new shopping item
+	// to provide default for being on the list or not (all other values
+	// are defaulted properly)
+	init(onList: Bool) {
+		self.onList = onList
+	}
+}
+
+// MARK: - View Definition
+
 struct AddorModifyShoppingItemView: View {
 	@Environment(\.presentationMode) var presentationMode
-
 
 	// editableItem is either a ShoppingItem to edit, or nil to signify
 	// that we're creating a new ShoppingItem in this View.
 	var editableItem: ShoppingItem? = nil
+	
 	// addItemToShoppingList just means that if we are adding a new item
 	// (editableItem == nil), this tells us whether to put it on the shopping
-	// list or not.  the default is true: a new item goes on the shopping list.
+	// list initially or not.  the default is true: a new item goes on the shopping list.
 	// however, if inserting a new item from the Purchased list,
-	// this will be set to false at entry to mean "put the new item on
-	// the Purchased list," which the user can override if they wish.  so
+	// this will be set to false. the user can override here if they wish.
 	var addItemToShoppingList: Bool = true
 	
-	// all of these @State values are suitable defaults for a new ShoppingItem
-	// so if editableItem is nil, the values below are the right default values
-	// but note, loadData() will tweak the onList default value to false if called from
-	// the purchased list for adding a new item
-	//
-	// but if editableItem is not nil, all of these will be updated in loadData()
-	@State private var itemName: String = "" // these are suitable defaults for a new shopping item
-	@State private var itemQuantity: Int = 1
-	@State private var selectedLocationIndex: Int = 0 // but this one's not right; we'll fix in loadData()
-	@State private var onList: Bool = true
-	@State private var isAvailable = true
+	// this editableData stuct contains all of the fields of a ShoppingItem that
+	// can be edited here, so that we're not doing a "live edit" on the ShoppingItem.
+	// this will be defaulted properly in .onAppear()
+	@State private var editableData = EditableShoppingItemData()
 	
 	// this indicates dataHasBeenLoaded from an incoming editableItem
 	// it will be flipped to true once .onAppear() has been called
-	@State private var dataLoaded = false
+	@State private var editableDataInitialized = false
 	
 	// showDeleteConfirmation controls whether an Alert will appear
 	// to confirm deletion of a ShoppingItem
@@ -46,9 +74,8 @@ struct AddorModifyShoppingItemView: View {
 	// this itemToDelete... variable is a place to stash an item to be deleted, if any,
 	// after the view has disappeared.  seems like a kludgy way to do this, but also seems
 	// to work without incident (instead of deleting first then popping this view back
-	// to its navigation parent.
+	// to its navigation parent, which seemed to want to crash)
 	@State private var itemToDeleteAfterDisappear: ShoppingItem?
-
 
 	// we need access to the complete list of Locations to populate the picker
 	@FetchRequest(entity: Location.entity(),
@@ -57,52 +84,59 @@ struct AddorModifyShoppingItemView: View {
 
 	var body: some View {
 		Form {
-			// 1
+			// 1. Basic Information Fields
 			Section(header: MySectionHeaderView(title: "Basic Information")) {
+				
 				HStack(alignment: .firstTextBaseline) {
 					SLFormLabelText(labelText: "Name: ")
-					TextField("Item name", text: $itemName, onCommit: { self.commitDataEntry() })
+					TextField("Item name", text: $editableData.itemName, onCommit: { self.commitDataEntry() })
 				}
-				Stepper(value: $itemQuantity, in: 1...10) {
+				
+				Stepper(value: $editableData.itemQuantity, in: 1...10) {
 					HStack {
 						SLFormLabelText(labelText: "Quantity: ")
-						Text("\(itemQuantity)")
+						Text("\(editableData.itemQuantity)")
 					}
 				}
-				Picker(selection: $selectedLocationIndex,
+				
+				Picker(selection: $editableData.selectedLocation,
 							 label: SLFormLabelText(labelText: "Location: ")) {
-					ForEach(0 ..< locations.count, id:\.self) { index in
-						Text(self.locations[index].name!)
-					}
+								ForEach(locations) { location in
+									Text(location.name!).tag(location)
+								}
 				}
+				
 				HStack(alignment: .firstTextBaseline) {
-					Toggle(isOn: $onList) {
+					Toggle(isOn: $editableData.onList) {
 						SLFormLabelText(labelText: "On Shopping List: ")
 					}
 				}
+				
 				HStack(alignment: .firstTextBaseline) {
-					Toggle(isOn: $isAvailable) {
+					Toggle(isOn: $editableData.isAvailable) {
 						SLFormLabelText(labelText: "Is Available: ")
 					}
 				}
 				
 			} // end of Section
 			
-			// 2 -- operational buttons
+			// 2. Item Management (Save/Delete)
 			Section(header: MySectionHeaderView(title: "Shopping Item Management")) {
+				
 				SLCenteredButton(title: "Save", action: self.commitDataEntry)
+				
 				if editableItem != nil {
 					SLCenteredButton(title: "Delete This Shopping Item", action: { self.showDeleteConfirmation = true })
-					.foregroundColor(Color.red)
+						.foregroundColor(Color.red)
+						.alert(isPresented: $showDeleteConfirmation) {
+							Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
+										message: Text("Are you sure you want to delete this item?"),
+										primaryButton: .cancel(Text("No")),
+										secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
+							)}
 				}
 				
 			} // end of Section
-			.alert(isPresented: $showDeleteConfirmation) {
-				Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
-							message: Text("Are you sure you want to delete this item?"),
-							primaryButton: .cancel(Text("No")),
-							secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
-				)}
 		
 		} // end of Form
 			.navigationBarTitle(barTitle(), displayMode: .inline)
@@ -133,39 +167,24 @@ struct AddorModifyShoppingItemView: View {
 	
 	func loadData() {
 		// called on every .onAppear().  if dataLoaded is true, then we have
-		// already taken care of setting up the local state variables.  otherwise,
-		// we offload all the data of the editableItem (if there is one) to the
-		// state variables that control this view
-		if dataLoaded {
-			return
-		}
-		// if there is an incoming editable shopping item, offload its
-		// values to the state variables
-		if let item = editableItem {
-			itemName = item.name!
-			itemQuantity = Int(item.quantity)
-			let locationNames = locations.map() { $0.name! }
-			if let index = locationNames.firstIndex(of: item.location!.name!) {
-				selectedLocationIndex = index
+		// already taken care of setting up the local state editable data.  otherwise,
+		// we offload all the data from the editableItem (if there is one) to the
+		// local state editable data that control this view
+		if !editableDataInitialized {
+			if let item = editableItem {
+				editableData = EditableShoppingItemData(shoppingItem: item)
 			} else {
-				selectedLocationIndex = locations.count - 1 // index of Unknown Location
+				// just be sure the default data is tweaked to place a new item on
+				// the right list by default, depending on how this view was created
+				editableData = EditableShoppingItemData(onList: addItemToShoppingList)
 			}
-			onList = item.onList
-			isAvailable = item.isAvailable
-		} else {
-			// set up to be true if adding a new item to shoppinglist,
-			// but false if adding to purchased list. (user can override on screen)
-			// also sets default location to the unknownLocation
-			onList = addItemToShoppingList
-			selectedLocationIndex = locations.count - 1 // index of Unknown Location
+			// and be sure we don't do this again (!)
+			editableDataInitialized = true
 		}
-		// and be sure we don't do this again (!)
-		dataLoaded = true
 	}
 	
 	func commitDataEntry() {
-		// if we already have an editableItem, use it,
-		// else create it now
+		// if we already have an editableItem, use it, else create it now
 		var itemForCommit: ShoppingItem
 		if let item = editableItem {
 			itemForCommit = item
@@ -173,15 +192,9 @@ struct AddorModifyShoppingItemView: View {
 			itemForCommit = ShoppingItem.addNewItem()
 		}
 
-		// fill in basic info fields
-		itemForCommit.name = itemName
-		itemForCommit.quantity = Int32(itemQuantity)
-		itemForCommit.onList = onList
-		itemForCommit.isAvailable = isAvailable
-		// if existing object, remove its reference from its locations (notice ?.?.!)
-		editableItem?.location?.removeFromItems(editableItem!)
-		// then update location info
-		itemForCommit.setLocation(locations[selectedLocationIndex])
+		// update for all edits made and we're done.  i created an extension
+		// on ShoppingItem below to do thi update
+		itemForCommit.updateValues(from: editableData)
 		ShoppingItem.saveChanges()
 		presentationMode.wrappedValue.dismiss()
 	}
@@ -195,5 +208,18 @@ struct AddorModifyShoppingItemView: View {
 			// ShoppingItem.delete(item: item, saveChanges: true)
 			presentationMode.wrappedValue.dismiss()
 		}
+	}
+}
+
+// MARK: - ShoppingItem Convenience Extension
+
+extension ShoppingItem {
+	
+	func updateValues(from editableData: EditableShoppingItemData) {
+		name = editableData.itemName
+		quantity = Int32(editableData.itemQuantity)
+		setLocation(editableData.selectedLocation)
+		onList = editableData.onList
+		isAvailable = editableData.isAvailable
 	}
 }

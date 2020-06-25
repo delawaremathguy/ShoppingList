@@ -42,7 +42,7 @@ struct PurchasedTabView: View {
 				Section(header: MySectionHeaderView(title: sectionHeaderTitle())) {
 					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in 
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-							FlawedShoppingItemRowView(item: item)
+							ShoppingItemRowView(item: item)
 								.contextMenu {
 									Button("Move to Shopping List") {
 										item.moveToShoppingList(saveChanges: true)

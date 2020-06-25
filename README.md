@@ -1,9 +1,9 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 20, 2020**, when 
+My Last Update of note was **June 25, 2020**, when 
 
-* I  made a change to the idea of "deletion" of a ShoppingItem or a Location.  Previously, asking to delete one of these in a "Modify" screen" caused the item to be deleted from Core Data, and then the view was popped off the navigation stack (*UIKit-based language*) to return to the parent.  Now, asking to delete one of these in a "Modify" screen" causes the item to be stashed away, the view is dismissed, and then the .onDisappear() view modifier kicks in to do the actual deletion.  This *appears* to fix the major "bug" that was out there and was only ever patched so the code would not break; but we shall see.
-
+* I  seriously cleaned up the code of AddOrModifyShoppingItemView to collect all the state variables into a single struct, which makes it more clear what we're doing and that we are certainly not doing a live editing on the item.  when the user saves the data, all this editable data is copied back the item.  I also updated the location Picker in this view to be keyed to the locations themselves, rather than by index into the locations array. *Similar modifications were made in AddOrModifyLocationView*.
+* I now believe that the one crash I was experiencing and had worked around has been eliminated.  Comments in the code reflect this.
 
 
 * * * * * *
@@ -31,29 +31,31 @@ The main screen is a TabView, to show
 * a list of previously purchased items, and
 * a list of "locations" in a store, such as "Dairy," "Fruits & Vegetables," "Deli," and so forth.  
 
-The CoreData model has only two entities named "ShoppingItem" and "Location," with every ShoppingItem having a to-one relationship to a location (the inverse is to-many).
+The CoreData model has only two entities named "ShoppingItem" and "Location," with every ShoppingItem having a to-one relationship to a Location (the inverse is to-many).
 
-**ShoppingItems** have an id (UUID), a name, a quantity, a boolean "onList" that indicates whether the item is on the list for today's shopping exercise, or not on the list (and so available in the purchased list for future promotion to the shopping list), and also an "isAvailable" boolean that provides a strike-through appearance for the item when false.    ShoppingItems currently also have a visitationOrder, that mirrors the visitationOrder of the Location to which they are assigned -- you'll see a comment in the code about why this is done.
+**ShoppingItems** have an id (UUID), a name, a quantity, a boolean "onList" that indicates whether the item is on the list for today's shopping exercise, or not on the list (and so available in the purchased list for future promotion to the shopping list), and also an "isAvailable" boolean that provides a strike-through appearance for the item when false (sometimes an item is on the list, but not available today, and I want to remember that when planning the future shopping list).    ShoppingItems currently also have a visitationOrder, that mirrors the visitationOrder of the Location to which they are assigned -- you'll see a comment in the code about why this is done.
 
 **Locations** have an id (UUID), a name, a visitationOrder (an integer, as in, go to the dairy first, then the deli, then the canned vegetables, etc), and then values red, green, blue, opacity to define a color that is used to color every item listed in the shopping list.
 
-* A note on color.  There are some ColorPickers out there that could be used and i have tried some, but i'm hoping this arrives in SwiftUI 2.0.  Individually adjusting RGB and Alpha is not the best UI.  
+* A note on color.  There is now a ColorPicker in SwiftUI 2.0, and "sometime soon" I will start using that.  In the meantime, individually adjusting RGB and Alpha may not the best UI, but it will have to do. 
 
-Swiping an item (from trailing to leading) in either the shopping list or the already-purchased list moves it to the other list.  This exposes an issue in SwiftUI: the swipe UI calls the motion a "Delete," and the view modifier is .onDelete, but nothing is being deleted in this case.  Tapping on any item in either list lets you edit it for name, quantity, assign/edit the store location in which it is found, or even delete the item.  Long pressing on an item gives you a contextMenu to let you move items between lists, and also to toggle between the item being available and not available. (At some point, you will also be able to Delete the item in this contextMenu, but the third button is not shown because the layout system goes nuts ... some comments on SO seem to suggest this is a bug.)
+Swiping an item (from trailing to leading) in either the shopping list or the already-purchased list moves it to the other list.  This exposes an issue in SwiftUI: the swipe UI calls the motion a "Delete," and the view modifier is .onDelete, but nothing is being deleted in this case.  Tapping on any item in either list lets you edit it for name, quantity, assign/edit the store location in which it is found, or even delete the item.  Long pressing on an item gives you a contextMenu to let you move items between lists, and also to toggle between the item being available and not available.
 
 * A reminder:  to truly delete a ShoppingItem from the database, go to its Modify View and tap the Delete button. (same for deleting Locations below ...)  ~~However, there is a latent bug I'm still trying to work out, although I have put together a work-around for it in the code so that I don't think you'll see its effect.~~
+*  At some point, you will also be able to Delete an item from the contextMenu, but the attempted placement of a third button in the contextMenu is not showing and the layout system goes nuts ... some comments on SO seem to suggest this is a bug.
+* I haven't seen anything yet from WWDC about handling general swiping actions.
 
 The third tab shows a list of all locations, listed in visitationOrder (an integer from 1...100).  One special Location is the "Unknown Location" which serves as the default location for all new items, which means "I don't really know where this item is yet, but I'll figure it out at the store." In programming terms, this location has the highest of all visitationOrder values, so that it comes last in the list of Locations, and shopping items with an unassigned/unknown location will come at the bottom of the shopping list. 
 
 Tapping on a Location in the list lets you edit location information, including reassigning the visitation order, as well as delete it.  You will also see a list of the ShoppingItems that are associated with this Location.
 
-* Why not let the user drag the Locations around to reset the order -- well, it's partly a SwiftUI thing with .onMove(), but persisting the order the way I'd like to do (using visitationOrder markers) has a few wrinkles that seem to conflict with SwiftUI's @FetchRequest.
+* Why not let the user drag the Locations around to reset the order? Well, it's partly the SwiftUI visual problem with .onMove() mentioned below, but persisting the order the way I'd like to do (using visitationOrder markers) has a few wrinkles that seem to conflict with SwiftUI's @FetchRequest.
 
 The shopping list is sorted by the visitation order of the location in which it is found (and then alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered, although all items in the same Location have the same color as a form of grouping.
 
-* Why don't you let me drag these items to reorder them, you ask?  Well, I did the reordering thing one time, and discovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  
-* The current code offers you the choice to see the shopping list either as one big list (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine, ~~albeit with one edge-case bug still unresolved -- but the code does have a work-around in place (see below and in the code).~~
-* About color: using color to distinguish different Locations is not a good UI, since a significant portion of users either cannot distinguish color or cannot choose visually compatible colors very well. 
+* Why don't you let me drag these items to reorder them, you ask?  Well, I did the reordering thing one time, and discovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  And I also don't see that you can drag between Sections of a list.
+* The current code offers you the choice to see the shopping list either as one big list where the coloring helps distinguish between different location (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine, ~~albeit with one edge-case bug still unresolved -- but the code does have a work-around in place (see below and in the code).~~
+* About color: Using color to distinguish different Locations is not a good UI, since a significant portion of users either cannot distinguish color or cannot choose visually compatible colors very well. 
 
 If you plan to play with or use this app, the app will start with an empty shopping list; from there you can create your own shopping items and locations associated with those items.  To get the sense of the app, however, you really want some data to work with.  So go to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
 
@@ -68,22 +70,22 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
 - At some point, I may want to use **sheets** for the Add/Modify screens, and I am working on that right now.  I have a pretty good idea about how that works.  But in using NavigationLinks to move to the Add/Modify views, I have found the following curiosities (that perhaps will go away in Swift 2.0) which seem to be in conflict (this was not the case in UIKit). 
 
-  - The MainView of this app is a TabView and is embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation to be configured.  
+  - The MainView of this app is a TabView and is embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView apparently cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation to be configured.  
 
   - On the other hand, if I "segue" (*to use a UIKit term*) to one of the Add/Modify views using a NavigationLink, the tab bar is removed -- which turns out to be the behaviour I want (in UIKit, there was a simple checkbox in IB to make this happen).
  
-  - And if the MainView is not in a NavigationView, and if each of the TabViews is inside their own NavigationViews, then the TabViews own their navigation bars and can set title and navbar items as they wish.  But it's no longer possible (?) to hide the tab bar when segueing to one of the Add/Modify Views.
+  - But if the MainView is not in a NavigationView, and if each of the TabViews is inside their own NavigationViews, then the TabViews own their navigation bars and can set title and navbar items as they wish.  But it's no longer possible (?) to hide the tab bar when segueing to one of the Add/Modify Views.
  
-  - Finally, moving to a sheet means that we have to explicitly hand off the managedObjectContext to its environment (not a big thing); but worse, the Picker that's used to set a Location for a ShoppingItem will not be active, because Pickers are not active unless inside a NavigationView/have a Navigation bar.
+ - Finally, moving to a sheet means that we have to explicitly hand off the managedObjectContext to its environment (not a big thing); but the Picker that's used to set a Location for a ShoppingItem will not be active, because Pickers are not active unless inside a NavigationView/have a Navigation bar.  I can work around this, as well, by putting the view for the sheet inside its own NavigationView.  You may see such a change soon, if only as an experiment.
 
 
  - I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
 
 - I have been constantly struggling with visual updates in this project.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating -- I finally seem to have found the right mix of when @ObservedObect is necessary and when it isn't. You may see a comment or two in the code about this.
 
-- I'm still trying to get the right viewpoint on what is SwifUI.  It seems to be a combination of a future direction of iOS et. al. programming, a decent prototyping tool for now, and beta software with  limitations.  Its animation capabilities really do steal the show, though.  Paul Hudson (@twostraws, hackingwithswift.com) and other top devs he's interviewed recently all seem to think of SwiftUI as the future, so this project is my getting ready for what's next.  
+- I'm still trying to get the right viewpoint on what is SwifUI.  Despite SwiftUI's rocky start and need for more substance, app creation time has shrunk dramatically from the days of UIKit and its MVC/delegation patterns (*UIKit is not going away anytime soon*), and SwiftUI's animation capabilities really do steal the show.  Paul Hudson (@twostraws, hackingwithswift.com) and other top devs he's interviewed recently all seem to think of SwiftUI as the future, so this project is my getting ready for what's next.  And this week's WWDC has not disappointed in raising the bar!
 
-- Bugs have come and gone in SwiftUI (and come back again) since WWDC2019.  Perhaps WWDC2020 will give us SwiftUI 2.0 or something, and then maybe things will look better.  and in comparison with the introduction of Swift itself -- i doubt there were few apps that were pure Swift1.0; but these days, almost every new project will be done in SwiftUI.
+
 
 ## Anything Else?
 
@@ -99,6 +101,6 @@ I was very close to having what I wanted, just waiting to flesh out the cloud in
 
 I have since rebuilt that app with CoreData (it was easier than you think -- I had done it before), and I am now actively building the project in parallel in SwiftUI.  But I ran into a few roadblocks (e.g., where's CollectionView, etc.) and kept finding myself with the same basic visual updating issues that have been discussed above.  So I am glad I built Shopping List (again, I had a need since I was doing almost all of the shopping during the pandemic) and confronted these issues. 
 
-So, I am waiting for WWDC2020 and Swift 2.0 so that I can move forward and eventually take that other app to the App Store.
+So far, this week's WWDC has given me more than enough so I can move forward and eventually take that other app to the App Store.
 
 Feel free to contact me about questions and comments.

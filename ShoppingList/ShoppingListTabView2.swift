@@ -44,7 +44,7 @@ struct ShoppingListTabView2: View {
 			// 1. add new item "button" is at top of the list
 			// Question: why not put this in the Navigation bar?  i can't do it here, because the
 			// MainView owns the Navigation bar.  i could work around this by not having the MainView
-			// not live inside a NavigationView and put this view inside a NavigationView,
+			// live inside a NavigationView and put this view inside a NavigationView,
 			// but then when i NavigationLink my way off to Add/Modify
 			// an item, the tab bar of the MainView cannot be dismissed (which is what i want)
 			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
@@ -80,7 +80,7 @@ struct ShoppingListTabView2: View {
 							
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-									FlawedShoppingItemRowView(item: item, showLocation: false)
+									ShoppingItemRowView(item: item, showLocation: false)
 										.contextMenu {
 											Button("Mark Purchased") {
 												item.moveToPuchased(saveChanges: true)
@@ -103,11 +103,12 @@ struct ShoppingListTabView2: View {
 				
 				// clear/ mark as unavailable shopping list buttons
 				if !shoppingItems.isEmpty {
+					Divider()
 					SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
 						.padding([.bottom], 6)
 
 					if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
-						SLCenteredButton(title: "Mark All Items Available", action: {self.markAllAvailable()})
+						SLCenteredButton(title: "Mark All Items Available", action: self.markAllAvailable )
 							.padding([.bottom], 6)
 
 					}

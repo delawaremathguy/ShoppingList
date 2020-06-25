@@ -122,6 +122,9 @@ extension ShoppingItem: Identifiable {
 	}
 	
 	func setLocation(_ location: Location) {
+		// if this ShoppingItem is already linked to a Location,
+		// remove its reference from that location now (notice use of ?.?.!)
+		self.location?.removeFromItems(self)
 		self.location = location
 		visitationOrder = location.visitationOrder
 	}

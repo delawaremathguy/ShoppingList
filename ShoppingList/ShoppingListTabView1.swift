@@ -9,15 +9,16 @@
 import SwiftUI
 import CoreData
 
-// This is just a straightforward list display of items on the shopping list.
+// This is a straightforward list display of items on the shopping list.
 // a simple @FetchRequest gets these items, arranged by their location's
 // visitation order, a copy of which is kept in the shopping item itself.
 // why is this kept here, as duplicate information?  if you change a Location's
 // visitation order, copying that to the items in the location makes sure that
 // this sees the changes.
 
-// See comments over in ShoppingListTabView2, since that's where i spend more of my
-// time tweaking the shopping list.
+// be sure to see comments over in ShoppingListTabView2, since that's where i
+// spend more of my time tweaking the shopping list code and i may not always
+// keep these two views in synch
 
 struct ShoppingListTabView1: View {
 	// Core Data access for items on shopping list
@@ -49,7 +50,7 @@ struct ShoppingListTabView1: View {
 					Section(header: MySectionHeaderView(title: "Items Listed: \(shoppingItems.count)")) {
 						ForEach(shoppingItems) { item in
 							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-								FlawedShoppingItemRowView(item: item)
+								ShoppingItemRowView(item: item)
 									.contextMenu {
 										Button("Mark Purchased") {
 											item.moveToPuchased(saveChanges: true)
@@ -69,12 +70,17 @@ struct ShoppingListTabView1: View {
 						} // end of ForEach
 							.onDelete(perform: moveToPurchased)
 						
-						// clear shopping list button (yes, it's the last thing in the list
-						// but i don't want it at the bottom, in case you accidentally hit
-						// it while moving to the purchased item list
+						// clear/ mark as unavailable shopping list buttons
 						if !shoppingItems.isEmpty {
+							Divider()
 							SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
-							SLCenteredButton(title: "Mark All Items Available", action: {})
+								.padding([.bottom], 6)
+							
+							if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
+								SLCenteredButton(title: "Mark All Items Available", action: self.markAllAvailable )
+									.padding([.bottom], 6)
+								
+							}
 						}
 
 					} // end of Section
@@ -91,6 +97,14 @@ struct ShoppingListTabView1: View {
 		}
 		ShoppingItem.saveChanges()
 	}
+	
+	func markAllAvailable() {
+		for item in shoppingItems {
+			item.mark(available: true, saveChanges: true)
+		}
+		ShoppingItem.saveChanges()
+	}
+
 	
 	func moveToPurchased(indexSet: IndexSet) {
 		for index in indexSet {
