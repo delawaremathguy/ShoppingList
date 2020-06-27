@@ -79,7 +79,7 @@ struct AddorModifyLocationView: View {
 				HStack {
 					SLFormLabelText(labelText: "Composite Color: ")
 					Spacer()
-					RoundedRectangle(cornerRadius: 16)
+					Capsule()
 						.fill(rgbColor())
 						.frame(width: 200)
 						.overlay(Capsule().stroke(Color.black, lineWidth: 1))
@@ -105,7 +105,7 @@ struct AddorModifyLocationView: View {
 			// Section 3: Items assigned to this Location
 			Section(header: MySectionHeaderView(title: "At this Location: \(editableLocation?.items?.count ?? 0) items")) {
 				ForEach(itemsArray(at: editableLocation)) { item in
-					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item, allowsDeletion: false)) {
 						Text(item.name!)
 					}
 				}
@@ -145,7 +145,13 @@ struct AddorModifyLocationView: View {
 	
 	func deleteLocation() {
 		if let location = editableLocation {
+			// mark this as a location to be deleted shortly
 			itemToDeleteAfterDisappear = location
+			// dismiss ourselves, then wait for .onDisappear() to come around and
+			// complete the deletion.  this seems to avoid the one bug that was really a problem,
+			// which i think had to do with the timing of when an item was deleted in Core
+			// Data and when some views caught on to the change and went about updating
+			// their views.
 			presentationMode.wrappedValue.dismiss()
 		}
 	}

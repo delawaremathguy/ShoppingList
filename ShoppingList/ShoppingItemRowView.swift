@@ -21,8 +21,9 @@ import SwiftUI
 // delete the item.  this way, the visual transition seems to be completed before
 // the item is deleted and the result is perfectly fine.
 //
-// so my theory of the case is that Core Data's deletion of the item and the
-// parent view's discovery of that deletion were out-of-synch; using the .onDisappear()
+// so my conclusion is that Core Data's deletion of the item and the
+// parent view's discovery of that deletion were out-of-synch; and this is
+// certainly tied in to the magic of @FetchRequest.  using the .onDisappear()
 // modifier seems to guarantee the right order of events.  so far, anyway!
 
 struct ShoppingItemRowView: View {
@@ -41,17 +42,17 @@ struct ShoppingItemRowView: View {
 						.font(.body)
 						.overlay(Rectangle().frame(height: 1.0))
 				} else {
-					Text(item.name!)
+					Text(item.name!)  // <-- also, possible site of earlier crash (read comments above)
 						.font(.body)
 				}
 				if showLocation {
-					Text(item.location!.name!)
+					Text(item.location!.name!)  // <-- also, possible site of earlier crash (read comments above)
 						.font(.caption)
 						.foregroundColor(.secondary)
 				}
 			}
 			Spacer()
-			Text(String(item.quantity))
+			Text(String(item.quantity))   // <-- also, possible site of earlier crash (read comments above)
 				.font(.headline)
 				.foregroundColor(Color.blue)
 		}

@@ -40,6 +40,7 @@ struct EditableShoppingItemData {
 	init(onList: Bool) {
 		self.onList = onList
 	}
+	
 }
 
 // MARK: - View Definition
@@ -50,6 +51,19 @@ struct AddorModifyShoppingItemView: View {
 	// editableItem is either a ShoppingItem to edit, or nil to signify
 	// that we're creating a new ShoppingItem in this View.
 	var editableItem: ShoppingItem? = nil
+	
+	// allowsDeletion is usually true: we will show a "Delete this Item"
+	// button.  however, if we do Locations -> EditorModify -> select one
+	// of the items at this location -> Delete this Item, we have a problem.
+	// the editableLocation in AddOrModifyLocationView cannot be an observable
+	// object, because i allow it to be nil; and so deleting an item this deep
+	// in the view hierarchy doesn't trickle back to the AddOrModifyLocationView
+	// and the view still shows the item at that location.  now, trying to look
+	// at the item causes a crash, because it's not there.
+	// so when AddOrModifyLocationView presents this view, we'll set this
+	// to false.  yes, it's kludgey, but time will tell if there's an easier
+	// way to do this.  you just can't make a binding to an optional ObservedObject
+	var allowsDeletion: Bool = true
 	
 	// addItemToShoppingList just means that if we are adding a new item
 	// (editableItem == nil), this tells us whether to put it on the shopping
@@ -62,7 +76,7 @@ struct AddorModifyShoppingItemView: View {
 	// can be edited here, so that we're not doing a "live edit" on the ShoppingItem.
 	// this will be defaulted properly in .onAppear()
 	@State private var editableData = EditableShoppingItemData()
-	
+
 	// this indicates dataHasBeenLoaded from an incoming editableItem
 	// it will be flipped to true once .onAppear() has been called
 	@State private var editableDataInitialized = false
@@ -125,7 +139,7 @@ struct AddorModifyShoppingItemView: View {
 				
 				SLCenteredButton(title: "Save", action: self.commitDataEntry)
 				
-				if editableItem != nil {
+				if editableItem != nil && allowsDeletion {
 					SLCenteredButton(title: "Delete This Shopping Item", action: { self.showDeleteConfirmation = true })
 						.foregroundColor(Color.red)
 						.alert(isPresented: $showDeleteConfirmation) {
@@ -191,9 +205,9 @@ struct AddorModifyShoppingItemView: View {
 		} else {
 			itemForCommit = ShoppingItem.addNewItem()
 		}
-
+		
 		// update for all edits made and we're done.  i created an extension
-		// on ShoppingItem below to do thi update
+		// on ShoppingItem below to do this update
 		itemForCommit.updateValues(from: editableData)
 		ShoppingItem.saveChanges()
 		presentationMode.wrappedValue.dismiss()
@@ -205,7 +219,6 @@ struct AddorModifyShoppingItemView: View {
 	func deleteItem() {
 		if let item = editableItem {
 			itemToDeleteAfterDisappear = item
-			// ShoppingItem.delete(item: item, saveChanges: true)
 			presentationMode.wrappedValue.dismiss()
 		}
 	}

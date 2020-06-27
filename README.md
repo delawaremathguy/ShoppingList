@@ -1,10 +1,9 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 25, 2020**, when 
+My Last Update of note was **June 27, 2020**, when 
 
-* I  seriously cleaned up the code of AddOrModifyShoppingItemView to collect all the state variables into a single struct, which makes it more clear what we're doing and that we are certainly not doing a live editing on the item.  when the user saves the data, all this editable data is copied back the item.  I also updated the location Picker in this view to be keyed to the locations themselves, rather than by index into the locations array. *Similar modifications were made in AddOrModifyLocationView*.
-* I now believe that the one crash I was experiencing and had worked around has been eliminated.  Comments in the code reflect this.
-
+* I now believe that the one crash I was experiencing and had worked around has been eliminated, but one could argue that i've just created a more sophisticated work-around.  Comments in the code reflect this.
+* I eliminated one other potential crash -- it was hard to find -- where if you look at all Locations, select one of these Locations to modify it, then tap on one of the items currently assigned to that Location, then delete that ShoppingItem, the item does not get removed from the items at the given Location.  It's worse: tapping on that item again causes a crash.  I have a work-around in place (*i don't let you delete the item in this case!*), but there's more to be done on this.  See comments in the code.
 
 * * * * * *
 
@@ -66,7 +65,7 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
   - **ShoppingListTabView1** is a single list of items as described above, with items listed by their location's visitationOrder (and then alphabetically for each location).  Since Locations have different colors, the list is manageable, but not ideal.  
 
-  - **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far. 
+- **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far.  I already seen some things from WWDC this week that i will investigate further, to see if there's a more natural paradigm for sectioning a List.
 
 - At some point, I may want to use **sheets** for the Add/Modify screens, and I am working on that right now.  I have a pretty good idea about how that works.  But in using NavigationLinks to move to the Add/Modify views, I have found the following curiosities (that perhaps will go away in Swift 2.0) which seem to be in conflict (this was not the case in UIKit). 
 
