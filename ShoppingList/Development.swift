@@ -21,7 +21,7 @@ let kShowDevToolsTab = true
 // export shoppingItems and Locations via JSON
 // these are the filenames for JSON output when dumped from the simulator
 // (and also the filenames in the bundle used for sample data)
-let kJSONDumpDirectory = "/Users/YOUR_OWN_USERNAME_HERE/Desktop/"	// dumps to the Desktop: USE YOUR OWN USERNAME HERE
+let kJSONDumpDirectory = "/Users/YOUR_OWN_USERNAME_HERE/Desktop/"	// dumps to the Desktop: USE YOUR OWN MAC USERNAME HERE
 let kShoppingItemsFilename = "shoppingItems.json"
 let kLocationsFilename = "locations.json"
 

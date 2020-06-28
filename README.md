@@ -2,7 +2,7 @@
 
 My Last Update of note was **June 28, 2020**, when 
 
-* The one crash I have been experiencing and had worked around has been eliminated, although one could argue that i've just created a sophisticated work-around so it does not occur.  Comments in the code reflect this.
+* The one crash I have been experiencing and had worked around has been eliminated, although one could argue that i've just created a sophisticated work-around so it does not occur.  Comments in the code reflect this.  HOWEVER, THE CRASH HAS REAPPEARED IN XCODE 12 AND iOS 14 -- CLEARLY, THERE IS MORE TO BE DONE ON THIS.  AARRGGHH!
 * I eliminated one other potential crash -- it was hard to find and occurred only in an extreme situation (and is related to the ongoing problem mentioned above).  I have a guard in place so the situation never happens.  See comments in the code.
 * Adding a new ShoppingItem now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
 * Deleted items (ShoppingItem and Location) cause Core Data to save right away (*duh!*).

@@ -10,22 +10,24 @@ import SwiftUI
 
 // DEVELOPMENT COMMENT
 // in some previous versions, this code would occasionally crash when items
-// were deleted.
+// were deleted.  I HAVE SINCE FOUND THAT IT ALMOST ALWAYS CRASHES! AARRGGHH.
+// so you will see some nil-coalescing code below that walks over the underlying
+// problem to avoid crashing.
 
-// my theory of the case was that when a shopping item was deleted in
-// the AddOrModifyShoppingItemView, that view was dismissed, and in the visual
-// transition back to the parent list view, the row view associated with the deleted
-// item was still around somewhere.  the line below that referenced item.name! crashed --
-// the item still existed as a Core Data fault, but the information behind it was gone.
+// my theory of the case was that when a shopping item is deleted in
+// the AddOrModifyShoppingItemView, and when that view was dismissed, the visual
+// transition back to the parent list view has a problem: the row view associated with the deleted
+// item is still around somewhere.  the line below that referenced item.name! crashed --
+// shows that the item still existed as a Core Data fault, but the information behind it was gone.
 //
 // in the current code, when an item is deleted in AddOrModifyShoppingItemView, we
 // stash away the item to be deleted, dismiss() the view, and then in .onDisappear()
 // delete the item.  this way, the visual transition seems to be completed before
-// the item is deleted and the result is perfectly fine.
+// the item is deleted and the result is perfectly fine -- except in the beta iOS 14.
 //
 // so my conclusion is that Core Data's deletion of the item and the
 // parent view's discovery of that deletion were out-of-synch; and this is
-// certainly tied in to the magic of @FetchRequest.  using the .onDisappear()
+// certainly tied in to the magic behind @FetchRequest.  using the .onDisappear()
 // modifier seems to guarantee the right order of events.  so far, anyway!
 
 struct ShoppingItemRowView: View {
@@ -40,15 +42,15 @@ struct ShoppingItemRowView: View {
 		HStack {
 			VStack(alignment: .leading) {
 				if !item.isAvailable {
-					Text(item.name!)	// <-- site of earlier crash (read comments above)
+					Text(item.name ?? "Not Available")	// <-- site of earlier crash (read comments above)
 						.font(.body)
 						.overlay(Rectangle().frame(height: 1.0))
 				} else {
-					Text(item.name!)  // <-- also, possible site of earlier crash (read comments above)
+					Text(item.name ?? "Not Available")  // <-- also, possible site of earlier crash (read comments above)
 						.font(.body)
 				}
 				if showLocation {
-					Text(item.location!.name!)  // <-- also, possible site of earlier crash (read comments above)
+					Text(item.location?.name ?? "Not Available")  // <-- also, possible site of earlier crash (read comments above)
 						.font(.caption)
 						.foregroundColor(.secondary)
 				}
