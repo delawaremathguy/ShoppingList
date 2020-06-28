@@ -137,7 +137,7 @@ struct AddorModifyLocationView: View {
 	
 	func deleteItemIfRequested() {
 		if let item = itemToDeleteAfterDisappear {
-			Location.delete(location: item)
+			Location.delete(location: item, saveChanges: true)
 		}
 	}
 

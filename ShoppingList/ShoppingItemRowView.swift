@@ -10,10 +10,12 @@ import SwiftUI
 
 // DEVELOPMENT COMMENT
 // in some previous versions, this code would occasionally crash when items
-// were deleted.  my theory of the case was that a shopping item was deleted in
+// were deleted.
+
+// my theory of the case was that when a shopping item was deleted in
 // the AddOrModifyShoppingItemView, that view was dismissed, and in the visual
 // transition back to the parent list view, the row view associated with the deleted
-// item was still around.  the line below that referenced item.name! crashed --
+// item was still around somewhere.  the line below that referenced item.name! crashed --
 // the item still existed as a Core Data fault, but the information behind it was gone.
 //
 // in the current code, when an item is deleted in AddOrModifyShoppingItemView, we
@@ -52,7 +54,7 @@ struct ShoppingItemRowView: View {
 				}
 			}
 			Spacer()
-			Text(String(item.quantity))   // <-- also, possible site of earlier crash (read comments above)
+			Text(String(item.quantity)) 
 				.font(.headline)
 				.foregroundColor(Color.blue)
 		}

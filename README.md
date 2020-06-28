@@ -1,9 +1,12 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 27, 2020**, when 
+My Last Update of note was **June 28, 2020**, when 
 
-* I now believe that the one crash I was experiencing and had worked around has been eliminated, but one could argue that i've just created a more sophisticated work-around.  Comments in the code reflect this.
-* I eliminated one other potential crash -- it was hard to find -- where if you look at all Locations, select one of these Locations to modify it, then tap on one of the items currently assigned to that Location, then delete that ShoppingItem, the item does not get removed from the items at the given Location.  It's worse: tapping on that item again causes a crash.  I have a work-around in place (*i don't let you delete the item in this case!*), but there's more to be done on this.  See comments in the code.
+* The one crash I have been experiencing and had worked around has been eliminated, although one could argue that i've just created a sophisticated work-around so it does not occur.  Comments in the code reflect this.
+* I eliminated one other potential crash -- it was hard to find and occurred only in an extreme situation (and is related to the ongoing problem mentioned above).  I have a guard in place so the situation never happens.  See comments in the code.
+* Adding a new ShoppingItem now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
+* Deleted items (ShoppingItem and Location) cause Core Data to save right away (*duh!*).
+* The meat of the AddorModifyShoppingItemView has been moved into its own View, separating a shopping item from the struct of the data for the item to be edited in the subview.  This makes for simpler code, especially given the nunmber of fields to edit and the number of view modifiers that are attached to this (Form) view.
 
 * * * * * *
 
@@ -13,7 +16,7 @@ I'm making this repo publicly available.  I may be interested in asking some que
 
 However, be warned: 
 
-* the project source is likely to change often -- this is an ongoing project for me get more familiar with SwiftUI; 
+* the project source is likely to change often -- this is an ongoing project for me to get more familiar with SwiftUI; 
 * there may be errors in the code, or some areas of the code might need help with regard to best practices; yet
 * nevertheless, this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
 
@@ -40,7 +43,7 @@ The CoreData model has only two entities named "ShoppingItem" and "Location," wi
 
 Swiping an item (from trailing to leading) in either the shopping list or the already-purchased list moves it to the other list.  This exposes an issue in SwiftUI: the swipe UI calls the motion a "Delete," and the view modifier is .onDelete, but nothing is being deleted in this case.  Tapping on any item in either list lets you edit it for name, quantity, assign/edit the store location in which it is found, or even delete the item.  Long pressing on an item gives you a contextMenu to let you move items between lists, and also to toggle between the item being available and not available.
 
-* A reminder:  to truly delete a ShoppingItem from the database, go to its Modify View and tap the Delete button. (same for deleting Locations below ...)  ~~However, there is a latent bug I'm still trying to work out, although I have put together a work-around for it in the code so that I don't think you'll see its effect.~~
+* A reminder:  to truly delete a ShoppingItem from the database, go to its Modify View and tap the Delete button. (same for deleting Locations below ...)  ~~However, there is a latent bug I'm still trying to work out, perhaps because of my misunderstanding of a SwiftUI internal, although I have put together a work-around for it in the code so that I don't think you'll see its effect.~~
 *  At some point, you will also be able to Delete an item from the contextMenu, but the attempted placement of a third button in the contextMenu is not showing and the layout system goes nuts ... some comments on SO seem to suggest this is a bug.
 * I haven't seen anything yet from WWDC about handling general swiping actions.
 
@@ -53,7 +56,8 @@ Tapping on a Location in the list lets you edit location information, including 
 The shopping list is sorted by the visitation order of the location in which it is found (and then alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered, although all items in the same Location have the same color as a form of grouping.
 
 * Why don't you let me drag these items to reorder them, you ask?  Well, I did the reordering thing one time, and discovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  And I also don't see that you can drag between Sections of a list.
-* The current code offers you the choice to see the shopping list either as one big list where the coloring helps distinguish between different location (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine, ~~albeit with one edge-case bug still unresolved -- but the code does have a work-around in place (see below and in the code).~~
+* The current code offers you the choice to see the shopping list either as one big list where the coloring helps distinguish between different location (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine for now.
+
 * About color: Using color to distinguish different Locations is not a good UI, since a significant portion of users either cannot distinguish color or cannot choose visually compatible colors very well. 
 
 If you plan to play with or use this app, the app will start with an empty shopping list; from there you can create your own shopping items and locations associated with those items.  To get the sense of the app, however, you really want some data to work with.  So go to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
@@ -61,28 +65,22 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
 ## Some Things I'm Working On
 
-- I have provided two options for the ShoppingListTabView, named, suprisingly, *ShoppingListTabView1* and *ShoppingListTabView2*.  Just change the MainView code to use one or the other.  The latter is what I am working with myself, so that's what I have coded in MainView.  But if you're poking around in the code, try each one of them.
+* I have provided two options for the ShoppingListTabView, named, suprisingly, *ShoppingListTabView1* and *ShoppingListTabView2*.  Just change the MainView code to use one or the other.  The latter is what I am working with myself, so that's what I have coded in MainView.  But if you're poking around in the code, try each one of them.
 
   - **ShoppingListTabView1** is a single list of items as described above, with items listed by their location's visitationOrder (and then alphabetically for each location).  Since Locations have different colors, the list is manageable, but not ideal.  
 
 - **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far.  I already seen some things from WWDC this week that i will investigate further, to see if there's a more natural paradigm for sectioning a List.
 
-- At some point, I may want to use **sheets** for the Add/Modify screens, and I am working on that right now.  I have a pretty good idea about how that works.  But in using NavigationLinks to move to the Add/Modify views, I have found the following curiosities (that perhaps will go away in Swift 2.0) which seem to be in conflict (this was not the case in UIKit). 
+*  I have made the "Add New Shopping Item" button present a Sheet, although if you later want to edit it, you'll trnasition using a NavigationLink.  (The same will happen sometime soon for "Add a New Location.")  you might be interested in seeing how to do this -- it turns out to be pretty simple.
 
-  - The MainView of this app is a TabView and is embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView apparently cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation to be configured.  
-
-  - On the other hand, if I "segue" (*to use a UIKit term*) to one of the Add/Modify views using a NavigationLink, the tab bar is removed -- which turns out to be the behaviour I want (in UIKit, there was a simple checkbox in IB to make this happen).
- 
-  - But if the MainView is not in a NavigationView, and if each of the TabViews is inside their own NavigationViews, then the TabViews own their navigation bars and can set title and navbar items as they wish.  But it's no longer possible (?) to hide the tab bar when segueing to one of the Add/Modify Views.
- 
- - Finally, moving to a sheet means that we have to explicitly hand off the managedObjectContext to its environment (not a big thing); but the Picker that's used to set a Location for a ShoppingItem will not be active, because Pickers are not active unless inside a NavigationView/have a Navigation bar.  I can work around this, as well, by putting the view for the sheet inside its own NavigationView.  You may see such a change soon, if only as an experiment.
+*  I'm puzzled for now on one thing. The MainView of this app is a TabView, embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView apparently cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation bar to be configured.  
 
 
- - I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
+*  I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, until the next iteration of SwiftUI. Several internet comments out there seem to be saying that's the right thing to do for now.
 
-- I have been constantly struggling with visual updates in this project.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating -- I finally seem to have found the right mix of when @ObservedObect is necessary and when it isn't. You may see a comment or two in the code about this.
+*  I have been constantly struggling with visual updates in this project.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating -- I finally seem to have found the right mix of when @ObservedObect is necessary and when it isn't. You may see a comment or two in the code about this.
 
-- I'm still trying to get the right viewpoint on what is SwifUI.  Despite SwiftUI's rocky start and need for more substance, app creation time has shrunk dramatically from the days of UIKit and its MVC/delegation patterns (*UIKit is not going away anytime soon*), and SwiftUI's animation capabilities really do steal the show.  Paul Hudson (@twostraws, hackingwithswift.com) and other top devs he's interviewed recently all seem to think of SwiftUI as the future, so this project is my getting ready for what's next.  And this week's WWDC has not disappointed in raising the bar!
+*  I'm looking at the new SwiftUI releases from WWDC right now and can definitely use quite a bit of it very easily (e.g., a ColorPicker); i think you may see a ShoppingList14 (for iOS 14) from me sometime soon.
 
 
 

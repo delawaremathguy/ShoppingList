@@ -8,44 +8,9 @@
 
 import SwiftUI
 
-// this is a transitional struct in the sense that on the way in, all the data for
-// a shoppingItem that i want to edit is copied into one of these; and on the way
-// out, whatever data is here is copied to the shoppingItem.  so we don't do
-// live editing -- we can edit away, but none of those changes is saved until
-// you really click the Save button.
-
-struct EditableShoppingItemData {
-	 // all of the values here provide suitable defaults for a new shopping item
-	var itemName: String = ""
-	var itemQuantity: Int = 1
-	var selectedLocation = Location.unknownLocation()!
-	var onList: Bool = true
-	var isAvailable = true
-	
-	// this copies all the editable data from an incoming ShoppingItem
-	init(shoppingItem: ShoppingItem) {
-		itemName = shoppingItem.name!
-		itemQuantity = Int(shoppingItem.quantity)
-		selectedLocation = shoppingItem.location!
-		onList = shoppingItem.onList
-		isAvailable = shoppingItem.onList
-	}
-	
-	// provides simple, default init with values specified above
-	init() { }
-	
-	// provides special case init when we adding a new shopping item
-	// to provide default for being on the list or not (all other values
-	// are defaulted properly)
-	init(onList: Bool) {
-		self.onList = onList
-	}
-	
-}
-
-// MARK: - View Definition
-
 struct AddorModifyShoppingItemView: View {
+	// we use this so we can dismiss ourself (sometimes we're in a Sheet, sometimes
+	// in a NavigationLink)
 	@Environment(\.presentationMode) var presentationMode
 
 	// editableItem is either a ShoppingItem to edit, or nil to signify
@@ -57,111 +22,61 @@ struct AddorModifyShoppingItemView: View {
 	// of the items at this location -> Delete this Item, we have a problem.
 	// the editableLocation in AddOrModifyLocationView cannot be an observable
 	// object, because i allow it to be nil; and so deleting an item this deep
-	// in the view hierarchy doesn't trickle back to the AddOrModifyLocationView
-	// and the view still shows the item at that location.  now, trying to look
-	// at the item causes a crash, because it's not there.
+	// in the navigation hierarchy doesn't trickle back to the AddOrModifyLocationView
+	// and the view still shows the item at that location.  then, trying to look
+	// at the item causes a crash, because it's not there and we crash.
 	// so when AddOrModifyLocationView presents this view, we'll set this
 	// to false.  yes, it's kludgey, but time will tell if there's an easier
-	// way to do this.  you just can't make a binding to an optional ObservedObject
+	// way to do this.  you just can't make a binding to an optional ObservedObject?
 	var allowsDeletion: Bool = true
 	
-	// addItemToShoppingList just means that if we are adding a new item
-	// (editableItem == nil), this tells us whether to put it on the shopping
-	// list initially or not.  the default is true: a new item goes on the shopping list.
+	// addItemToShoppingList just means that by default, a new item will be added to
+	// the shopping list, and so this is true.
 	// however, if inserting a new item from the Purchased list,
 	// this will be set to false. the user can override here if they wish.
 	var addItemToShoppingList: Bool = true
 	
 	// this editableData stuct contains all of the fields of a ShoppingItem that
 	// can be edited here, so that we're not doing a "live edit" on the ShoppingItem.
-	// this will be defaulted properly in .onAppear()
+	// itself.  this will be defaulted properly in .onAppear()
 	@State private var editableData = EditableShoppingItemData()
 
-	// this indicates dataHasBeenLoaded from an incoming editableItem
-	// it will be flipped to true once .onAppear() has been called
+	// this indicates whether the editableData has been initialized from an incoming
+	// editableItem and it will be flipped to true once .onAppear() has been called
+	// and the editableData is appropriately set
 	@State private var editableDataInitialized = false
 	
-	// showDeleteConfirmation controls whether an Alert will appear
+	// showDeleteConfirmation controls whether a Delete This Shopping Item button appear
 	// to confirm deletion of a ShoppingItem
 	@State private var showDeleteConfirmation: Bool = false
 	
-	// this itemToDelete... variable is a place to stash an item to be deleted, if any,
-	// after the view has disappeared.  seems like a kludgy way to do this, but also seems
+	// this "itemToDeleteAfterDisappear" variable is a place to stash an item to be deleted, if any,
+	// after the view has disappeared.  seems like a kludgey way to do this, but also seems
 	// to work without incident (instead of deleting first then popping this view back
-	// to its navigation parent, which seemed to want to crash)
+	// to its navigation parent, which seems to want to crash sometimes)
 	@State private var itemToDeleteAfterDisappear: ShoppingItem?
 
-	// we need access to the complete list of Locations to populate the picker
-	@FetchRequest(entity: Location.entity(),
-								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
-	var locations: FetchedResults<Location>
-
 	var body: some View {
-		Form {
-			// 1. Basic Information Fields
-			Section(header: MySectionHeaderView(title: "Basic Information")) {
-				
-				HStack(alignment: .firstTextBaseline) {
-					SLFormLabelText(labelText: "Name: ")
-					TextField("Item name", text: $editableData.itemName, onCommit: { self.commitDataEntry() })
-				}
-				
-				Stepper(value: $editableData.itemQuantity, in: 1...10) {
-					HStack {
-						SLFormLabelText(labelText: "Quantity: ")
-						Text("\(editableData.itemQuantity)")
-					}
-				}
-				
-				Picker(selection: $editableData.selectedLocation,
-							 label: SLFormLabelText(labelText: "Location: ")) {
-								ForEach(locations) { location in
-									Text(location.name!).tag(location)
-								}
-				}
-				
-				HStack(alignment: .firstTextBaseline) {
-					Toggle(isOn: $editableData.onList) {
-						SLFormLabelText(labelText: "On Shopping List: ")
-					}
-				}
-				
-				HStack(alignment: .firstTextBaseline) {
-					Toggle(isOn: $editableData.isAvailable) {
-						SLFormLabelText(labelText: "Is Available: ")
-					}
-				}
-				
-			} // end of Section
-			
-			// 2. Item Management (Delete), if present
-			if editableItem != nil && allowsDeletion {
-				Section(header: MySectionHeaderView(title: "Shopping Item Management")) {
-					SLCenteredButton(title: "Delete This Shopping Item", action: { self.showDeleteConfirmation = true })
-						.foregroundColor(Color.red)
-						.alert(isPresented: $showDeleteConfirmation) {
-							Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
-										message: Text("Are you sure you want to delete this item?"),
-										primaryButton: .cancel(Text("No")),
-										secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
-							)}
-				}
-			} // end of Section
 		
-		} // end of Form
+		ShoppingItemEditView(editableData: $editableData, showDeleteConfirmation: $showDeleteConfirmation, allowsDeletion: allowsDeletion)
 			.navigationBarTitle(barTitle(), displayMode: .inline)
 			.navigationBarBackButtonHidden(true)
 			.navigationBarItems(
 				leading: Button(action : { self.presentationMode.wrappedValue.dismiss() }){
-				Text("Cancel")
-			},
+					Text("Cancel")
+				},
 				trailing: Button(action : { self.commitDataEntry() }){
 					Text("Save")
-				})
+						.disabled(!editableData.canBeSaved)
+			})
 			.onAppear(perform: loadData)
 			.onDisappear(perform: deleteItemIfRequested)
-
-
+			.alert(isPresented: $showDeleteConfirmation) {
+				Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
+							message: Text("Are you sure you want to delete this item?"),
+							primaryButton: .cancel(Text("No")),
+							secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
+				)}
 	}
 	
 	// called when view disappears, which is when the parent view has fully returned
@@ -169,7 +84,7 @@ struct AddorModifyShoppingItemView: View {
 	// to have been the underlying bug i struggled with earlier
 	func deleteItemIfRequested() {
 		if let item = itemToDeleteAfterDisappear {
-			ShoppingItem.delete(item: item)
+			ShoppingItem.delete(item: item, saveChanges: true)
 		}
 	}
 		
@@ -196,6 +111,8 @@ struct AddorModifyShoppingItemView: View {
 	}
 	
 	func commitDataEntry() {
+		guard editableData.canBeSaved else { return }
+		
 		// if we already have an editableItem, use it, else create it now
 		var itemForCommit: ShoppingItem
 		if let item = editableItem {
@@ -222,15 +139,3 @@ struct AddorModifyShoppingItemView: View {
 	}
 }
 
-// MARK: - ShoppingItem Convenience Extension
-
-extension ShoppingItem {
-	
-	func updateValues(from editableData: EditableShoppingItemData) {
-		name = editableData.itemName
-		quantity = Int32(editableData.itemQuantity)
-		setLocation(editableData.selectedLocation)
-		onList = editableData.onList
-		isAvailable = editableData.isAvailable
-	}
-}

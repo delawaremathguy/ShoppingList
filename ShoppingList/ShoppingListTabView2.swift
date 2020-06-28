@@ -41,31 +41,20 @@ struct ShoppingListTabView2: View {
 	var body: some View {
 		VStack {
 			
-			// 1. add new item "button" is at top of the list
-			// Question: why not put this in the Navigation bar?  i can't do it here, because the
-			// MainView owns the Navigation bar.  i could work around this by not having the MainView
-			// live inside a NavigationView and put this view inside a NavigationView,
-			// but then when i NavigationLink my way off to Add/Modify
-			// an item, the tab bar of the MainView cannot be dismissed (which is what i want)
-			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
+			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
+			// inside its own NaviagtionView (so the Picker will work!) and we must pass along the
+			// managedObjectContext manually because sheets don't automatically inherit the environment
+			Button(action: { self.isAddNewItemSheetShowing = true }) {
 				Text("Add New Item")
 					.foregroundColor(Color.blue)
-					.padding(4)
+					.padding(10)
 			}
-
-//			// 1. add new item "button" is at top
-//			// Question: why is this not used?  because when you move to a Sheet,
-//			// the Picker (for setting a Location) will be inactive because it is
-//			// not inside a NavigationView.  i will fix this by putting a navigation
-//			 // view inside the sheet -- that may require a little subtlety
-//			Button(action: { self.isAddNewItemSheetShowing = true }) {
-//				Text("Add New Item")
-//					.foregroundColor(Color.blue)
-//					.padding(10)
-//			}
-//			.sheet(isPresented: $isAddNewItemSheetShowing) {
-//				AddorModifyShoppingItemView(addItemToShoppingList: true).environment(\.managedObjectContext, self.managedObjectContext)
-//			}
+			.sheet(isPresented: $isAddNewItemSheetShowing) {
+				NavigationView {
+					AddorModifyShoppingItemView(allowsDeletion: false)
+						.environment(\.managedObjectContext, self.managedObjectContext)
+				}
+			}
 
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
 			if shoppingItems.isEmpty {

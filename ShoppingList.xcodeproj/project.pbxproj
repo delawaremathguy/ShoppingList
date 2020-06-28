@@ -32,6 +32,8 @@
 		D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */; };
 		D6B8A95424636711005F8EF2 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A95324636711005F8EF2 /* MainView.swift */; };
 		D6B8A9562463693D005F8EF2 /* LocationsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */; };
+		D6C91D8524A8E69F008C8DFF /* ShoppingItemEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C91D8424A8E69F008C8DFF /* ShoppingItemEditView.swift */; };
+		D6C91D8724A8EC09008C8DFF /* EditableShoppingItemData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */; };
 		D6DE39BD247314B40013F9B4 /* SLFormLabelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */; };
 		D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF557C246D7421007D636B /* PurchasedTabView.swift */; };
 		D6EF5585246D964C007D636B /* ShoppingItemRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */; };
@@ -69,6 +71,8 @@
 		D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		D6B8A95324636711005F8EF2 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsTabView.swift; sourceTree = "<group>"; };
+		D6C91D8424A8E69F008C8DFF /* ShoppingItemEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemEditView.swift; sourceTree = "<group>"; };
+		D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableShoppingItemData.swift; sourceTree = "<group>"; };
 		D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLFormLabelText.swift; sourceTree = "<group>"; };
 		D6EF557C246D7421007D636B /* PurchasedTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasedTabView.swift; sourceTree = "<group>"; };
 		D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemRowView.swift; sourceTree = "<group>"; };
@@ -125,6 +129,8 @@
 				D6F375D52485593D005559E6 /* LocationRowView.swift */,
 				D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */,
 				D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */,
+				D6C91D8424A8E69F008C8DFF /* ShoppingItemEditView.swift */,
+				D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */,
 				D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */,
 				D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */,
 				D65B206B2493005600DB55F1 /* SLSliderControl.swift */,
@@ -252,9 +258,11 @@
 				D612E16124898EBB007E1412 /* Array+Extensions.swift in Sources */,
 				D6EF5587246D97C3007D636B /* Development.swift in Sources */,
 				D66FF35424926B6400B3ABC8 /* DevToolsTabView.swift in Sources */,
+				D6C91D8724A8EC09008C8DFF /* EditableShoppingItemData.swift in Sources */,
 				D65B206C2493005600DB55F1 /* SLSliderControl.swift in Sources */,
 				D63B1A0B248EA76A001CA309 /* MySectionHeaderView.swift in Sources */,
 				D606197F2481510E005CE575 /* SearchBarView.swift in Sources */,
+				D6C91D8524A8E69F008C8DFF /* ShoppingItemEditView.swift in Sources */,
 				D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */,
 				D6B8A9562463693D005F8EF2 /* LocationsTabView.swift in Sources */,
 				D6FC7A0A24635D950096F018 /* ShoppingList.xcdatamodeld in Sources */,

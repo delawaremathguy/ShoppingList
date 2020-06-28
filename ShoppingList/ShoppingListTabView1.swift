@@ -21,7 +21,8 @@ import CoreData
 // keep these two views in synch
 
 struct ShoppingListTabView1: View {
-	// Core Data access for items on shopping list
+	// Core Data access for the context and the items on shopping list
+	@Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
 									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
@@ -29,15 +30,26 @@ struct ShoppingListTabView1: View {
 								predicate: NSPredicate(format: "onList == true")
 	) var shoppingItems: FetchedResults<ShoppingItem>
 	
+	@State private var isAddNewItemSheetShowing = false
+	
 	var body: some View {
 		VStack {
 			
-			// add new item "button" is at top
-			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: true)) {
+			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
+			// inside its own NaviagtionView (so the Picker will work!) and we must pass along the
+			// managedObjectContext manually because sheets don't automatically inherit the environment
+			Button(action: { self.isAddNewItemSheetShowing = true }) {
 				Text("Add New Item")
+					.foregroundColor(Color.blue)
 					.padding(10)
 			}
-			
+			.sheet(isPresented: $isAddNewItemSheetShowing) {
+				NavigationView {
+					AddorModifyShoppingItemView(allowsDeletion: false) 
+						.environment(\.managedObjectContext, self.managedObjectContext)
+				}
+			}
+
 			if shoppingItems.isEmpty {
 				Spacer()
 				Text("There are currently no items")
