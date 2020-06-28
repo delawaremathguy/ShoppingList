@@ -134,12 +134,9 @@ struct AddorModifyShoppingItemView: View {
 				
 			} // end of Section
 			
-			// 2. Item Management (Save/Delete)
-			Section(header: MySectionHeaderView(title: "Shopping Item Management")) {
-				
-				SLCenteredButton(title: "Save", action: self.commitDataEntry)
-				
-				if editableItem != nil && allowsDeletion {
+			// 2. Item Management (Delete), if present
+			if editableItem != nil && allowsDeletion {
+				Section(header: MySectionHeaderView(title: "Shopping Item Management")) {
 					SLCenteredButton(title: "Delete This Shopping Item", action: { self.showDeleteConfirmation = true })
 						.foregroundColor(Color.red)
 						.alert(isPresented: $showDeleteConfirmation) {
@@ -149,17 +146,18 @@ struct AddorModifyShoppingItemView: View {
 										secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
 							)}
 				}
-				
 			} // end of Section
 		
 		} // end of Form
 			.navigationBarTitle(barTitle(), displayMode: .inline)
 			.navigationBarBackButtonHidden(true)
-			.navigationBarItems(leading: Button(action : {
-				self.presentationMode.wrappedValue.dismiss()
-			}){
+			.navigationBarItems(
+				leading: Button(action : { self.presentationMode.wrappedValue.dismiss() }){
 				Text("Cancel")
-			})
+			},
+				trailing: Button(action : { self.commitDataEntry() }){
+					Text("Save")
+				})
 			.onAppear(perform: loadData)
 			.onDisappear(perform: deleteItemIfRequested)
 

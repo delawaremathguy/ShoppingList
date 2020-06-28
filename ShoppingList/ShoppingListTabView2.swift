@@ -56,7 +56,8 @@ struct ShoppingListTabView2: View {
 //			// 1. add new item "button" is at top
 //			// Question: why is this not used?  because when you move to a Sheet,
 //			// the Picker (for setting a Location) will be inactive because it is
-//			// not inside a NavigationView.  otherwise, it would be better
+//			// not inside a NavigationView.  i will fix this by putting a navigation
+//			 // view inside the sheet -- that may require a little subtlety
 //			Button(action: { self.isAddNewItemSheetShowing = true }) {
 //				Text("Add New Item")
 //					.foregroundColor(Color.blue)

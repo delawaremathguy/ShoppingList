@@ -92,33 +92,35 @@ struct AddorModifyLocationView: View {
 
 			} // end of Section 1
 			
-			// Section 2: Save and Delete buttons
-			Section(header: MySectionHeaderView(title: "Location Management")) {
-				SLCenteredButton(title: "Save", action: self.commitData)
-				
-				if editableData.visitationOrder != kUnknownLocationVisitationOrder && editableLocation != nil {
+			// Section 2: Delete button, if present
+			if editableData.visitationOrder != kUnknownLocationVisitationOrder && editableLocation != nil {
+				Section(header: MySectionHeaderView(title: "Location Management")) {
 					SLCenteredButton(title: "Delete This Location", action: { self.showDeleteConfirmation = true })
 						.foregroundColor(Color.red)
 				}
 			}  // end of Section 2
 			
-			// Section 3: Items assigned to this Location
-			Section(header: MySectionHeaderView(title: "At this Location: \(editableLocation?.items?.count ?? 0) items")) {
-				ForEach(itemsArray(at: editableLocation)) { item in
-					NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item, allowsDeletion: false)) {
-						Text(item.name!)
+			// Section 3: Items assigned to this Location, if we are editing a Location
+			if editableLocation != nil {
+				Section(header: MySectionHeaderView(title: "At this Location: \(editableLocation?.items?.count ?? 0) items")) {
+					ForEach(itemsArray(at: editableLocation)) { item in
+						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item, allowsDeletion: false)) {
+							Text(item.name!)
+						}
 					}
-				}
-			} // end of Section 3
+				} // end of Section 3
+			}
 			
 		} // end of Form
 			.onAppear(perform: loadData)
 			.navigationBarTitle(barTitle(), displayMode: .inline)
 			.navigationBarBackButtonHidden(true)
-			.navigationBarItems(leading: Button(action : {
-				self.presentationMode.wrappedValue.dismiss()
-			}){
-				Text("Cancel")
+			.navigationBarItems(
+				leading: Button(action: { self.presentationMode.wrappedValue.dismiss() }){
+					Text("Cancel")
+				},
+				trailing: Button(action: { self.commitData() }){
+					Text("Save")
 			})
 			.alert(isPresented: $showDeleteConfirmation) {
 				Alert(title: Text("Delete \'\(editableLocation!.name!)\'?"),
