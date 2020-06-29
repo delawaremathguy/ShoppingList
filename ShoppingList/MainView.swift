@@ -55,6 +55,7 @@ struct MainView: View {
 				
 			} // end of TabView
 				.navigationBarTitle(tabTitle(selectedTab: selectedTab))
+				.onAppear(perform: reportEntityCounts) // just for testing ...
 
 		} // end of NavigationView
 	}
@@ -69,6 +70,11 @@ struct MainView: View {
 		} else {
 			return "Dev Tools"
 		}
+	}
+	
+	func reportEntityCounts() {
+//		print("Number of shopping items is \(ShoppingItem.count())")
+//		print("Number of locations is \(Location.count())")
 	}
 	
 }

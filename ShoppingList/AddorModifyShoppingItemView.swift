@@ -54,7 +54,7 @@ struct AddorModifyShoppingItemView: View {
 	// after the view has disappeared.  seems like a kludgey way to do this, but also seems
 	// to work without incident (instead of deleting first then popping this view back
 	// to its navigation parent, which seems to want to crash sometimes)
-	@State private var itemToDeleteAfterDisappear: ShoppingItem?
+//	@State private var itemToDeleteAfterDisappear: ShoppingItem?
 
 	var body: some View {
 		
@@ -70,7 +70,6 @@ struct AddorModifyShoppingItemView: View {
 						.disabled(!editableData.canBeSaved)
 			})
 			.onAppear(perform: loadData)
-			.onDisappear(perform: deleteItemIfRequested)
 			.alert(isPresented: $showDeleteConfirmation) {
 				Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
 							message: Text("Are you sure you want to delete this item?"),
@@ -79,15 +78,19 @@ struct AddorModifyShoppingItemView: View {
 				)}
 	}
 	
-	// called when view disappears, which is when the parent view has fully returned
-	// to the screen.  this way, we don't delete out from under the parent, which seems
-	// to have been the underlying bug i struggled with earlier
-	func deleteItemIfRequested() {
-		if let item = itemToDeleteAfterDisappear {
-			ShoppingItem.delete(item: item, saveChanges: true)
-		}
-	}
-		
+	// called when view disappears, which is when we'll take the opportunity
+	// to delete this ShoppingItem.  the problem is one of timing, however.
+	// if you delete too soon, you are deleting "underneath" the shopping list
+	// and that's a potential crash, and so that's why we wait for onDisappear()
+	// so the shopping list has "almost" fully taken control back.  but even
+	// that seems to be a timing issue in iOS 14, so this now has an additional
+	// 0.35 second delay.  even this has other issues associated with it, since we're
+	// trying to guess on timing; and what happens if the user tries to use this item
+	// before the delete comes around?  we could put a boolean mark on the ShoppingItem
+	// to say that it's going to be deleted, then not allow ourselves to do anything
+	// to such an item (!)
+
+	
 	func barTitle() -> Text {
 		return editableItem == nil ? Text("Add New Item") : Text("Modify Item")
 	}
@@ -128,12 +131,10 @@ struct AddorModifyShoppingItemView: View {
 		presentationMode.wrappedValue.dismiss()
 	}
 	
-	// called after confirmation to delete an item.  we only place this
-	// item to delete "on hold" and it will be deleted after this view disappears --
-	// which means that you'll see the deletion then take place in the parent view
+	// called after confirmation to delete an item. 
 	func deleteItem() {
 		if let item = editableItem {
-			itemToDeleteAfterDisappear = item
+			ShoppingItem.delete(item: item, saveChanges: true)
 			presentationMode.wrappedValue.dismiss()
 		}
 	}

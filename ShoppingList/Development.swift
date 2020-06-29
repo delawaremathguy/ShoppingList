@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import UIKit
 
-// i added what i call a "Demo Tools" tab so that if you want to use this
+// i added what i call a "Dev Tools" tab so that if you want to use this
 // as a real app (device or simulator), access to all the debugging stuff that's
 // I have can be "controlled," so to speak, on a separate tabview, and that tab
 // view can be displayed or not by setting this global variable:

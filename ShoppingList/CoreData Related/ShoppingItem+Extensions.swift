@@ -94,7 +94,9 @@ extension ShoppingItem: Identifiable {
 		let context = appDelegate.persistentContainer.viewContext
 		context.delete(item)
 		if saveChanges {
-			Self.saveChanges()
+			DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+				Self.saveChanges()
+			}
 		}
 	}
 	

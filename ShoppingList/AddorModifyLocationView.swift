@@ -55,9 +55,6 @@ struct AddorModifyLocationView: View {
 	// to confirm deletion of a Location
 	@State private var showDeleteConfirmation: Bool = false
 	
-	@State private var itemToDeleteAfterDisappear: Location?
-
-			
 	var body: some View {
 		Form {
 			// 1: Name, Visitation Order, Colors
@@ -128,32 +125,19 @@ struct AddorModifyLocationView: View {
 							primaryButton: .cancel(Text("No")),
 							secondaryButton: .destructive(Text("Yes"), action: self.deleteLocation)
 				)}
-			.onDisappear(perform: deleteItemIfRequested)
 	}
 	
 	func rgbColor() -> Color {
 		Color(.sRGB, red: editableData.red, green: editableData.green, blue: editableData.blue, opacity: editableData.opacity)
 	}
 	
-	func deleteItemIfRequested() {
-		if let item = itemToDeleteAfterDisappear {
-			Location.delete(location: item, saveChanges: true)
-		}
-	}
-
 	func barTitle() -> Text {
 		return editableLocation == nil ? Text("Add New Location") : Text("Modify Location")
 	}
 	
 	func deleteLocation() {
 		if let location = editableLocation {
-			// mark this as a location to be deleted shortly
-			itemToDeleteAfterDisappear = location
-			// dismiss ourselves, then wait for .onDisappear() to come around and
-			// complete the deletion.  this seems to avoid the one bug that was really a problem,
-			// which i think had to do with the timing of when an item was deleted in Core
-			// Data and when some views caught on to the change and went about updating
-			// their views.
+			Location.delete(location: location)
 			presentationMode.wrappedValue.dismiss()
 		}
 	}

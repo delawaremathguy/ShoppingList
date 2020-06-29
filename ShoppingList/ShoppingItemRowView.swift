@@ -9,57 +9,73 @@
 import SwiftUI
 
 // DEVELOPMENT COMMENT
-// in some previous versions, this code would occasionally crash when items
-// were deleted.  I HAVE SINCE FOUND THAT IT ALMOST ALWAYS CRASHES! AARRGGHH.
-// so you will see some nil-coalescing code below that walks over the underlying
-// problem to avoid crashing.
 
-// my theory of the case was that when a shopping item is deleted in
-// the AddOrModifyShoppingItemView, and when that view was dismissed, the visual
-// transition back to the parent list view has a problem: the row view associated with the deleted
-// item is still around somewhere.  the line below that referenced item.name! crashed --
-// shows that the item still existed as a Core Data fault, but the information behind it was gone.
-//
-// in the current code, when an item is deleted in AddOrModifyShoppingItemView, we
-// stash away the item to be deleted, dismiss() the view, and then in .onDisappear()
-// delete the item.  this way, the visual transition seems to be completed before
-// the item is deleted and the result is perfectly fine -- except in the beta iOS 14.
-//
-// so my conclusion is that Core Data's deletion of the item and the
-// parent view's discovery of that deletion were out-of-synch; and this is
-// certainly tied in to the magic behind @FetchRequest.  using the .onDisappear()
-// modifier seems to guarantee the right order of events.  so far, anyway!
+// this has been an ongoing problem: when i deleted a ShoppingItem from
+// the AddorModifyShoppingItemView, two things were happening in sequence:
+// this view was getting a "redraw" message through its ObservedObject
+// status in the view, and after that, the actual deletion came through
+// as the FetchRequest updated, which then removed this view.
+
+// but the problem is that we're first getting redrawn, then removed; but the
+// the ObservedObject was already deleted in Core Data.  the curiosity is
+// that the ObservedObject "item" was still there because we're hanging on to it
+// but it exists only as a Core Data fault in memory.
+// what that means is that item.isAvailable and item.showLocation and
+// item.quantity are probably all zero (but could have any value), but
+// item.name! and item.location!.name! are meaningless, since each would cause
+// the fault to reload and it can't.  so" BOOM.
+
+// there's no way around this problem, at least until i know more.
+// indeed, the .onDelete() modifier knows enough about the problem
+// that it probably deletes the "cell" in such a way that no visual update
+// is delivered here.
 
 struct ShoppingItemRowView: View {
-	// shows one line in a list for a shopping item, used for consistency.
+	// shows one line in a list for a shopping item.
 	// note: we must have the parameter as an @ObservedObject, otherwise
 	// edits made to the ShoppingItem will not show when the ShoppingListView
 	// or PurchasedListView is brought back on screen.
+	
+	// second, important note: if the item is marked in Core Data as "isDeleted,"
+	// that means we have a deferred "save to disk" out there that will eventually
+	// kick in (and it may happen sooner).  but this prevents the basic bug i've
+	// been fighting for some time, concerning the timing of when Core Data objects
+	// really go away and when they don't, and how a View such as this is still holding onto
+	// an object that is going away on the next layout/body result pass.
+	
 	@ObservedObject var item: ShoppingItem
 	var showLocation: Bool = true
 	
 	var body: some View {
 		HStack {
-			VStack(alignment: .leading) {
-				if !item.isAvailable {
-					Text(item.name ?? "Not Available")	// <-- site of earlier crash (read comments above)
-						.font(.body)
-						.overlay(Rectangle().frame(height: 1.0))
-				} else {
-					Text(item.name ?? "Not Available")  // <-- also, possible site of earlier crash (read comments above)
-						.font(.body)
+			if item.isDeleted {
+				Text("Being Deleted")
+					.font(.body)
+
+			} else {
+
+				VStack(alignment: .leading) {
+					if !item.isAvailable {
+						Text(item.name!)
+							.font(.body)
+							.overlay(Rectangle().frame(height: 1.0))
+					} else {
+						Text(item.name!)
+							.font(.body)
+					}
+					if showLocation {
+						Text(item.location!.name!)
+							.font(.caption)
+							.foregroundColor(.secondary)
+					}
 				}
-				if showLocation {
-					Text(item.location?.name ?? "Not Available")  // <-- also, possible site of earlier crash (read comments above)
-						.font(.caption)
-						.foregroundColor(.secondary)
-				}
-			}
-			Spacer()
-			Text(String(item.quantity)) 
-				.font(.headline)
-				.foregroundColor(Color.blue)
-		}
+				
+				Spacer()
+				Text(String(item.quantity))
+					.font(.headline)
+					.foregroundColor(Color.blue)
+			} // end of if-then-else
+		} // end of HStack
 	}
 }
 

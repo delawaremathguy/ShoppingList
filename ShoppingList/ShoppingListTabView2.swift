@@ -37,7 +37,9 @@ struct ShoppingListTabView2: View {
 	) var shoppingItems: FetchedResults<ShoppingItem>
 	
 	@State private var isAddNewItemSheetShowing: Bool = false
-	
+	@State private var isDeleteItemSheetShowing: Bool = false
+	@State private var itemToDelete: ShoppingItem?
+
 	var body: some View {
 		VStack {
 			
@@ -72,22 +74,41 @@ struct ShoppingListTabView2: View {
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 									ShoppingItemRowView(item: item, showLocation: false)
 										.contextMenu {
-											Button("Mark Purchased") {
+											Button(action: {
 												item.moveToPuchased(saveChanges: true)
+											}) {
+												Text("Mark Purchased")
+												Image(systemName: "purchased")
 											}
-											Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
-												item.mark(available: !item.isAvailable, saveChanges: true)
+											Button(action: { item.mark(available: !item.isAvailable, saveChanges: true) }) {
+												Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
+												Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
 											}
-									}
+											Button(action: {
+												self.itemToDelete = item
+												self.isDeleteItemSheetShowing = true
+											}) {
+												Text("Delete This Item")
+												Image(systemName: "minus.circle")
+											}
+									} // end of contextMenu
 								}
 								.listRowBackground(self.textColor(for: item))
+								
 							} // end of ForEach
 								.onDelete(perform: { offsets in
-									self.moveToPurchased(at: offsets, within: location)
+									self.handleOnDeleteModifier(at: offsets, within: location)
 								})
 							
 						} // end of Section
 					} // end of ForEach
+						.alert(isPresented: $isDeleteItemSheetShowing) {
+							Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
+										message: Text("Are you sure you want to delete this item?"),
+										primaryButton: .cancel(Text("No")),
+										secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
+							)}
+
 				}  // end of List
 					.listStyle(GroupedListStyle())
 				
@@ -105,7 +126,6 @@ struct ShoppingListTabView2: View {
 				}
 
 			} // end of else for if shoppingItems.isEmpty
-
 			
 		} // end of VStack
 	} // end of body: some View
@@ -120,7 +140,14 @@ struct ShoppingListTabView2: View {
 		return Set(allLocations).sorted(by: <)
 	}
 
-	func moveToPurchased(at indexSet: IndexSet, within location: Location) {
+	func handleOnDeleteModifier(at indexSet: IndexSet, within location: Location) {
+		
+		// you can choose here what to do.  my original thought was that we'd soon be
+		// seeing more general swipe actions in SwifUI, so i used this as a hook to
+		// just move an item to "the other list."  unfortunately, WWDC2020 did not
+		// deliver this capability.  so you decide how you want to handle onDelete().
+		
+		// here's the code to move the item(s) "to the other list"
 		// recreate list of items on the shopping list in this location
 		// -- relies on this order being the same as the order in the ForEach above
 		let itemsInThisLocation = shoppingItems.filter({ $0.location! == location })
@@ -129,6 +156,11 @@ struct ShoppingListTabView2: View {
 			item.moveToPuchased()
 		}
 		ShoppingItem.saveChanges()
+		
+		// here's the code to trigger an alert to delete the (first) item
+		//			isDeleteItemSheetShowing = true
+		//			itemToDelete = itemsInThisLocation[indexSet.first!]
+
 	}
 
 	func clearShoppingList() {
@@ -143,6 +175,10 @@ struct ShoppingListTabView2: View {
 			item.mark(available: true, saveChanges: true)
 		}
 		ShoppingItem.saveChanges()
+	}
+	
+	func deleteItem() {
+		ShoppingItem.delete(item: itemToDelete!, saveChanges: true)
 	}
 
 	func textColor(for item: ShoppingItem) -> Color {

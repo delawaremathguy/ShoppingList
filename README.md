@@ -1,12 +1,13 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 28, 2020**, when 
+My Last Update of note was **June 28, 2020**, when these were some of the changes I made.
 
-* The one crash I have been experiencing and had worked around has been eliminated, although one could argue that i've just created a sophisticated work-around so it does not occur.  Comments in the code reflect this.  HOWEVER, THE CRASH HAS REAPPEARED IN XCODE 12 AND iOS 14 -- CLEARLY, THERE IS MORE TO BE DONE ON THIS.  AARRGGHH!
-* I eliminated one other potential crash -- it was hard to find and occurred only in an extreme situation (and is related to the ongoing problem mentioned above).  I have a guard in place so the situation never happens.  See comments in the code.
+
+* The one crash I have been experiencing and have worked around is one I now almost fully understand.  I have a work-around in-place to avoid crashing or improper data actions; but it is intimately tied to the interaction of @ObservedObject, @FetchRequest, and my use (versus SwiftUI's use) of .onDelete().  Since WWDC2020 did not add more general swipe actions, I think i'll leave things in place as is, although at some point I might provide hooks in the code so you can choose what you want to do about what a trailing swipe action means.
+* I have added a delete action to the context menus in any list of ShoppingItems or Locations; and, you'll see the problem manifest itself if you choose Delete from the menu.  (That's what helped me understand the problem: Since ContextMenus seem to work better in iOS 13.5 (you'll get lots of layout messages in the console), I was able to put a delete in a contextMenu and see the problem in real time.
+* I eliminated a hard-to-find crash that occurred only in an extreme situation (and is related to the ongoing problem mentioned above).  I have a guard in place so the situation never happens.  See comments in the code.
 * Adding a new ShoppingItem now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
-* Deleted items (ShoppingItem and Location) cause Core Data to save right away (*duh!*).
-* The meat of the AddorModifyShoppingItemView has been moved into its own View, separating a shopping item from the struct of the data for the item to be edited in the subview.  This makes for simpler code, especially given the nunmber of fields to edit and the number of view modifiers that are attached to this (Form) view.
+*  The meat of the AddorModifyShoppingItemView has been moved into its own View, separating a shopping item from the struct of the data for the item to be edited in the subview.  This makes for simpler code, especially given the nunmber of fields to edit and the number of view modifiers that are attached to this (Form) view.
 
 * * * * * *
 

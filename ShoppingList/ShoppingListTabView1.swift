@@ -31,6 +31,8 @@ struct ShoppingListTabView1: View {
 	) var shoppingItems: FetchedResults<ShoppingItem>
 	
 	@State private var isAddNewItemSheetShowing = false
+	@State private var itemToDelete: ShoppingItem?
+	@State private var isDeleteItemSheetShowing = false
 	
 	var body: some View {
 		VStack {
@@ -55,6 +57,7 @@ struct ShoppingListTabView1: View {
 				Text("There are currently no items")
 				Text("on your Shopping List.")
 				Spacer()
+				
 			} else {
 				
 				List {
@@ -64,40 +67,52 @@ struct ShoppingListTabView1: View {
 							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 								ShoppingItemRowView(item: item)
 									.contextMenu {
-										Button("Mark Purchased") {
+										Button(action: {
 											item.moveToPuchased(saveChanges: true)
+										}) {
+											Text("Mark Purchased")
+											Image(systemName: "purchased")
 										}
-										Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
-											item.mark(available: !item.isAvailable, saveChanges: true)
+										Button(action: { item.mark(available: !item.isAvailable, saveChanges: true) }) {
+											Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
+											Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
 										}
-//										Button("Delete this Item") {
-//											// trigger item deletion confirmation here
-//											// but at the moment, this third item drives the layout system crazy
-//											// and the button will not appear (apparently this is more about
-//											// SwiftUI than it is me and this code
-//										}
-								}
+										Button(action: {
+											self.itemToDelete = item
+											self.isDeleteItemSheetShowing = true
+										}) {
+											Text("Delete This Item")
+											Image(systemName: "minus.circle")
+										}
+								} // end of contextMenu
 							}
 							.listRowBackground(self.textColor(for: item))
 						} // end of ForEach
-							.onDelete(perform: moveToPurchased)
-						
-						// clear/ mark as unavailable shopping list buttons
-						if !shoppingItems.isEmpty {
-							Divider()
-							SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
-								.padding([.bottom], 6)
-							
-							if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
-								SLCenteredButton(title: "Mark All Items Available", action: self.markAllAvailable )
-									.padding([.bottom], 6)
-								
-							}
-						}
+							.onDelete(perform: handleOnDeleteModifier)
+							.alert(isPresented: $isDeleteItemSheetShowing) {
+								Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
+											message: Text("Are you sure you want to delete this item?"),
+											primaryButton: .cancel(Text("No")),
+											secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
+								)}
 
 					} // end of Section
 				}  // end of List
 					.listStyle(GroupedListStyle())
+				
+				// clear/ mark as unavailable shopping list buttons
+				if !shoppingItems.isEmpty {
+					Divider()
+					SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
+						.padding([.bottom], 6)
+					
+					if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
+						SLCenteredButton(title: "Mark All Items Available", action: self.markAllAvailable )
+							.padding([.bottom], 6)
+						
+					}
+				}
+
 			} // end of else
 			
 		} // end of VStack
@@ -118,12 +133,26 @@ struct ShoppingListTabView1: View {
 	}
 
 	
-	func moveToPurchased(indexSet: IndexSet) {
+	func handleOnDeleteModifier(indexSet: IndexSet) {
+		// you can choose here what to do.  my original thought was that we'd soon be
+		// seeing more general swipe actions in SwifUI, so i used this as a hook to
+		// just move an item to "the other list."  unfortunately, WWDC2020 did not
+		// deliver this capability.  so you decide how you want to handle onDelete().
+		
+		// here's the code to move the item(s) "to the other list"
 		for index in indexSet {
 			let item = shoppingItems[index]
 			item.moveToPuchased()
 		}
 		ShoppingItem.saveChanges()
+
+		// here's the code to trigger an alert to delete the (first) item
+//			isDeleteItemSheetShowing = true
+//			itemToDelete = shoppingItems[indexSet.first!]
+	}
+	
+	func deleteItem() {
+		ShoppingItem.delete(item: itemToDelete!, saveChanges: true)
 	}
 	
 	func textColor(for item: ShoppingItem) -> Color {

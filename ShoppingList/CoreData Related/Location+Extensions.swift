@@ -112,11 +112,12 @@ extension Location: Identifiable {
 		// and finish the deletion
 		appDelegate.persistentContainer.viewContext.delete(location)
 		if saveChanges {
-			appDelegate.saveContext()
+			DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+				Self.saveChanges()
+			}
 		}
 	}
 
-	
 	static func saveChanges() {
 		appDelegate.saveContext()
 	}
