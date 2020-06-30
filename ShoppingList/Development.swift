@@ -17,6 +17,21 @@ import UIKit
 
 let kShowDevToolsTab = true
 
+// i'm torn about this next setting.  i find it easier when i am in the store shopping to swipe
+// to say "i just put that in the cart, take it off today's shopping list."  but
+// SwiftUI only allows (even with WWDC2020 now in the rear view mirror) a traling
+// swipe to be invoked by .onDelete(), and SwiftUI demands the label to be "Delete."
+// you may want to change this behaviour.
+// so i have code in the app based on the following boolean for whether a trailing
+// swipe of ShoppingItems in a list means
+//   (1) delete from Core Data
+//   (2) remove from the current shopping list and place item into history/purchased list
+// my default view of life is that a trailing swipe -- EVEN THOUGH IT SAYS DELETE -- means
+// "move to the other list," so i set this boolean to false to choose option (2)
+// change this flag to true if you want (1)
+
+let kTrailingSwipeMeansDelete = false
+
 // I used these constants and routines during development to import and
 // export shoppingItems and Locations via JSON
 // these are the filenames for JSON output when dumped from the simulator

@@ -10,71 +10,84 @@ import SwiftUI
 
 // DEVELOPMENT COMMENT
 
-// this has been an ongoing problem: when i deleted a ShoppingItem from
-// the AddorModifyShoppingItemView, two things were happening in sequence:
-// this view was getting a "redraw" message through its ObservedObject
-// status in the view, and after that, the actual deletion came through
-// as the FetchRequest updated, which then removed this view.
+// this one small View was the source of repeated problems for some time.
+// my natural tendency was to "pass in" the ShoppingItem whose data was
+// displayed in one row of a List, and then read the fields of the
+// ShoppingItem below.
 
-// but the problem is that we're first getting redrawn, then removed; but the
-// the ObservedObject was already deleted in Core Data.  the curiosity is
-// that the ObservedObject "item" was still there because we're hanging on to it
-// but it exists only as a Core Data fault in memory.
-// what that means is that item.isAvailable and item.showLocation and
-// item.quantity are probably all zero (but could have any value), but
-// item.name! and item.location!.name! are meaningless, since each would cause
-// the fault to reload and it can't.  so" BOOM.
+// however, this introduces a problem: if the ShoppingItem is edited somewhere
+// else in the code, those changes were not being propagated back here by the
+// List.  that seemed counter-intuitive: the List obviously set up this View with
+// an obvious dependency on a ShoppingItem, didn't it?  wouldn't that force this
+// to be redrawn? apparently, it did not.
 
-// there's no way around this problem, at least until i know more.
-// indeed, the .onDelete() modifier knows enough about the problem
-// that it probably deletes the "cell" in such a way that no visual update
-// is delivered here.
+// so to make this work, i passed in a ShoppingItem as an @ObservedObject. then
+// we have other problems.  when this ShoppingItem is deleted elsewhere in
+// the app, this View was still holding on to the ShoppingItem and, depending
+// upon certain timing conditions, would cause a crash: not because the
+// shopping item reference became meaningless (it was still a Core Data reference
+// to something that was deleted in Core Data terms, but not yet saved out to disk
+// (i.e., a fault for which .isDeleted is true).  so you could no longer refer
+// to the shopping item's name (which was an optional, which would try to
+// load that data and go BOOM) or even reliably refer to the item's quantity
+// (a non-optional Int32).
+
+// short story: this View would want to redraw a deleted item!
+
+// so some re-thinking frced me into this little struct here, to carry the values
+// from the List to this View for display, rather than the shopping item itself.
+// and now this works fine.
+
+// moral of the story: don't pass along an object if you only want to read some values
+// from it.  instead, just pass along the values (in this case, as a struct for
+// better bookkeeping).
+
+struct ShoppingItemRowData {
+	var isAvailable: Bool = true
+	var name: String = ""
+	var locationName: String = ""
+	var quantity: Int32 = 0
+	var showLocation: Bool	// whether this is a two-line display, with location as secondary line
+	
+	init(item: ShoppingItem, showLocation: Bool = true) {
+		isAvailable  = item.isAvailable
+		name = item.name!
+		locationName = item.location!.name!
+		quantity = item.quantity
+		self.showLocation = showLocation
+	}
+}
 
 struct ShoppingItemRowView: View {
 	// shows one line in a list for a shopping item.
-	// note: we must have the parameter as an @ObservedObject, otherwise
-	// edits made to the ShoppingItem will not show when the ShoppingListView
-	// or PurchasedListView is brought back on screen.
-	
-	// second, important note: if the item is marked in Core Data as "isDeleted,"
-	// that means we have a deferred "save to disk" out there that will eventually
-	// kick in (and it may happen sooner).  but this prevents the basic bug i've
-	// been fighting for some time, concerning the timing of when Core Data objects
-	// really go away and when they don't, and how a View such as this is still holding onto
-	// an object that is going away on the next layout/body result pass.
-	
-	@ObservedObject var item: ShoppingItem
-	var showLocation: Bool = true
+
+	var itemData: ShoppingItemRowData
 	
 	var body: some View {
 		HStack {
-			if item.isDeleted {
-				Text("Being Deleted")
-					.font(.body)
-
-			} else {
-
-				VStack(alignment: .leading) {
-					if !item.isAvailable {
-						Text(item.name!)
-							.font(.body)
-							.overlay(Rectangle().frame(height: 1.0))
-					} else {
-						Text(item.name!)
-							.font(.body)
-					}
-					if showLocation {
-						Text(item.location!.name!)
-							.font(.caption)
-							.foregroundColor(.secondary)
-					}
+			VStack(alignment: .leading) {
+				
+				if itemData.isAvailable {
+					Text(itemData.name)
+				} else {
+					Text(itemData.name)
+						.font(.body)
+						.overlay(Rectangle().frame(height: 1.0))
 				}
 				
-				Spacer()
-				Text(String(item.quantity))
-					.font(.headline)
-					.foregroundColor(Color.blue)
-			} // end of if-then-else
+				if itemData.showLocation {
+					Text(itemData.locationName)
+						.font(.caption)
+						.foregroundColor(.secondary)
+				}
+			}
+			
+			Spacer()
+			
+			Text(String(itemData.quantity))
+				.font(.headline)
+				.foregroundColor(Color.blue)
+			
 		} // end of HStack
 	}
 }

@@ -12,7 +12,6 @@ import CoreData
 // constants
 let kUnknownLocationName = "Unknown Location"
 let kUnknownLocationVisitationOrder: Int32 = INT32_MAX
-let kUnknownLocationFilename = "unknownLocation.json"
 
 extension Location: Identifiable {
 	
@@ -112,9 +111,7 @@ extension Location: Identifiable {
 		// and finish the deletion
 		appDelegate.persistentContainer.viewContext.delete(location)
 		if saveChanges {
-			DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-				Self.saveChanges()
-			}
+			appDelegate.saveContext()
 		}
 	}
 

@@ -65,7 +65,7 @@ struct ShoppingListTabView1: View {
 					Section(header: MySectionHeaderView(title: "Items Listed: \(shoppingItems.count)")) {
 						ForEach(shoppingItems) { item in
 							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-								ShoppingItemRowView(item: item)
+								ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
 									.contextMenu {
 										Button(action: {
 											item.moveToPuchased(saveChanges: true)
@@ -77,12 +77,14 @@ struct ShoppingListTabView1: View {
 											Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
 											Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
 										}
-										Button(action: {
-											self.itemToDelete = item
-											self.isDeleteItemSheetShowing = true
-										}) {
-											Text("Delete This Item")
-											Image(systemName: "minus.circle")
+										if !kTrailingSwipeMeansDelete {
+											Button(action: {
+												self.itemToDelete = item
+												self.isDeleteItemSheetShowing = true
+											}) {
+												Text("Delete This Item")
+												Image(systemName: "minus.circle")
+											}
 										}
 								} // end of contextMenu
 							}
@@ -134,21 +136,20 @@ struct ShoppingListTabView1: View {
 
 	
 	func handleOnDeleteModifier(indexSet: IndexSet) {
-		// you can choose here what to do.  my original thought was that we'd soon be
-		// seeing more general swipe actions in SwifUI, so i used this as a hook to
-		// just move an item to "the other list."  unfortunately, WWDC2020 did not
-		// deliver this capability.  so you decide how you want to handle onDelete().
-		
-		// here's the code to move the item(s) "to the other list"
-		for index in indexSet {
-			let item = shoppingItems[index]
-			item.moveToPuchased()
+		// you can choose what happens here according to the value of kTrailingSwipeMeansDelete
+		// that is defined in Development.swift
+		if kTrailingSwipeMeansDelete {
+			// trigger a deletion alert/confirmation
+			isDeleteItemSheetShowing = true
+			itemToDelete = shoppingItems[indexSet.first!]
+		} else {
+			// this moves the item(s) "to the other list"
+			for index in indexSet {
+				let item = shoppingItems[index]
+				item.moveToPuchased()
+			}
+			ShoppingItem.saveChanges()
 		}
-		ShoppingItem.saveChanges()
-
-		// here's the code to trigger an alert to delete the (first) item
-//			isDeleteItemSheetShowing = true
-//			itemToDelete = shoppingItems[indexSet.first!]
 	}
 	
 	func deleteItem() {

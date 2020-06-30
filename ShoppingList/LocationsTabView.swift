@@ -11,28 +11,38 @@ import CoreData
 
 struct LocationsTabView: View {
 	// CoreData setup
+	@Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: Location.entity(),
 								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
 	var locations: FetchedResults<Location>
+	@State private var isAddNewLocationSheetShowing = false
 	
 	var body: some View {
 		VStack {
 			
-			// first item is an add new location "button."  this will stay at the
-			// top of the view, and the list beow will scroll underneath it.
-			NavigationLink(destination: AddorModifyLocationView()) {
-					Text("Add New Location")
-						.padding(10)
+			// 1. add new item "button" is at top.  note that this will put up the AddorModifyLocationView
+			// inside its own NaviagtionView (so the Picker will work!) and we must pass along the
+			// managedObjectContext manually because sheets don't automatically inherit the environment
+			Button(action: { self.isAddNewLocationSheetShowing = true }) {
+				Text("Add New Location")
+					.foregroundColor(Color.blue)
+					.padding(10)
+			}
+			.sheet(isPresented: $isAddNewLocationSheetShowing) {
+				NavigationView {
+					AddorModifyLocationView()
+						.environment(\.managedObjectContext, self.managedObjectContext)
 				}
+			}
 
-			// then the list of items
+			// 2. then the list of items
 			List {
 				Section(header: MySectionHeaderView(title: "Locations Listed: \(locations.count)")) {
 					ForEach(locations) { location in
 						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
-							LocationRowView(location: location)
-						} // end of NavigationLink
-							.listRowBackground(self.textColor(for: location))
+							LocationRowView(rowData: LocationRowData(location: location))
+						}
+						.listRowBackground(self.textColor(for: location))
 					} // end of ForEach
 				} // end of Section
 			} // end of List

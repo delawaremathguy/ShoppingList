@@ -94,14 +94,12 @@ extension ShoppingItem: Identifiable {
 		let context = appDelegate.persistentContainer.viewContext
 		context.delete(item)
 		if saveChanges {
-			DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-				Self.saveChanges()
-			}
+			Self.saveChanges()
 		}
 	}
 	
 	// these functions coordinate state transitions of ShoppingItems,
-	// which are onList or not, wasUnavailable or not.
+	// which are onList or not.
 	func moveToShoppingList(saveChanges: Bool = false) {
 		onList = true
 		if saveChanges {

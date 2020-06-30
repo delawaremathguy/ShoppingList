@@ -18,14 +18,6 @@ import CoreData
 // dependent on shoppingItems, and that seems to be what guarantees that things
 // really do get updated visually after editing.
 
-// AND ONE OTHER MAJOR ITEM.  my method of deleting (tap, go to edit screen,
-// tap "Delete This Item," and then returning was working EXCEPT FOR ONE CASE:
-// if the list had only one item and you use this delete methodology,
-// the program would crash.  I'm still interested in resolving this bug, but I
-// have for now patched the code that was crashing in ShoppingItemRowView.
-// you can see a note there
-
-
 struct ShoppingListTabView2: View {
 	// Core Data access for the context and the items on shopping list
 	@Environment(\.managedObjectContext) var managedObjectContext
@@ -72,7 +64,7 @@ struct ShoppingListTabView2: View {
 							
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-									ShoppingItemRowView(item: item, showLocation: false)
+									ShoppingItemRowView(itemData: ShoppingItemRowData(item: item, showLocation: false))
 										.contextMenu {
 											Button(action: {
 												item.moveToPuchased(saveChanges: true)
@@ -84,12 +76,14 @@ struct ShoppingListTabView2: View {
 												Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
 												Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
 											}
-											Button(action: {
-												self.itemToDelete = item
-												self.isDeleteItemSheetShowing = true
-											}) {
-												Text("Delete This Item")
-												Image(systemName: "minus.circle")
+											if !kTrailingSwipeMeansDelete {
+												Button(action: {
+													self.itemToDelete = item
+													self.isDeleteItemSheetShowing = true
+												}) {
+													Text("Delete This Item")
+													Image(systemName: "minus.circle")
+												}
 											}
 									} // end of contextMenu
 								}
@@ -142,37 +136,37 @@ struct ShoppingListTabView2: View {
 
 	func handleOnDeleteModifier(at indexSet: IndexSet, within location: Location) {
 		
-		// you can choose here what to do.  my original thought was that we'd soon be
-		// seeing more general swipe actions in SwifUI, so i used this as a hook to
-		// just move an item to "the other list."  unfortunately, WWDC2020 did not
-		// deliver this capability.  so you decide how you want to handle onDelete().
-		
-		// here's the code to move the item(s) "to the other list"
-		// recreate list of items on the shopping list in this location
+		// recreate the list of items on the shopping list in this location
 		// -- relies on this order being the same as the order in the ForEach above
 		let itemsInThisLocation = shoppingItems.filter({ $0.location! == location })
-		for index in indexSet.reversed() {
-			let item = itemsInThisLocation[index]
-			item.moveToPuchased()
+
+		// you can choose what happens here according to the value of kTrailingSwipeMeansDelete
+		// that is defined in Development.swift
+		if kTrailingSwipeMeansDelete {
+			// trigger a deletion alert/confirmation
+			isDeleteItemSheetShowing = true
+			itemToDelete = itemsInThisLocation[indexSet.first!]
+		} else {
+			// this moves the item(s) "to the other list"
+			for index in indexSet {
+				let item = itemsInThisLocation[index]
+				item.onList.toggle()
+			}
+			ShoppingItem.saveChanges()
 		}
-		ShoppingItem.saveChanges()
 		
-		// here's the code to trigger an alert to delete the (first) item
-		//			isDeleteItemSheetShowing = true
-		//			itemToDelete = itemsInThisLocation[indexSet.first!]
-
 	}
-
+	
 	func clearShoppingList() {
 		for item in shoppingItems {
-			item.moveToPuchased()
+			item.onList.toggle()
 		}
 		ShoppingItem.saveChanges()
 	}
 	
 	func markAllAvailable() {
 		for item in shoppingItems {
-			item.mark(available: true, saveChanges: true)
+			item.mark(available: true)
 		}
 		ShoppingItem.saveChanges()
 	}

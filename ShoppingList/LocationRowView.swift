@@ -8,36 +8,37 @@
 
 import SwiftUI
 
-// ONCE AGAIN: i pulled this code out of the List/Section/ForEach/NavigationLink
-// hierarchy in LocationTabView to simply the code, initially without @ObservedObject.
-// then updates in the LocationTabView were not reflected.  when i came
-// back and added @ObservedObject, all visual updates work fine.
-// identifying the variable as an @Observed object causes SwiftUI to update this view properly.
+// DEVELOPMENT COMMENT
+// see the discussion in ShoppingItemRowView.
 
-// see comments in ShoppingItemRowView about the use of "isDeleted" here.
+// this is a struct to transport all the incoming data about a Location that we will display
+struct LocationRowData {
+	var name: String = ""
+	var itemCount: Int = 0
+	var visitationOrder: Int32 = 0
+	
+	init(location: Location) {
+		name = location.name!
+		itemCount = location.items!.count
+		visitationOrder = location.visitationOrder
+	}
+}
 
 struct LocationRowView: View {
-	@ObservedObject var location: Location
+	var rowData: LocationRowData
 	
 	var body: some View {
 		HStack {
-			if location.isDeleted {
-				Text("Being Deleted")
-					.font(.body)
-				
-			} else {
-				
-				VStack(alignment: .leading) {
-					Text(location.name ?? "Being Deleted")
-						.font(.headline)
-					Text("\(location.items?.count ?? 0) items")
-						.font(.caption)
-				}
-				if location.visitationOrder != kUnknownLocationVisitationOrder {
-					Spacer()
-					Text(String(location.visitationOrder))
-				}
-			} // end of if-then-else
+			VStack(alignment: .leading) {
+				Text(rowData.name)
+					.font(.headline)
+				Text("\(rowData.itemCount) items")
+					.font(.caption)
+			}
+			if rowData.visitationOrder != kUnknownLocationVisitationOrder {
+				Spacer()
+				Text(String(rowData.visitationOrder))
+			}
 		} // end of HStack
 	} // end of body: some View
 }
