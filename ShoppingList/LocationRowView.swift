@@ -32,7 +32,7 @@ struct LocationRowView: View {
 			VStack(alignment: .leading) {
 				Text(rowData.name)
 					.font(.headline)
-				Text("\(rowData.itemCount) items")
+				Text(subtitle())
 					.font(.caption)
 			}
 			if rowData.visitationOrder != kUnknownLocationVisitationOrder {
@@ -41,4 +41,12 @@ struct LocationRowView: View {
 			}
 		} // end of HStack
 	} // end of body: some View
+	
+	func subtitle() -> String {
+		if rowData.itemCount == 1 {
+			return "1 item"
+		} else {
+			return "\(rowData.itemCount) items"
+		}
+	}
 }

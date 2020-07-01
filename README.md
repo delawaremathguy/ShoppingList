@@ -3,7 +3,7 @@
 My Last Update of note was **June 30, 2020**, when these were some of the changes I made.
 
 
-* The one crash I had been experiencing before this update and had worked around in code has now been eliminated (*he says with fingers crossed*).  It involved a subtlety of the way I was *over*-using @ObservedObject: you'll find comments in the code for the "row views" of both ShoppingItems and Locations on this.  
+* The one crash I had been experiencing before this update and had worked around in code has now been eliminated (*he says with fingers crossed, at least for my testing with iOS 13*).  It involved a subtlety of the way I was *over*-using @ObservedObject: you'll find comments in the code for the "row views" of both ShoppingItems and Locations on this.  On the other hand, the iOS 14 situation looks to still have a similar problem, where the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed on the navigation stack from View A).
 
 * Since WWDC2020 did not add more general swipe actions, I have provided a setting in the code (a boolean in Development.swift) so you can choose what you want to do about the meaning of a trailing swipe in any list of ShoppingItems.
 

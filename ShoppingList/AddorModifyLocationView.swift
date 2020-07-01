@@ -137,8 +137,8 @@ struct AddorModifyLocationView: View {
 	
 	func deleteLocation() {
 		if let location = editableLocation {
-			Location.delete(location: location)
 			presentationMode.wrappedValue.dismiss()
+			Location.delete(location: location)
 		}
 	}
 
