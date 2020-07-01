@@ -24,15 +24,15 @@ struct MySectionHeaderView: View {
 	
 	// this is split out to simplify working with the GeometryReader
 	// and see what kind of space is available for us. expect to see some
-	// experimentation here going on, although waiting for SwiftUI 2.0 might
-	// be the best strategy for customizing the section headers.
+	// experimentation here going on.
 	func body(for size: CGSize) -> some View {
-		// print(size)
-		return Text(title)
+		//		print(size)
+		//		return
+		Text(title)
 			.font(.headline)
 			.foregroundColor(.black)
-			.frame(minWidth: 0, maxWidth: .infinity)
-//			.background(Color.green)
-//			.opacity(0.5)
+		//			.background(Color.green)
+		//			.opacity(0.5)
+		//			.frame(minWidth: 0, maxWidth: .infinity)
 	}
 }

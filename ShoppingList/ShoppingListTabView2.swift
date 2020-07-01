@@ -29,14 +29,14 @@ struct ShoppingListTabView2: View {
 	) var shoppingItems: FetchedResults<ShoppingItem>
 	
 	@State private var isAddNewItemSheetShowing: Bool = false
-	@State private var isDeleteItemSheetShowing: Bool = false
+	@State private var isDeleteItemAlertShowing: Bool = false
 	@State private var itemToDelete: ShoppingItem?
 
 	var body: some View {
 		VStack {
 			
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
-			// inside its own NaviagtionView (so the Picker will work!) and we must pass along the
+			// inside its own NaviagtionView (so the Picker will work!) but we must pass along the
 			// managedObjectContext manually because sheets don't automatically inherit the environment
 			Button(action: { self.isAddNewItemSheetShowing = true }) {
 				Text("Add New Item")
@@ -56,6 +56,7 @@ struct ShoppingListTabView2: View {
 				Text("There are currently no items")
 				Text("on your Shopping List.")
 				Spacer()
+				
 			} else {
 				
 				List {
@@ -66,20 +67,23 @@ struct ShoppingListTabView2: View {
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 									ShoppingItemRowView(itemData: ShoppingItemRowData(item: item, showLocation: false))
 										.contextMenu {
+											
 											Button(action: {
 												item.moveToPuchased(saveChanges: true)
 											}) {
 												Text("Mark Purchased")
 												Image(systemName: "purchased")
 											}
+											
 											Button(action: { item.mark(available: !item.isAvailable, saveChanges: true) }) {
 												Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
 												Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
 											}
+											
 											if !kTrailingSwipeMeansDelete {
 												Button(action: {
 													self.itemToDelete = item
-													self.isDeleteItemSheetShowing = true
+													self.isDeleteItemAlertShowing = true
 												}) {
 													Text("Delete This Item")
 													Image(systemName: "minus.circle")
@@ -87,7 +91,7 @@ struct ShoppingListTabView2: View {
 											}
 									} // end of contextMenu
 								}
-								.listRowBackground(self.textColor(for: item))
+								.listRowBackground(self.backgroundColor(for: item))
 								
 							} // end of ForEach
 								.onDelete(perform: { offsets in
@@ -96,12 +100,14 @@ struct ShoppingListTabView2: View {
 							
 						} // end of Section
 					} // end of ForEach
-						.alert(isPresented: $isDeleteItemSheetShowing) {
+						.alert(isPresented: $isDeleteItemAlertShowing) {
 							Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
 										message: Text("Are you sure you want to delete this item?"),
 										primaryButton: .cancel(Text("No")),
-										secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
-							)}
+										secondaryButton: .destructive(Text("Yes")) {
+											ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true)
+								})
+					}
 
 				}  // end of List
 					.listStyle(GroupedListStyle())
@@ -109,7 +115,7 @@ struct ShoppingListTabView2: View {
 				// clear/ mark as unavailable shopping list buttons
 				if !shoppingItems.isEmpty {
 					Divider()
-					SLCenteredButton(title: "Move All Items off-list", action: self.clearShoppingList)
+					SLCenteredButton(title: "Move All Items off-list", action: { ShoppingItem.moveAllItemsOffList() })
 						.padding([.bottom], 6)
 
 					if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
@@ -144,7 +150,7 @@ struct ShoppingListTabView2: View {
 		// that is defined in Development.swift
 		if kTrailingSwipeMeansDelete {
 			// trigger a deletion alert/confirmation
-			isDeleteItemSheetShowing = true
+			isDeleteItemAlertShowing = true
 			itemToDelete = itemsInThisLocation[indexSet.first!]
 		} else {
 			// this moves the item(s) "to the other list"
@@ -157,17 +163,8 @@ struct ShoppingListTabView2: View {
 		
 	}
 	
-	func clearShoppingList() {
-		for item in shoppingItems {
-			item.onList.toggle()
-		}
-		ShoppingItem.saveChanges()
-	}
-	
 	func markAllAvailable() {
-		for item in shoppingItems {
-			item.mark(available: true)
-		}
+		shoppingItems.forEach({ $0.mark(available: true) })
 		ShoppingItem.saveChanges()
 	}
 	
@@ -175,8 +172,7 @@ struct ShoppingListTabView2: View {
 		ShoppingItem.delete(item: itemToDelete!, saveChanges: true)
 	}
 
-	func textColor(for item: ShoppingItem) -> Color {
-		let location = item.location!
-		return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
+	func backgroundColor(for item: ShoppingItem) -> Color {
+		return Color(item.backgroundColor)
 	}
 }

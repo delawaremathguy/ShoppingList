@@ -134,8 +134,8 @@ struct AddorModifyShoppingItemView: View {
 	// called after confirmation to delete an item. 
 	func deleteItem() {
 		if let item = editableItem {
-			presentationMode.wrappedValue.dismiss()
 			ShoppingItem.delete(item: item, saveChanges: true)
+			presentationMode.wrappedValue.dismiss()
 		}
 	}
 }

@@ -82,7 +82,6 @@ extension Location: Identifiable {
 	
 	// used to insert data from JSON files in the app bundle
 	static func insertNewLocations(from jsonLocations: [LocationJSON]) {
-//		var count = 0
 		for jsonLocation in jsonLocations {
 			let newLocation = addNewLocation() // new UUID created here
 			newLocation.name = jsonLocation.name
@@ -91,22 +90,22 @@ extension Location: Identifiable {
 			newLocation.green = jsonLocation.green
 			newLocation.blue = jsonLocation.blue
 			newLocation.opacity = jsonLocation.opacity
-//			count += 1
 		}
-//		print("Inserted \(count) locations.")
 	}
 	
 	static func delete(location: Location, saveChanges: Bool = false) {
 		// you cannot delete the unknownLocation
-		guard let theUnknownLocation = unknownLocation(), location != theUnknownLocation else { return }
+		guard !location.isUnknownLocation() else { return }
+		// retrieve all items for this location tso we can work with them
+		// this should succeed (!)
+		guard let shoppingItems = location.items as? Set<ShoppingItem> else { return }
 		
 		// take all shopping items associated with this location and
 		// move then to the unknown location
-		if let shoppingItems = location.items as? Set<ShoppingItem> {
-			for item in shoppingItems {
-				location.removeFromItems(item)
-				item.setLocation(theUnknownLocation)
-			}
+		let theUnknownLocation = Location.unknownLocation()!
+		for item in shoppingItems {
+			location.removeFromItems(item)
+			item.setLocation(theUnknownLocation)
 		}
 		// and finish the deletion
 		appDelegate.persistentContainer.viewContext.delete(location)
@@ -117,6 +116,10 @@ extension Location: Identifiable {
 
 	static func saveChanges() {
 		appDelegate.saveContext()
+	}
+	
+	func isUnknownLocation() -> Bool {
+		return visitationOrder != kUnknownLocationVisitationOrder
 	}
 
 }

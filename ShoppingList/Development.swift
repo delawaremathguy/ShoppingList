@@ -122,18 +122,4 @@ func deleteAllData() {
 //	print("Core Data DB Path :: \(path ?? "Not found")")
 //}
 
-// the stuff below is needed to implement my own ListStyle, e.g., so
-// section headers in a grouped style are better controlled.  i just don't know
-// yet how to do this ... waiting on some SwiftUI documentation (!)
 
-//struct MyListStyle: ListStyle {
-//	static func _makeView<SelectionValue>(value: _GraphValue<_ListValue<MyListStyle, SelectionValue>>, inputs: _ViewInputs) -> _ViewOutputs where SelectionValue : Hashable {
-//		<#code#>
-//	}
-//
-//	static func _makeViewList<SelectionValue>(value: _GraphValue<_ListValue<MyListStyle, SelectionValue>>, inputs: _ViewListInputs) -> _ViewListOutputs where SelectionValue : Hashable {
-//		<#code#>
-//	}
-//
-//
-//}

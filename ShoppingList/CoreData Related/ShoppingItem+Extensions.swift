@@ -46,6 +46,14 @@ extension ShoppingItem: Identifiable {
 		return [ShoppingItem]()
 	}
 	
+	static func moveAllItemsOffList() {
+		let items = allShoppingItems()
+		for item in items {
+			item.onList = false
+		}
+		saveChanges()
+	}
+	
 	// addNewItem is the user-facing add of a new entity.  since these are
 	// Identifiable objects, this makes sure we give the entity a unique id, then
 	// hand it back so the user can fill in what's important to them.
@@ -63,7 +71,6 @@ extension ShoppingItem: Identifiable {
 		let locations = Location.allUserLocations()
 		let name2Location = Dictionary(grouping: locations, by: { $0.name! })
 		
-//		var count = 0
 		for jsonShoppingItem in jsonShoppingItems {
 			let newItem = addNewItem() // new UUID is created here
 			newItem.name = jsonShoppingItem.name
@@ -78,9 +85,7 @@ extension ShoppingItem: Identifiable {
 			} else {
 				newItem.setLocation(Location.unknownLocation()!)
 			}
-//			count += 1
 		}
-//		print("Inserted \(count) shopping items")
 	}
 	
 	static func saveChanges() {
@@ -96,6 +101,10 @@ extension ShoppingItem: Identifiable {
 		if saveChanges {
 			Self.saveChanges()
 		}
+	}
+	
+	var backgroundColor: UIColor {
+		UIColor(red: CGFloat(location!.red), green: CGFloat(location!.green), blue: CGFloat(location!.blue), alpha: CGFloat(location!.opacity))
 	}
 	
 	// these functions coordinate state transitions of ShoppingItems,
