@@ -80,7 +80,7 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
   - **ShoppingListTabView1** is a single list of items as described above, with items listed by their location's visitationOrder (and then alphabetically for each location).  Since Locations have different colors, the list is manageable in use, but not ideal.  
 
-- **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far.  I already seen some things from WWDC2020 that i will investigate further, to see if there's a more natural paradigm for sectioning a List.
+  - **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far.  I already seen some things from WWDC2020 that i will investigate further, to see if there's a more natural paradigm for sectioning a List.
 
 *  I have made the "Add New Shopping Item" button present as a Sheet, although if you later want to edit it, you'll transition using a NavigationLink.  (The same will happen sometime soon for "Add a New Location.")  You might be interested in seeing how to do this -- it turns out to be pretty simple.
 
