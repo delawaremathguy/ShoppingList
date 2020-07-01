@@ -1,6 +1,6 @@
 #  About "ShoppingList"
 
-My Last Update of note was **June 30, 2020**, when these were some of the changes I made.
+My Last Update of note was **July 1, 2020**, when these were some of the changes I made.
 
 
 * The one crash I had been experiencing before this update and had worked around in code has now been eliminated (*he says with fingers crossed, at least for my testing with iOS 13*).  It involved a subtlety of the way I was *over*-using @ObservedObject: you'll find comments in the code for the "row views" of both ShoppingItems and Locations on this.  On the other hand, the iOS 14 situation looks to still have a similar problem, where the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed on the navigation stack from View A).
@@ -16,6 +16,8 @@ My Last Update of note was **June 30, 2020**, when these were some of the change
 * Adding a new ShoppingItem or new Location now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
 
 *  The meat of the AddorModifyShoppingItemView has been moved into its own View, separating a shopping item from the struct of the data for the item to be edited in the subview.  This makes for simpler code, especially given the number of fields to edit and the number of view modifiers that are attached to this (Form) view.  Something similar will be happening (*or has already happened*) to AddorModifyLocationView.
+
+* the code for bringing up a contextMenu for a shoppingItem has been condensed (there were three, independent copies of this code earlier, and some code review/cleaning demanded this be done)
 
 * * * * * *
 
