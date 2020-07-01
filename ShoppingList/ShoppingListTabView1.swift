@@ -53,45 +53,27 @@ struct ShoppingListTabView1: View {
 			}
 
 			if shoppingItems.isEmpty {
-				Spacer()
-				Text("There are currently no items")
-				Text("on your Shopping List.")
-				Spacer()
-				
+				emptyListView(listName: "shopping")				
 			} else {
 				
 				List {
 					// one main section, showing all items
 					Section(header: MySectionHeaderView(title: "Items Listed: \(shoppingItems.count)")) {
 						ForEach(shoppingItems) { item in
+							
+							// display a single row here for 'item'
 							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 								ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
 									.contextMenu {
-										
-										Button(action: {
-											item.moveToPuchased(saveChanges: true)
-										}) {
-											Text("Mark Purchased")
-											Image(systemName: "purchased")
-										}
-										
-										Button(action: { item.mark(available: !item.isAvailable, saveChanges: true) }) {
-											Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
-											Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
-										}
-										
-										if !kTrailingSwipeMeansDelete {
-											Button(action: {
-												self.itemToDelete = item
-												self.isDeleteItemAlertShowing = true
-											}) {
-												Text("Delete This Item")
-												Image(systemName: "minus.circle")
-											}
-										}
-								} // end of contextMenu
+										shoppingItemContextMenu(for: item, deletionTrigger: {
+											self.itemToDelete = item
+											self.isDeleteItemAlertShowing = true
+										})
+								}
+//									.contextMenu { self.contextMenu(for: item) }
 							}
-							.listRowBackground(self.backgroundColor(for: item))
+							.listRowBackground(backgroundColor(for: item))
+							
 						} // end of ForEach
 							.onDelete(perform: handleOnDeleteModifier)
 							.alert(isPresented: $isDeleteItemAlertShowing) {
@@ -148,8 +130,5 @@ struct ShoppingListTabView1: View {
 		}
 	}
 		
-	func backgroundColor(for item: ShoppingItem) -> Color {
-		return Color(item.backgroundColor)
-	}
 }
 

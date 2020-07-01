@@ -26,7 +26,7 @@ struct ShoppingListTabView2: View {
 									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
 								predicate: NSPredicate(format: "onList == true")
-	) var shoppingItems: FetchedResults<ShoppingItem>
+	) var fetchedShoppingItems: FetchedResults<ShoppingItem>
 	
 	@State private var isAddNewItemSheetShowing: Bool = false
 	@State private var isDeleteItemAlertShowing: Bool = false
@@ -51,47 +51,28 @@ struct ShoppingListTabView2: View {
 			}
 
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
-			if shoppingItems.isEmpty {
-				Spacer()
-				Text("There are currently no items")
-				Text("on your Shopping List.")
-				Spacer()
-				
+			if fetchedShoppingItems.isEmpty {
+				emptyListView(listName: "shopping")
 			} else {
 				
 				List {
-					ForEach(locations(for: shoppingItems)) { location in
+					ForEach(locations(for: fetchedShoppingItems)) { location in
 						Section(header: MySectionHeaderView(title: location.name!)) {
 							
-							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
+							ForEach(self.fetchedShoppingItems.filter({ $0.location! == location })) { item in
+								
+								// display a single row here for 'item'
+								
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 									ShoppingItemRowView(itemData: ShoppingItemRowData(item: item, showLocation: false))
 										.contextMenu {
-											
-											Button(action: {
-												item.moveToPuchased(saveChanges: true)
-											}) {
-												Text("Mark Purchased")
-												Image(systemName: "purchased")
-											}
-											
-											Button(action: { item.mark(available: !item.isAvailable, saveChanges: true) }) {
-												Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
-												Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
-											}
-											
-											if !kTrailingSwipeMeansDelete {
-												Button(action: {
-													self.itemToDelete = item
-													self.isDeleteItemAlertShowing = true
-												}) {
-													Text("Delete This Item")
-													Image(systemName: "minus.circle")
-												}
-											}
-									} // end of contextMenu
+											shoppingItemContextMenu(for: item, deletionTrigger: {
+												self.itemToDelete = item
+												self.isDeleteItemAlertShowing = true
+											})
+									}
 								}
-								.listRowBackground(self.backgroundColor(for: item))
+								.listRowBackground(backgroundColor(for: item))
 								
 							} // end of ForEach
 								.onDelete(perform: { offsets in
@@ -113,12 +94,12 @@ struct ShoppingListTabView2: View {
 					.listStyle(GroupedListStyle())
 				
 				// clear/ mark as unavailable shopping list buttons
-				if !shoppingItems.isEmpty {
+				if !fetchedShoppingItems.isEmpty {
 					Divider()
 					SLCenteredButton(title: "Move All Items off-list", action: { ShoppingItem.moveAllItemsOffList() })
 						.padding([.bottom], 6)
 
-					if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
+					if fetchedShoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
 						SLCenteredButton(title: "Mark All Items Available", action: self.markAllAvailable )
 							.padding([.bottom], 6)
 
@@ -144,7 +125,7 @@ struct ShoppingListTabView2: View {
 		
 		// recreate the list of items on the shopping list in this location
 		// -- relies on this order being the same as the order in the ForEach above
-		let itemsInThisLocation = shoppingItems.filter({ $0.location! == location })
+		let itemsInThisLocation = fetchedShoppingItems.filter({ $0.location! == location })
 
 		// you can choose what happens here according to the value of kTrailingSwipeMeansDelete
 		// that is defined in Development.swift
@@ -164,7 +145,7 @@ struct ShoppingListTabView2: View {
 	}
 	
 	func markAllAvailable() {
-		shoppingItems.forEach({ $0.mark(available: true) })
+		fetchedShoppingItems.forEach({ $0.mark(available: true) })
 		ShoppingItem.saveChanges()
 	}
 	
@@ -172,7 +153,47 @@ struct ShoppingListTabView2: View {
 		ShoppingItem.delete(item: itemToDelete!, saveChanges: true)
 	}
 
-	func backgroundColor(for item: ShoppingItem) -> Color {
-		return Color(item.backgroundColor)
+	
+}
+
+// common code for both shopping list tabs and the purchased tab
+
+func backgroundColor(for item: ShoppingItem) -> Color {
+	return Color(item.backgroundColor)
+}
+
+
+@ViewBuilder
+func emptyListView(listName: String) -> some View {
+	Spacer()
+	Text("There are currently no items")
+	Text("on your \(listName) List.")
+	Spacer()
+}
+
+@ViewBuilder
+func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping () -> Void) -> some View {
+	Button(action: {
+		item.onList.toggle()
+		ShoppingItem.saveChanges()
+	}) {
+		Text(item.onList ? "Mark Purchased" : "Move to ShoppingList")
+			Image(systemName: item.onList ? "purchased" : "cart")
+	}
+	
+	Button(action: { item.mark(available: !item.isAvailable, saveChanges: true) }) {
+		Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
+		Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
+	}
+	
+	if !kTrailingSwipeMeansDelete {
+		Button(action: {
+			deletionTrigger()
+		}) {
+			Text("Delete This Item")
+			Image(systemName: "minus.circle")
+		}
 	}
 }
+
+

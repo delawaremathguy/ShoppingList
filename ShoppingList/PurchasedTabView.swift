@@ -40,27 +40,19 @@ struct PurchasedTabView: View {
 					.padding(10)
 			}
 			
+			if purchasedItems.isEmpty {
+				emptyListView(listName: "shopping")
+			} else {
 			List {
 				Section(header: MySectionHeaderView(title: sectionHeaderTitle())) {
 					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in 
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
 								.contextMenu {
-									Button("Move to Shopping List") {
-										item.moveToShoppingList(saveChanges: true)
-									}
-									Button(item.isAvailable ? "Mark as Unavailable" : "Mark as Available") {
-										item.mark(available: !item.isAvailable, saveChanges: true)
-									}
-									if !kTrailingSwipeMeansDelete {
-										Button(action: {
-											self.itemToDelete = item
-											self.isDeleteItemSheetShowing = true
-										}) {
-											Text("Delete This Item")
-											Image(systemName: "minus.circle")
-										}
-									}
+									shoppingItemContextMenu(for: item, deletionTrigger: {
+										self.itemToDelete = item
+										self.isDeleteItemSheetShowing = true
+									})
 							}
 						} // end of NavigationLink
 					} // end of ForEach
@@ -76,7 +68,8 @@ struct PurchasedTabView: View {
 				} // end of Section
 			}  // end of List
 				.listStyle(GroupedListStyle())
-			
+				
+			} // end of if-else
 		} // end of VStack
 	}
 	
@@ -109,16 +102,6 @@ struct PurchasedTabView: View {
 		}
 	}
 
-//	func moveToShoppingList(indexSet: IndexSet) {
-//		// the indexSet refers to indices in what's showing -- the filtered list
-//		let itemsShowing = purchasedItems.filter({ searchTextAppears(in: $0.name!) })
-//		for index in indexSet {
-//			let item = itemsShowing[index]
-//			item.moveToShoppingList()
-//		}
-//		ShoppingItem.saveChanges()
-//	}
-	
 	// i added this so that the search is not case sensistive, and also just to
 	// simplify the original coding of the filter function used in ForEach
 	func searchTextAppears(in name: String) -> Bool {
