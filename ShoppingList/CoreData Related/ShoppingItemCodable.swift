@@ -8,7 +8,9 @@
 
 import Foundation
 
-struct ShoppingItemJSON: Codable {
+// this is a simple struct to extract only the fields of a ShoppingItem
+// that we would import or export in such a way that the result is Codable
+struct ShoppingItemCodable: Codable {
 	var name: String
 	var onList: Bool
 	var isAvailable: Bool
@@ -22,7 +24,6 @@ struct ShoppingItemJSON: Codable {
 		quantity = item.quantity
 		locationName = item.location!.name!
 	}
-	
 
 }
 

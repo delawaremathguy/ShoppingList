@@ -53,7 +53,7 @@ struct ShoppingListTabView1: View {
 			}
 
 			if shoppingItems.isEmpty {
-				emptyListView(listName: "shopping")				
+				emptyListView(listName: "Shopping")				
 			} else {
 				
 				List {

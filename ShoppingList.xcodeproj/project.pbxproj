@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		D606197F2481510E005CE575 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D606197E2481510E005CE575 /* SearchBarView.swift */; };
 		D606198124815F8C005CE575 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D606198024815F8C005CE575 /* LICENSE */; };
-		D60F14A724686BA80077AD3F /* ShoppingItemJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A624686BA80077AD3F /* ShoppingItemJSON.swift */; };
-		D60F14A924686D710077AD3F /* LocationJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A824686D710077AD3F /* LocationJSON.swift */; };
+		D60F14A724686BA80077AD3F /* ShoppingItemCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A624686BA80077AD3F /* ShoppingItemCodable.swift */; };
+		D60F14A924686D710077AD3F /* LocationCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A824686D710077AD3F /* LocationCodable.swift */; };
 		D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */; };
 		D612E16124898EBB007E1412 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D612E16024898EBB007E1412 /* Array+Extensions.swift */; };
 		D62B882B2451162D0051A7CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62B882A2451162D0051A7CE /* AppDelegate.swift */; };
@@ -45,8 +45,8 @@
 /* Begin PBXFileReference section */
 		D606197E2481510E005CE575 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		D606198024815F8C005CE575 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		D60F14A624686BA80077AD3F /* ShoppingItemJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemJSON.swift; sourceTree = "<group>"; };
-		D60F14A824686D710077AD3F /* LocationJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationJSON.swift; sourceTree = "<group>"; };
+		D60F14A624686BA80077AD3F /* ShoppingItemCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemCodable.swift; sourceTree = "<group>"; };
+		D60F14A824686D710077AD3F /* LocationCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCodable.swift; sourceTree = "<group>"; };
 		D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingItem+Extensions.swift"; sourceTree = "<group>"; };
 		D612E16024898EBB007E1412 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		D62B88272451162D0051A7CE /* ShoppingList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,9 +159,9 @@
 			children = (
 				D6FC7A0824635D950096F018 /* ShoppingList.xcdatamodeld */,
 				D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */,
-				D60F14A624686BA80077AD3F /* ShoppingItemJSON.swift */,
+				D60F14A624686BA80077AD3F /* ShoppingItemCodable.swift */,
 				D648D348246388C100CD881B /* Location+Extensions.swift */,
-				D60F14A824686D710077AD3F /* LocationJSON.swift */,
+				D60F14A824686D710077AD3F /* LocationCodable.swift */,
 			);
 			path = "CoreData Related";
 			sourceTree = "<group>";
@@ -245,13 +245,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6450BD7245F49DB0074DA16 /* AddorModifyShoppingItemView.swift in Sources */,
-				D60F14A724686BA80077AD3F /* ShoppingItemJSON.swift in Sources */,
+				D60F14A724686BA80077AD3F /* ShoppingItemCodable.swift in Sources */,
 				D6B8A95424636711005F8EF2 /* MainView.swift in Sources */,
 				D6DE39BD247314B40013F9B4 /* SLFormLabelText.swift in Sources */,
 				D6F375D62485593D005559E6 /* LocationRowView.swift in Sources */,
 				D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */,
 				D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */,
-				D60F14A924686D710077AD3F /* LocationJSON.swift in Sources */,
+				D60F14A924686D710077AD3F /* LocationCodable.swift in Sources */,
 				D62B882B2451162D0051A7CE /* AppDelegate.swift in Sources */,
 				D62B88322451162D0051A7CE /* ShoppingListTabView1.swift in Sources */,
 				D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */,

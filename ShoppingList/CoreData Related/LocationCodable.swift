@@ -8,14 +8,15 @@
 
 import Foundation
 
-struct LocationJSON: Codable {
+// this is a simple struct to extract only the fields of a Location
+// that we would import or export in such a way that the result is Codable
+struct LocationCodable: Codable {
 	var name: String
 	var visitationOrder: Int32
 	var red: Double
 	var green: Double
 	var blue: Double
 	var opacity: Double
-
 
 	init(from location: Location) {
 		name = location.name!

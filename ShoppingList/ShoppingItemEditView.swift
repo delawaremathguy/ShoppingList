@@ -36,7 +36,7 @@ struct ShoppingItemEditView: View {
 						}
 					}
 					
-					Picker(selection: $editableData.selectedLocation,
+					Picker(selection: $editableData.location,
 								 label: SLFormLabelText(labelText: "Location: ")) {
 									ForEach(locations) { location in
 										Text(location.name!).tag(location)

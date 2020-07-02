@@ -45,23 +45,22 @@ let kLocationsFilename = "locations.json"
 // in the list.  so we use the power of generics:  we introduce
 // (1) a protocol that demands that something be able to produce a simple
 // Codable (struct) representation of itself -- a proxy as it were.
-protocol JSONRepresentable {
+protocol CodableStructRepresentable {
 	associatedtype DataType: Codable
-	var jsonProxy: DataType { get }
+	var codableProxy: DataType { get }
 }
 
-// and (2), knowing that ShoppingItem and Location are NSManagedObjects, we
-// don't want to write our own encoder, and we
-// only want to write out a few fields of data, so we extend each to be able to
-// produce a simple, Codable struct holding only what we want to write out
+// and (2), knowing that ShoppingItem and Location are NSManagedObjects, and we
+// don't want to write our own custom encoder (eventually we will), we extend each to
+// be able to produce a simple, Codable struct holding only what we want to write out
 // (ShoppingItemJSON and LocationJSON structs, respectively)
-func writeAsJSON<T>(items: [T], to filename: String) where T: JSONRepresentable {
-	let jsonizedItems = items.map() { $0.jsonProxy }
+func writeAsJSON<T>(items: [T], to filename: String) where T: CodableStructRepresentable {
+	let codableItems = items.map() { $0.codableProxy }
 	let encoder = JSONEncoder()
 	encoder.outputFormatting = .prettyPrinted
 	var data = Data()
 	do {
-		data = try encoder.encode(jsonizedItems)
+		data = try encoder.encode(codableItems)
 	} catch let error as NSError {
 		print("Error converting items to JSON: \(error.localizedDescription), \(error.userInfo)")
 		return
@@ -86,10 +85,10 @@ func writeAsJSON<T>(items: [T], to filename: String) where T: JSONRepresentable 
 
 func populateDatabaseFromJSON() {
 	// it sure is easy to do with HWS's Bundle extension (!)
-	let jsonLocations: [LocationJSON] = Bundle.main.decode(from: kLocationsFilename)
-	Location.insertNewLocations(from: jsonLocations)
-	let jsonShoppingItems: [ShoppingItemJSON] = Bundle.main.decode(from: kShoppingItemsFilename)
-	ShoppingItem.insertNewItems(from: jsonShoppingItems)
+	let codableLocations: [LocationCodable] = Bundle.main.decode(from: kLocationsFilename)
+	Location.insertNewLocations(from: codableLocations)
+	let codableShoppingItems: [ShoppingItemCodable] = Bundle.main.decode(from: kShoppingItemsFilename)
+	ShoppingItem.insertNewItems(from: codableShoppingItems)
 	ShoppingItem.saveChanges()
 }
 

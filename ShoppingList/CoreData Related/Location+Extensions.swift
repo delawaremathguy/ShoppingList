@@ -81,7 +81,7 @@ extension Location: Identifiable {
 	}
 	
 	// used to insert data from JSON files in the app bundle
-	static func insertNewLocations(from jsonLocations: [LocationJSON]) {
+	static func insertNewLocations(from jsonLocations: [LocationCodable]) {
 		for jsonLocation in jsonLocations {
 			let newLocation = addNewLocation() // new UUID created here
 			newLocation.name = jsonLocation.name
@@ -124,9 +124,9 @@ extension Location: Identifiable {
 
 }
 
-extension Location: JSONRepresentable {
-	var jsonProxy: some Decodable & Encodable {
-		return LocationJSON(from: self)
+extension Location: CodableStructRepresentable {
+	var codableProxy: some Encodable & Decodable {
+		return LocationCodable(from: self)
 	}
 }
 	

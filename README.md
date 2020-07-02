@@ -107,8 +107,8 @@ But Apple deprecated its sort-of-support for the cloud with CoreData somewhere a
 
 I was very close to having what I wanted, just waiting to flesh out the cloud integration, but then WWDC2019 happened.  I saw two things: CoreData and CloudKit working together (which I had really wanted a long time ago) and SwiftUI (that was a BIG WOW). 
 
-I have since rebuilt that app with CoreData (it was easier than you think -- I had done it before), and I am now actively building the project in parallel in SwiftUI.  But I ran into a few roadblocks (e.g., where's CollectionView, etc.) and kept finding myself with the same basic visual updating issues that have been discussed above.  So I am glad I built Shopping List (again, I had a need since I was doing almost all of the shopping during the pandemic) and confronted these issues. 
+I have since rebuilt that app in UIKit with CoreData (it was easier than you think -- I had done it before), as well as added a new capability, and I am now actively building the project in parallel in SwiftUI.  But I ran into a few roadblocks (e.g., where's CollectionView, etc.) and kept finding myself with the same basic visual updating issues that have been discussed above.  So I am glad I built Shopping List (again, I had a need since I was doing almost all of the shopping during the pandemic) and confronted these issues. 
 
-So far, this week's WWDC has given me more than enough so I can move forward and eventually take that other app to the App Store.
+So far,  WWDC2020 has given me more than enough so I can move forward and eventually take that other app to the App Store.
 
 Feel free to contact me about questions and comments.

@@ -8,13 +8,11 @@
 
 import SwiftUI
 
-// ONE MAJOR ITEM.  my method of deleting (tap, go to edit screen,
-// tap "Delete This Item," and then returning was working EXCEPT FOR ONE CASE:
-// if the list has only one item and you use this delete methodology,
-// the program would crash.  I'm still interested in resolving this bug, but I
-// have for now patched the code that was crashing in ShoppingItemRowView.
-// you can see a note there
-
+// a simple list of items that are not on the current shopping list
+// these are the items that were on the shopping list at some time and
+// were later removed -- items we purchased.  you could also call it a
+// catalog, of sorts, although we only show items that we know about
+// that are not already on the shopping list.
 
 struct PurchasedTabView: View {
 	
@@ -25,8 +23,11 @@ struct PurchasedTabView: View {
 								predicate: NSPredicate(format: "onList == false")
 	) var purchasedItems: FetchedResults<ShoppingItem>
 	
+	// the usual @State variables to handle the Search field and control
+	// the action of the confirmation alert that you really do want to
+	// delete an item
 	@State private var searchText: String = ""
-	@State private var isDeleteItemSheetShowing: Bool = false
+	@State private var isDeleteItemAlertShowing: Bool = false
 	@State private var itemToDelete: ShoppingItem?
 
 	var body: some View {
@@ -41,7 +42,7 @@ struct PurchasedTabView: View {
 			}
 			
 			if purchasedItems.isEmpty {
-				emptyListView(listName: "shopping")
+				emptyListView(listName: "Purchased")
 			} else {
 			List {
 				Section(header: MySectionHeaderView(title: sectionHeaderTitle())) {
@@ -51,13 +52,13 @@ struct PurchasedTabView: View {
 								.contextMenu {
 									shoppingItemContextMenu(for: item, deletionTrigger: {
 										self.itemToDelete = item
-										self.isDeleteItemSheetShowing = true
+										self.isDeleteItemAlertShowing = true
 									})
 							}
 						} // end of NavigationLink
 					} // end of ForEach
 						.onDelete(perform: handleOnDeleteModifier)
-						.alert(isPresented: $isDeleteItemSheetShowing) {
+						.alert(isPresented: $isDeleteItemAlertShowing) {
 							Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
 										message: Text("Are you sure you want to delete this item?"),
 										primaryButton: .cancel(Text("No")),
@@ -90,7 +91,7 @@ struct PurchasedTabView: View {
 		// that is defined in Development.swift
 		if kTrailingSwipeMeansDelete {
 			// trigger a deletion alert/confirmation
-			isDeleteItemSheetShowing = true
+			isDeleteItemAlertShowing = true
 			itemToDelete = purchasedItems[indexSet.first!]
 		} else {
 			// this moves the item(s) "to the other list"

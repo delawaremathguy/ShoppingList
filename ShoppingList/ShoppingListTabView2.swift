@@ -52,7 +52,7 @@ struct ShoppingListTabView2: View {
 
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
 			if fetchedShoppingItems.isEmpty {
-				emptyListView(listName: "shopping")
+				emptyListView(listName: "Shopping")
 			} else {
 				
 				List {
@@ -107,7 +107,6 @@ struct ShoppingListTabView2: View {
 				}
 
 			} // end of else for if shoppingItems.isEmpty
-			
 		} // end of VStack
 	} // end of body: some View
 			
@@ -145,7 +144,7 @@ struct ShoppingListTabView2: View {
 	}
 	
 	func markAllAvailable() {
-		fetchedShoppingItems.forEach({ $0.mark(available: true) })
+		fetchedShoppingItems.forEach({ $0.isAvailable = true })
 		ShoppingItem.saveChanges()
 	}
 	
@@ -158,11 +157,14 @@ struct ShoppingListTabView2: View {
 
 // common code for both shopping list tabs and the purchased tab
 
+// this first one looks like there's no need, but it turns out that
+// .listRowBackground doesn't like the syntax of Color(item.backgroundColor)
+// on its own (?)
 func backgroundColor(for item: ShoppingItem) -> Color {
 	return Color(item.backgroundColor)
 }
 
-
+// simplifies the code for what to show when a list is empty
 @ViewBuilder
 func emptyListView(listName: String) -> some View {
 	Spacer()
@@ -171,6 +173,10 @@ func emptyListView(listName: String) -> some View {
 	Spacer()
 }
 
+// a good example: this builds a context menu (it is used in three
+// different places, but just
+// needed to have a closure parameter specified that was
+// specific to usage because of variable names
 @ViewBuilder
 func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping () -> Void) -> some View {
 	Button(action: {

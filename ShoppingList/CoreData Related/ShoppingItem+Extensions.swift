@@ -64,7 +64,7 @@ extension ShoppingItem: Identifiable {
 		return newItem
 	}
 
-	static func insertNewItems(from jsonShoppingItems: [ShoppingItemJSON]) {
+	static func insertNewItems(from jsonShoppingItems: [ShoppingItemCodable]) {
 		
 		// get all Locations that are not the unknown location
 		// group by id for faster lookup below when adding an item to a location
@@ -139,8 +139,8 @@ extension ShoppingItem: Identifiable {
 	}
 }
 
-extension ShoppingItem: JSONRepresentable {
-	var jsonProxy: some Encodable & Decodable {
-		return ShoppingItemJSON(from: self)
+extension ShoppingItem: CodableStructRepresentable {
+	var codableProxy: some Encodable & Decodable {
+		return ShoppingItemCodable(from: self)
 	}
 }
