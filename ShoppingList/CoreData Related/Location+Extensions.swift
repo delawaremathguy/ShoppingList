@@ -98,17 +98,20 @@ extension Location: Identifiable {
 		guard !location.isUnknownLocation() else { return }
 		// retrieve all items for this location tso we can work with them
 		// this should succeed (!)
-		guard let shoppingItems = location.items as? Set<ShoppingItem> else { return }
+		var itemsAtThisLocation = Set<ShoppingItem>()
+		if let shoppingItems = location.items as? Set<ShoppingItem> {
+			itemsAtThisLocation = shoppingItems
+		}
 		
 		// take all shopping items associated with this location and
 		// move then to the unknown location
 		let theUnknownLocation = Location.unknownLocation()!
-		for item in shoppingItems {
+		for item in itemsAtThisLocation {
 			location.removeFromItems(item)
 			item.setLocation(theUnknownLocation)
 		}
 		// and finish the deletion
-		appDelegate.persistentContainer.viewContext.delete(location)
+		location.managedObjectContext?.delete(location)
 		if saveChanges {
 			appDelegate.saveContext()
 		}
@@ -119,7 +122,7 @@ extension Location: Identifiable {
 	}
 	
 	func isUnknownLocation() -> Bool {
-		return visitationOrder != kUnknownLocationVisitationOrder
+		return visitationOrder == kUnknownLocationVisitationOrder
 	}
 
 }
