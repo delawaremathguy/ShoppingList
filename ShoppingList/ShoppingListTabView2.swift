@@ -167,16 +167,23 @@ func backgroundColor(for item: ShoppingItem) -> Color {
 // simplifies the code for what to show when a list is empty
 @ViewBuilder
 func emptyListView(listName: String) -> some View {
-	Spacer()
-	Text("There are currently no items")
-	Text("on your \(listName) List.")
+
+	Group {
+		Text("There are no items")
+			.padding([.top], 200)
+		Text("on your \(listName) List.")
+	}
+	.font(.title)
+	.foregroundColor(.secondary)
 	Spacer()
 }
 
-// a good example: this builds a context menu (it is used in three
-// different places, but just
-// needed to have a closure parameter specified that was
-// specific to usage because of variable names
+/// Builds out a context menu for a ShoppingItem that can be used in the shopping list
+/// or the purchased list to quickly move the item to the other list, toggle the state
+/// of the availability, and delete the item.
+/// - Parameter item: a ShoppingItem
+/// - Parameter deletionTrigger: a closure to call to set state veriables and put up an "Are you sure?" alert before allowing deletion of the item
+/// - Returns: none
 @ViewBuilder
 func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping () -> Void) -> some View {
 	Button(action: {

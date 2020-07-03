@@ -95,9 +95,9 @@ extension Location: Identifiable {
 	
 	static func delete(location: Location, saveChanges: Bool = false) {
 		// you cannot delete the unknownLocation
-		guard !location.isUnknownLocation() else { return }
+		guard location.visitationOrder != kUnknownLocationVisitationOrder else { return }
 		// retrieve all items for this location tso we can work with them
-		// this should succeed (!)
+		// this if let should succeed (!)
 		var itemsAtThisLocation = Set<ShoppingItem>()
 		if let shoppingItems = location.items as? Set<ShoppingItem> {
 			itemsAtThisLocation = shoppingItems
@@ -121,10 +121,6 @@ extension Location: Identifiable {
 		appDelegate.saveContext()
 	}
 	
-	func isUnknownLocation() -> Bool {
-		return visitationOrder == kUnknownLocationVisitationOrder
-	}
-
 }
 
 extension Location: CodableStructRepresentable {
