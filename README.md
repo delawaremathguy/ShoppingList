@@ -16,7 +16,7 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 My Last Update of note was **July 4, 2020**, when these were some of the changes I made.
 
-* I abstracted out the Core Data code from the AppDelegate to a PersistentStore singleton object in a separate file.  It's a simple transition, but it will be eaiser to use the code if you're working with XCode12 and iOS 14, since there's a lot of confusion about the new App structure that has no AppDelegate.
+* I pulled out the Core Data code from the AppDelegate to a PersistentStore singleton object in a separate file.  It's a simple transition, but it will be eaiser to use the code if you're working with XCode12 and iOS 14, since there's a lot of confusion about the new App structure that has no AppDelegate.
 
 
 

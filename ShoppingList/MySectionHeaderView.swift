@@ -29,7 +29,7 @@ struct MySectionHeaderView: View {
 		//		print(size)
 		//		return
 		Text(title)
-			.font(.headline)
+			.font(.body)
 			.foregroundColor(.black)
 		//			.background(Color.green)
 		//			.opacity(0.5)
