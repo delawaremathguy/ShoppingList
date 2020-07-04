@@ -14,11 +14,9 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 3, 2020**, when these were some of the more vichanges I made.
+My Last Update of note was **July 4, 2020**, when these were some of the changes I made.
 
-* Adding a new ShoppingItem or new Location now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
-
-* The code for bringing up a contextMenu for a shoppingItem has been condensed (there were three, independent copies of this code earlier, and some code review/cleaning demanded this be done).  However, you'll get a lot of traffic on the console in XCode 11.5 and iOS 13.5 when the context menu comes up (this does not happen in XCode 12 beta wth iOS 14 beta).
+* I abstracted out the Core Data code from the AppDelegate to a PersistentStore singleton object in a separate file.  It's a simple transition, but it will be eaiser to use the code if you're working with XCode12 and iOS 14, since there's a lot of confusion about the new App structure that has no AppDelegate.
 
 
 

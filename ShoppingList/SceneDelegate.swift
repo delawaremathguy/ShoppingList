@@ -19,8 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
 		// This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
-		// Get the managed object context from the shared persistent container.
-		let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+		// Get the managed object context from the shared persistent store.
+		let context = PersistentStore.shared.context
 		
 		// hook in here to be sure we have a working database
 		if Location.unknownLocation() == nil {
@@ -70,7 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// to restore the scene back to its current state.
 
 		// Save changes in the application's managed object context when the application transitions to the background.
-		(UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+		PersistentStore.shared.saveContext()
 	}
 
 

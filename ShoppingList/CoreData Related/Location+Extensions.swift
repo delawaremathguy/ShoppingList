@@ -15,15 +15,11 @@ let kUnknownLocationVisitationOrder: Int32 = INT32_MAX
 
 extension Location: Identifiable {
 	
-	fileprivate static var appDelegate: AppDelegate = {
-		UIApplication.shared.delegate as! AppDelegate
-	}()
-
 	static func count() -> Int {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
 		do {
-			let itemCount = try appDelegate.persistentContainer.viewContext.count(for: fetchRequest)
+			let itemCount = try PersistentStore.shared.context.count(for: fetchRequest)
 			return itemCount
 		}
 		catch let error as NSError {
@@ -36,7 +32,7 @@ extension Location: Identifiable {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
 		do {
-			let items = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+			let items = try PersistentStore.shared.context.fetch(fetchRequest)
 			return items
 		}
 		catch let error as NSError {
@@ -46,13 +42,13 @@ extension Location: Identifiable {
 	}
 
 	static func addNewLocation() -> Location {
-		let newLocation = Location(context: appDelegate.persistentContainer.viewContext)
+		let newLocation = Location(context: PersistentStore.shared.context)
 		newLocation.id = UUID()
 		return newLocation
 	}
 	
 	static func createUnknownLocation() {
-		let unknownLocation = Location(context: appDelegate.persistentContainer.viewContext)
+		let unknownLocation = Location(context: PersistentStore.shared.context)
 		unknownLocation.id = UUID()
 		unknownLocation.name = kUnknownLocationName
 		unknownLocation.red = 0.5
@@ -70,7 +66,7 @@ extension Location: Identifiable {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "visitationOrder == %d", kUnknownLocationVisitationOrder)
 		do {
-			let locations = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+			let locations = try PersistentStore.shared.context.fetch(fetchRequest)
 			if locations.count == 1 {
 				return locations[0]
 			}
@@ -113,12 +109,12 @@ extension Location: Identifiable {
 		// and finish the deletion
 		location.managedObjectContext?.delete(location)
 		if saveChanges {
-			appDelegate.saveContext()
+			PersistentStore.shared.saveContext()
 		}
 	}
 
 	static func saveChanges() {
-		appDelegate.saveContext()
+		PersistentStore.shared.saveContext()
 	}
 	
 	func uiColor() -> UIColor {

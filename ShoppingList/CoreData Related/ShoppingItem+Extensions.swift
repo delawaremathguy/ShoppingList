@@ -17,12 +17,12 @@ extension ShoppingItem: Identifiable {
 	// so that i don't have to litter a whole bunch of try? moc.save() statements
 	// out in the Views.
 	
-	fileprivate static var appDelegate: AppDelegate = {
-		UIApplication.shared.delegate as! AppDelegate
-	}()
+//	fileprivate static var appDelegate: AppDelegate = {
+//		UIApplication.shared.delegate as! AppDelegate
+//	}()
 	
 	static func count() -> Int {
-		let context = appDelegate.persistentContainer.viewContext
+		let context = PersistentStore.shared.context
 		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
 		do {
 			let itemCount = try context.count(for: fetchRequest)
@@ -35,7 +35,7 @@ extension ShoppingItem: Identifiable {
 	}
 
 	static func allShoppingItems() -> [ShoppingItem] {
-		let context = appDelegate.persistentContainer.viewContext
+		let context = PersistentStore.shared.context
 		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
 		do {
 			let items = try context.fetch(fetchRequest)
@@ -48,7 +48,7 @@ extension ShoppingItem: Identifiable {
 	}
 	
 	static func moveAllItemsOffList() {
-		let context = appDelegate.persistentContainer.viewContext
+		let context = PersistentStore.shared.context
 		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "onList == true")
 		do {
@@ -62,7 +62,7 @@ extension ShoppingItem: Identifiable {
 	}
 	
 	static func markAllItemsAvailable() {
-		let context = appDelegate.persistentContainer.viewContext
+		let context = PersistentStore.shared.context
 		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "isAvailable == false")
 		do {
@@ -80,7 +80,7 @@ extension ShoppingItem: Identifiable {
 	// Identifiable objects, this makes sure we give the entity a unique id, then
 	// hand it back so the user can fill in what's important to them.
 	static func addNewItem() -> ShoppingItem {
-		let context = appDelegate.persistentContainer.viewContext
+		let context = PersistentStore.shared.context
 		let newItem = ShoppingItem(context: context)
 		newItem.id = UUID()
 		return newItem
@@ -111,14 +111,14 @@ extension ShoppingItem: Identifiable {
 	}
 	
 	static func saveChanges() {
-		appDelegate.saveContext()
+		PersistentStore.shared.saveContext()
 	}
 
 	static func delete(item: ShoppingItem, saveChanges: Bool = false) {
 		// remove reference to this item from its associated location first, then delete
 		let location = item.location
 		location?.removeFromItems(item)
-		let context = appDelegate.persistentContainer.viewContext
+		let context = PersistentStore.shared.context
 		context.delete(item)
 		if saveChanges {
 			Self.saveChanges()
