@@ -74,7 +74,7 @@ struct PurchasedTabView: View {
 										message: Text("Are you sure you want to delete this item?"),
 										primaryButton: .cancel(Text("No")),
 										secondaryButton: .destructive(Text("Yes"),
-										action: self.deleteItem)
+										action: { ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true) })
 							)}
 
 				} // end of Section
@@ -85,10 +85,6 @@ struct PurchasedTabView: View {
 		} // end of VStack
 	}
 	
-	func deleteItem() {
-		ShoppingItem.delete(item: itemToDelete!, saveChanges: true)
-	}
-
 	func sectionHeaderTitle() -> String {
 		if searchText.isEmpty {
 			return "Items Listed: \(purchasedItems.count)"

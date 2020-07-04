@@ -6,7 +6,7 @@ I'm making this repo publicly available.  I may be interested in asking some que
 
 However, be warned: 
 
-* the project source is likely to change often -- this is an ongoing project for me to get more familiar with SwiftUI; 
+* the project source is likely to change often -- this is an ongoing project for me to get more familiar with certain details of SwiftUI; 
 * there may be errors in the code, or some areas of the code might need help with regard to best practices; and
 * nevertheless, this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
 
@@ -14,12 +14,11 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 3, 2020**, when these were some of the changes I made.
+My Last Update of note was **July 3, 2020**, when these were some of the more vichanges I made.
 
 * Adding a new ShoppingItem or new Location now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
 
-* the code for bringing up a contextMenu for a shoppingItem has been condensed (there were three, independent copies of this code earlier, and some code review/cleaning demanded this be done).  However, you'll get a lot of traffic on the console in XCode 11.5 and iOS 13.5 when the context menu comes up (this doe snot happen in XCode 12 beta wth iOS 14 beta).
-
+* The code for bringing up a contextMenu for a shoppingItem has been condensed (there were three, independent copies of this code earlier, and some code review/cleaning demanded this be done).  However, you'll get a lot of traffic on the console in XCode 11.5 and iOS 13.5 when the context menu comes up (this does not happen in XCode 12 beta wth iOS 14 beta).
 
 
 
@@ -82,14 +81,14 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
   - **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far.  I already seen some things from WWDC2020 that i will investigate further, to see if there's a more natural paradigm for sectioning a List.
 
-*  I have made the "Add New Shopping Item" button present as a Sheet, although if you later want to edit it, you'll transition using a NavigationLink.  (The same will happen sometime soon for "Add a New Location.")  You might be interested in seeing how to do this -- it turns out to be pretty simple.
+*  I have made the "Add New Shopping Item" button present as a Sheet, although if you later want to edit it, you'll transition using a NavigationLink.  (The same happens for "Add a New Location.")  You might be interested in seeing how to do this -- it turns out to be pretty simple.
 
 *  I'm puzzled for now on one thing. The MainView of this app is a TabView, embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView apparently cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation bar to be configured.  
 
 
 *  I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, and I have already seen fewer or none of these in testing out XCode 12. Several internet comments  seem to be saying ignoring most of these messages is the right thing to do for now.
 
-*  I have been constantly struggling with visual updates in this project.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating and you may see a comment or two in the code about this.
+*  I have been constantly struggling with visual updates in SwiftUI, although not so much anymore.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating and you may see a comment or two in the code about this.
 
 *  I'm looking at the new SwiftUI releases from WWDC right now and can definitely use quite a bit of it very easily (e.g., a ColorPicker); i think you may see a ShoppingList14 (for iOS 14) from me sometime soon to play with.
 

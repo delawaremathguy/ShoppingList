@@ -38,20 +38,12 @@ struct ShoppingListTabView1: View {
 		VStack {
 			
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
-			// inside its own NaviagtionView (so the Picker will work!) but we must pass along the
+			// inside its own NavigationView (so the Picker will work!) but we must pass along the
 			// managedObjectContext manually because sheets don't automatically inherit the environment
-			Button(action: { self.isAddNewItemSheetShowing = true }) {
-				Text("Add New Item")
-					.foregroundColor(Color.blue)
-					.padding(10)
-			}
-			.sheet(isPresented: $isAddNewItemSheetShowing) {
-				NavigationView {
-					AddorModifyShoppingItemView(allowsDeletion: false) 
-						.environment(\.managedObjectContext, self.managedObjectContext)
-				}
-			}
+			addNewShoppingItemButtonView(isAddNewItemSheetShowing: $isAddNewItemSheetShowing,
+																	 managedObjectContext: managedObjectContext)
 
+			// 2.  now come the items, if there are any
 			if shoppingItems.isEmpty {
 				emptyListView(listName: "Shopping")				
 			} else {
@@ -95,23 +87,16 @@ struct ShoppingListTabView1: View {
 					SLCenteredButton(title: "Move All Items off-list", action: { ShoppingItem.moveAllItemsOffList() })
 						.padding([.bottom], 6)
 					
-					if shoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
-						SLCenteredButton(title: "Mark All Items Available", action: self.markAllAvailable )
+					if shoppingItems.filter({ !$0.isAvailable }).count > 0 {
+						SLCenteredButton(title: "Mark All Items Available", action: { ShoppingItem.markAllItemsAvailable() })
 							.padding([.bottom], 6)
 						
 					}
 				}
 
-			} // end of else
-			
+			} // end of else for if shoppingItems.isEmpty
 		} // end of VStack
-	}
-	
-	func markAllAvailable() {
-		shoppingItems.forEach({ $0.mark(available: true )})
-		ShoppingItem.saveChanges()
-	}
-
+	} // end of body: some View
 	
 	func handleOnDeleteModifier(indexSet: IndexSet) {
 		// you can choose what happens here according to the value of kTrailingSwipeMeansDelete

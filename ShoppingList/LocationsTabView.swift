@@ -42,17 +42,13 @@ struct LocationsTabView: View {
 						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
 							LocationRowView(rowData: LocationRowData(location: location))
 						}
-						.listRowBackground(self.textColor(for: location))
+						.listRowBackground(Color(location.uiColor())) 
 					} // end of ForEach
 				} // end of Section
 			} // end of List
 				.listStyle(GroupedListStyle())
 			
 		} // end of VStack
-	}
-	
-	func textColor(for location: Location) -> Color {
-		return Color(.sRGB, red: location.red, green: location.green, blue: location.blue, opacity: location.opacity)
 	}
 	
 }

@@ -89,8 +89,8 @@ struct AddorModifyLocationView: View {
 
 			} // end of Section 1
 			
-			// Section 2: Delete button, if present
-			if editableData.visitationOrder != kUnknownLocationVisitationOrder && editableLocation != nil {
+			// Section 2: Delete button, if present (must be editing a user location)
+			if editableLocation != nil && editableData.visitationOrder != kUnknownLocationVisitationOrder  {
 				Section(header: MySectionHeaderView(title: "Location Management")) {
 					SLCenteredButton(title: "Delete This Location", action: { self.showDeleteConfirmation = true })
 						.foregroundColor(Color.red)
@@ -137,8 +137,8 @@ struct AddorModifyLocationView: View {
 	
 	func deleteLocation() {
 		if let location = editableLocation {
-			presentationMode.wrappedValue.dismiss()
 			Location.delete(location: location, saveChanges: true)
+			presentationMode.wrappedValue.dismiss()
 		}
 	}
 

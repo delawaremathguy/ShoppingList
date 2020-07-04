@@ -22,9 +22,10 @@ extension ShoppingItem: Identifiable {
 	}()
 	
 	static func count() -> Int {
+		let context = appDelegate.persistentContainer.viewContext
 		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
 		do {
-			let itemCount = try appDelegate.persistentContainer.viewContext.count(for: fetchRequest)
+			let itemCount = try context.count(for: fetchRequest)
 			return itemCount
 		}
 		catch let error as NSError {
@@ -47,13 +48,34 @@ extension ShoppingItem: Identifiable {
 	}
 	
 	static func moveAllItemsOffList() {
-		let items = allShoppingItems()
-		for item in items {
-			item.onList = false
+		let context = appDelegate.persistentContainer.viewContext
+		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "onList == true")
+		do {
+			let items = try context.fetch(fetchRequest)
+			items.forEach({ $0.onList = false })
+		}
+		catch let error as NSError {
+			print("Error getting items onList: \(error.localizedDescription), \(error.userInfo)")
 		}
 		saveChanges()
 	}
 	
+	static func markAllItemsAvailable() {
+		let context = appDelegate.persistentContainer.viewContext
+		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "isAvailable == false")
+		do {
+			let items = try context.fetch(fetchRequest)
+			items.forEach({ $0.isAvailable = true })
+		}
+		catch let error as NSError {
+			print("Error getting items not available: \(error.localizedDescription), \(error.userInfo)")
+		}
+		saveChanges()
+	}
+	
+
 	// addNewItem is the user-facing add of a new entity.  since these are
 	// Identifiable objects, this makes sure we give the entity a unique id, then
 	// hand it back so the user can fill in what's important to them.
@@ -64,23 +86,23 @@ extension ShoppingItem: Identifiable {
 		return newItem
 	}
 
-	static func insertNewItems(from jsonShoppingItems: [ShoppingItemCodable]) {
+	static func insertNewItems(from codableShoppingItems: [ShoppingItemCodable]) {
 		
 		// get all Locations that are not the unknown location
 		// group by id for faster lookup below when adding an item to a location
 		let locations = Location.allUserLocations()
 		let name2Location = Dictionary(grouping: locations, by: { $0.name! })
 		
-		for jsonShoppingItem in jsonShoppingItems {
+		for codableShoppingItem in codableShoppingItems {
 			let newItem = addNewItem() // new UUID is created here
-			newItem.name = jsonShoppingItem.name
-			newItem.quantity = jsonShoppingItem.quantity
-			newItem.onList = jsonShoppingItem.onList
-			newItem.isAvailable = jsonShoppingItem.isAvailable
+			newItem.name = codableShoppingItem.name
+			newItem.quantity = codableShoppingItem.quantity
+			newItem.onList = codableShoppingItem.onList
+			newItem.isAvailable = codableShoppingItem.isAvailable
 			
 			// look up matching location by id
 			// anything that doesn't match goes to the unknown location.
-			if let location = name2Location[jsonShoppingItem.locationName]?.first {
+			if let location = name2Location[codableShoppingItem.locationName]?.first {
 				newItem.setLocation(location)
 			} else {
 				newItem.setLocation(Location.unknownLocation()!)
@@ -104,7 +126,7 @@ extension ShoppingItem: Identifiable {
 	}
 	
 	var backgroundColor: UIColor {
-		UIColor(red: CGFloat(location!.red), green: CGFloat(location!.green), blue: CGFloat(location!.blue), alpha: CGFloat(location!.opacity))
+		return location!.uiColor()
 	}
 	
 	// these functions coordinate state transitions of ShoppingItems,

@@ -121,6 +121,10 @@ extension Location: Identifiable {
 		appDelegate.saveContext()
 	}
 	
+	func uiColor() -> UIColor {
+		UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(opacity))
+	}
+	
 }
 
 extension Location: CodableStructRepresentable {

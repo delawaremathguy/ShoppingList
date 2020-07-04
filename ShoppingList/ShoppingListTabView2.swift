@@ -26,7 +26,7 @@ struct ShoppingListTabView2: View {
 									NSSortDescriptor(keyPath: \ShoppingItem.visitationOrder, ascending: true),
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
 								predicate: NSPredicate(format: "onList == true")
-	) var fetchedShoppingItems: FetchedResults<ShoppingItem>
+	) var shoppingItems: FetchedResults<ShoppingItem>
 	
 	@State private var isAddNewItemSheetShowing: Bool = false
 	@State private var isDeleteItemAlertShowing: Bool = false
@@ -36,30 +36,21 @@ struct ShoppingListTabView2: View {
 		VStack {
 			
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
-			// inside its own NaviagtionView (so the Picker will work!) but we must pass along the
+			// inside its own NavigationView (so the Picker will work!) but we must pass along the
 			// managedObjectContext manually because sheets don't automatically inherit the environment
-			Button(action: { self.isAddNewItemSheetShowing = true }) {
-				Text("Add New Item")
-					.foregroundColor(Color.blue)
-					.padding(10)
-			}
-			.sheet(isPresented: $isAddNewItemSheetShowing) {
-				NavigationView {
-					AddorModifyShoppingItemView(allowsDeletion: false)
-						.environment(\.managedObjectContext, self.managedObjectContext)
-				}
-			}
-
+			addNewShoppingItemButtonView(isAddNewItemSheetShowing: $isAddNewItemSheetShowing,
+																	 managedObjectContext: managedObjectContext)
+			
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
-			if fetchedShoppingItems.isEmpty {
+			if shoppingItems.isEmpty {
 				emptyListView(listName: "Shopping")
 			} else {
 				
 				List {
-					ForEach(locations(for: fetchedShoppingItems)) { location in
+					ForEach(locations(for: shoppingItems)) { location in
 						Section(header: MySectionHeaderView(title: location.name!)) {
 							
-							ForEach(self.fetchedShoppingItems.filter({ $0.location! == location })) { item in
+							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								
 								// display a single row here for 'item'
 								
@@ -94,13 +85,13 @@ struct ShoppingListTabView2: View {
 					.listStyle(GroupedListStyle())
 				
 				// clear/ mark as unavailable shopping list buttons
-				if !fetchedShoppingItems.isEmpty {
+				if !shoppingItems.isEmpty {
 					Divider()
 					SLCenteredButton(title: "Move All Items off-list", action: { ShoppingItem.moveAllItemsOffList() })
 						.padding([.bottom], 6)
 
-					if fetchedShoppingItems.compactMap({ !$0.isAvailable ? "Unavailable" : nil }).count > 0 {
-						SLCenteredButton(title: "Mark All Items Available", action: self.markAllAvailable )
+					if shoppingItems.filter({ !$0.isAvailable }).count > 0 {
+						SLCenteredButton(title: "Mark All Items Available", action: { ShoppingItem.markAllItemsAvailable() })
 							.padding([.bottom], 6)
 
 					}
@@ -122,9 +113,9 @@ struct ShoppingListTabView2: View {
 
 	func handleOnDeleteModifier(at indexSet: IndexSet, within location: Location) {
 		
-		// recreate the list of items on the shopping list in this location
+		// first, recreate the list of items on the shopping list for this location
 		// -- relies on this order being the same as the order in the ForEach above
-		let itemsInThisLocation = fetchedShoppingItems.filter({ $0.location! == location })
+		let itemsInThisLocation = shoppingItems.filter({ $0.location! == location })
 
 		// you can choose what happens here according to the value of kTrailingSwipeMeansDelete
 		// that is defined in Development.swift
@@ -142,16 +133,6 @@ struct ShoppingListTabView2: View {
 		}
 		
 	}
-	
-	func markAllAvailable() {
-		fetchedShoppingItems.forEach({ $0.isAvailable = true })
-		ShoppingItem.saveChanges()
-	}
-	
-	func deleteItem() {
-		ShoppingItem.delete(item: itemToDelete!, saveChanges: true)
-	}
-
 	
 }
 
@@ -208,4 +189,22 @@ func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping 
 	}
 }
 
-
+struct addNewShoppingItemButtonView: View {
+	@Binding var isAddNewItemSheetShowing: Bool
+	var managedObjectContext: NSManagedObjectContext
+	
+	var body: some View {
+		Button(action: { self.isAddNewItemSheetShowing = true }) {
+			Text("Add New Item")
+				.foregroundColor(Color.blue)
+				.padding(10)
+		}
+		.sheet(isPresented: $isAddNewItemSheetShowing) {
+			NavigationView {
+				AddorModifyShoppingItemView(allowsDeletion: false)
+					.environment(\.managedObjectContext, self.managedObjectContext)
+			}
+		}
+	}
+	
+}
