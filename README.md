@@ -1,14 +1,5 @@
 #  About "ShoppingList"
 
-My Last Update of note was **July 3, 2020**, when these were some of the changes I made.
-
-* Adding a new ShoppingItem or new Location now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
-
-* the code for bringing up a contextMenu for a shoppingItem has been condensed (there were three, independent copies of this code earlier, and some code review/cleaning demanded this be done).  However, you'll get a lot of traffic on the console in XCode 11.5 and iOS 13.5 when the context menu comes up (this doe snot happen in XCode 12 beta wth iOS 14 beta).
-
-
-* * * * * *
-
 This is a simple, in-progress iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
 I'm making this repo publicly available.  I may be interested in asking some questions about what I am doing (e.g., in the Apple Developer forums, on the HackingWithSwift forums), and it's easier to do that if I expose all the source for inspection.  There was also a recent question on the Apple Developer's forum, *[Example using Core Data between views](https://forums.developer.apple.com/thread/133370)* that expressed some frustration in not being able to find enough examples of working with CoreData and getting list updates done correctly (that whole thing about Identifiable, id:\.self, @ObservedObject, etc).  My hope is this project will fill some of that need, even if it's not yet demonstrated to be 100% bullet-proof.
@@ -20,6 +11,17 @@ However, be warned:
 * nevertheless, this is reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
 
 Feel free to use this as is, to develop further,  to completely ignore, or even just to inspect and then send me a note to tell me I am doing this all wrong.  
+
+## Last Update of Note
+
+My Last Update of note was **July 3, 2020**, when these were some of the changes I made.
+
+* Adding a new ShoppingItem or new Location now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
+
+* the code for bringing up a contextMenu for a shoppingItem has been condensed (there were three, independent copies of this code earlier, and some code review/cleaning demanded this be done).  However, you'll get a lot of traffic on the console in XCode 11.5 and iOS 13.5 when the context menu comes up (this doe snot happen in XCode 12 beta wth iOS 14 beta).
+
+
+
 
 ## License
 
