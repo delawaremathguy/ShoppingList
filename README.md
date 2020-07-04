@@ -1,23 +1,11 @@
 #  About "ShoppingList"
 
-My Last Update of note was **July 1, 2020**, when these were some of the changes I made.
-
-
-* The one crash I had been experiencing before this update and had worked around in code has now been eliminated (*he says with fingers crossed, at least for my testing with iOS 13*).  It involved a subtlety of the way I was *over*-using @ObservedObject: you'll find comments in the code for the "row views" of both ShoppingItems and Locations on this.  On the other hand, the iOS 14 situation looks to still have a similar problem, where the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed on the navigation stack from View A).
-
-* Since WWDC2020 did not add more general swipe actions, I have provided a setting in the code (a boolean in Development.swift) so you can choose what you want to do about the meaning of a trailing swipe in any list of ShoppingItems.
-
-* I have added a delete action to the context menus in any list of ShoppingItems. (You'll get a gazillion console messages about layout from the contextMenu in XCode 11.5, but these are not present with XCode 12 and iOS 14.)
-
-* I discovered a crash with a simple, benign operation or two while running the app on my iPhone 11 with iOS 13.5.1 just yesterday.  The crash logs showed the app very deep inside UITableVIew code when it crashed (virtually identical logs, by the way), so I am guessing something changed in iOS 13.5.1 that wasn't there in 13.5.  It may also be related to use of a contextMenu, which I was using at the time.
-
-* I eliminated a hard-to-find crash that occurred only in an extreme situation (and is related to the ongoing problem mentioned above).  I have a guard in place so the situation never happens.  See comments in the code.
+My Last Update of note was **July 3, 2020**, when these were some of the changes I made.
 
 * Adding a new ShoppingItem or new Location now comes up as a Sheet (although later editing remains using a NavigationLink), so you can see how to do either one in code, depending on your preference.  
 
-*  The meat of the AddorModifyShoppingItemView has been moved into its own View, separating a shopping item from the struct of the data for the item to be edited in the subview.  This makes for simpler code, especially given the number of fields to edit and the number of view modifiers that are attached to this (Form) view.  Something similar will be happening (*or has already happened*) to AddorModifyLocationView.
+* the code for bringing up a contextMenu for a shoppingItem has been condensed (there were three, independent copies of this code earlier, and some code review/cleaning demanded this be done).  However, you'll get a lot of traffic on the console in XCode 11.5 and iOS 13.5 when the context menu comes up (this doe snot happen in XCode 12 beta wth iOS 14 beta).
 
-* the code for bringing up a contextMenu for a shoppingItem has been condensed (there were three, independent copies of this code earlier, and some code review/cleaning demanded this be done)
 
 * * * * * *
 
@@ -81,6 +69,11 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
 ## Some Things I'm Working On
 
+* The one crash I had been experiencing throughout development and have worked around in code has now been eliminated (*he says with fingers crossed, at least for my testing with iOS 13*).  It involved a subtlety of the way I was *over*-using @ObservedObject: you'll find comments in the code for the "row views" of both ShoppingItems and Locations on this.  On the other hand, the iOS 14 beta situation looks to still have a similar problem, where I am sure that the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed on the navigation stack from View A).
+
+* I discovered a crash with a simple, benign operation or two while running the app on my iPhone 11 with iOS 13.5.1 recently.  The crash logs showed the app very deep inside UITableVIew code when it crashed (virtually identical logs, by the way), so I am guessing something changed in iOS 13.5.1 that wasn't there in 13.5.  It may also be related to use of a contextMenu, which I was using at the time.
+
+
 * I have provided two options for the ShoppingListTabView, named, suprisingly, *ShoppingListTabView1* and *ShoppingListTabView2*.  Just change the MainView code to use one or the other.  The latter is what I am working with myself, so that's what I have coded in MainView.  But if you're poking around in the code, try each one of them.
 
   - **ShoppingListTabView1** is a single list of items as described above, with items listed by their location's visitationOrder (and then alphabetically for each location).  Since Locations have different colors, the list is manageable in use, but not ideal.  
@@ -97,6 +90,9 @@ If you plan to play with or use this app, the app will start with an empty shopp
 *  I have been constantly struggling with visual updates in this project.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating and you may see a comment or two in the code about this.
 
 *  I'm looking at the new SwiftUI releases from WWDC right now and can definitely use quite a bit of it very easily (e.g., a ColorPicker); i think you may see a ShoppingList14 (for iOS 14) from me sometime soon to play with.
+
+* Since WWDC2020 did not add more general swipe actions, I have provided a setting in the code (a boolean in Development.swift) so you can choose what you want to do about the meaning of a trailing swipe in any list of ShoppingItems.
+
 
 
 

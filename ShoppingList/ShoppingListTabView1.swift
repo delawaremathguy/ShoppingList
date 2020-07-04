@@ -124,7 +124,7 @@ struct ShoppingListTabView1: View {
 			// this moves the item(s) "to the other list"
 			for index in indexSet {
 				let item = shoppingItems[index]
-				item.moveToPuchased()
+				item.onList.toggle()
 			}
 			ShoppingItem.saveChanges()
 		}

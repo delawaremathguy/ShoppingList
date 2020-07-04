@@ -164,10 +164,9 @@ func backgroundColor(for item: ShoppingItem) -> Color {
 	return Color(item.backgroundColor)
 }
 
-// simplifies the code for what to show when a list is empty
+// simplifies, consolidates the code for what to show when a list is empty
 @ViewBuilder
 func emptyListView(listName: String) -> some View {
-
 	Group {
 		Text("There are no items")
 			.padding([.top], 200)
@@ -182,8 +181,8 @@ func emptyListView(listName: String) -> some View {
 /// or the purchased list to quickly move the item to the other list, toggle the state
 /// of the availability, and delete the item.
 /// - Parameter item: a ShoppingItem
-/// - Parameter deletionTrigger: a closure to call to set state veriables and put up an "Are you sure?" alert before allowing deletion of the item
-/// - Returns: none
+/// - Parameter deletionTrigger: a closure to call to set state variables and put up an "Are you sure?" alert before allowing deletion of the item
+/// - Returns: Void
 @ViewBuilder
 func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping () -> Void) -> some View {
 	Button(action: {

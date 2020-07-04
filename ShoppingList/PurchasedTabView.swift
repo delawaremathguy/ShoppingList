@@ -17,6 +17,7 @@ import SwiftUI
 struct PurchasedTabView: View {
 	
 	// CoreData setup
+	@Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: ShoppingItem.entity(),
 								sortDescriptors: [
 									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
@@ -29,18 +30,28 @@ struct PurchasedTabView: View {
 	@State private var searchText: String = ""
 	@State private var isDeleteItemAlertShowing: Bool = false
 	@State private var itemToDelete: ShoppingItem?
+	@State private var isAddNewItemSheetShowing = false
 
 	var body: some View {
 			
 		VStack {
 			SearchBarView(text: $searchText)
-
-			// add new item stays at top
-			NavigationLink(destination: AddorModifyShoppingItemView(addItemToShoppingList: false)) {
+			
+			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
+			// inside its own NaviagtionView (so the Picker will work!) but we must pass along the
+			// managedObjectContext manually because sheets don't automatically inherit the environment
+			Button(action: { self.isAddNewItemSheetShowing = true }) {
 				Text("Add New Item")
+					.foregroundColor(Color.blue)
 					.padding(10)
 			}
-			
+			.sheet(isPresented: $isAddNewItemSheetShowing) {
+				NavigationView {
+					AddorModifyShoppingItemView(allowsDeletion: false)
+						.environment(\.managedObjectContext, self.managedObjectContext)
+				}
+			}
+
 			if purchasedItems.isEmpty {
 				emptyListView(listName: "Purchased")
 			} else {

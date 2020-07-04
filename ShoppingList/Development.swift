@@ -36,7 +36,7 @@ let kTrailingSwipeMeansDelete = false
 // export shoppingItems and Locations via JSON
 // these are the filenames for JSON output when dumped from the simulator
 // (and also the filenames in the bundle used for sample data)
-let kJSONDumpDirectory = "/Users/YOUR_OWN_USERNAME_HERE/Desktop/"	// dumps to the Desktop: USE YOUR OWN MAC USERNAME HERE
+let kJSONDumpDirectory = "/Users/USE_YOUR_OWN_MAC_USERNAME_HERE_HERE/Desktop/"	// dumps to the Desktop: Adjust for your Username!
 let kShoppingItemsFilename = "shoppingItems.json"
 let kLocationsFilename = "locations.json"
 
@@ -72,7 +72,8 @@ func writeAsJSON<T>(items: [T], to filename: String) where T: CodableStructRepre
 		let filepath = kJSONDumpDirectory + filename
 		do {
 			try data.write(to: URL(fileURLWithPath: filepath))
-		} catch {
+		} catch let error as NSError {
+			print("Could not write to desktop file: \(error.localizedDescription), \(error.userInfo)")
 			print(String(data: data, encoding: .utf8)!)
 		}
 	#else
