@@ -41,6 +41,10 @@ final class PersistentStore {
 			}
 			
 		})
+		// these next two lines added per suggestion by "Apple Staff" on the Apple Developer Forums
+		// https://developer.apple.com/forums/thread/650173
+		container.viewContext.automaticallyMergesChangesFromParent = true
+		container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 		return container
 	}()
 	
