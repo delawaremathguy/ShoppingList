@@ -38,7 +38,7 @@ struct ShoppingListTabView2: View {
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
 			// inside its own NavigationView (so the Picker will work!) but we must pass along the
 			// managedObjectContext manually because sheets don't automatically inherit the environment
-			addNewShoppingItemButtonView(isAddNewItemSheetShowing: $isAddNewItemSheetShowing,
+			AddNewShoppingItemButtonView(isAddNewItemSheetShowing: $isAddNewItemSheetShowing,
 																	 managedObjectContext: managedObjectContext)
 			
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
@@ -53,7 +53,6 @@ struct ShoppingListTabView2: View {
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								
 								// display a single row here for 'item'
-								
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 									ShoppingItemRowView(itemData: ShoppingItemRowData(item: item, showLocation: false))
 										.contextMenu {
@@ -63,7 +62,7 @@ struct ShoppingListTabView2: View {
 											})
 									}
 								}
-								.listRowBackground(backgroundColor(for: item))
+								.listRowBackground(Color(item.backgroundColor))
 								
 							} // end of ForEach
 								.onDelete(perform: { offsets in
@@ -84,7 +83,7 @@ struct ShoppingListTabView2: View {
 				}  // end of List
 					.listStyle(GroupedListStyle())
 				
-				// clear/ mark as unavailable shopping list buttons
+				// clear/mark as unavailable shopping list buttons
 				if !shoppingItems.isEmpty {
 					Divider()
 					SLCenteredButton(title: "Move All Items off-list", action: { ShoppingItem.moveAllItemsOffList() })
@@ -131,80 +130,7 @@ struct ShoppingListTabView2: View {
 			}
 			ShoppingItem.saveChanges()
 		}
-		
 	}
 	
 }
 
-// common code for both shopping list tabs and the purchased tab
-
-// this first one looks like there's no need, but it turns out that
-// .listRowBackground doesn't like the syntax of Color(item.backgroundColor)
-// on its own (?)
-func backgroundColor(for item: ShoppingItem) -> Color {
-	return Color(item.backgroundColor)
-}
-
-// simplifies, consolidates the code for what to show when a list is empty
-@ViewBuilder
-func emptyListView(listName: String) -> some View {
-	Group {
-		Text("There are no items")
-			.padding([.top], 200)
-		Text("on your \(listName) List.")
-	}
-	.font(.title)
-	.foregroundColor(.secondary)
-	Spacer()
-}
-
-/// Builds out a context menu for a ShoppingItem that can be used in the shopping list
-/// or the purchased list to quickly move the item to the other list, toggle the state
-/// of the availability, and delete the item.
-/// - Parameter item: a ShoppingItem
-/// - Parameter deletionTrigger: a closure to call to set state variables and put up an "Are you sure?" alert before allowing deletion of the item
-/// - Returns: Void
-@ViewBuilder
-func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping () -> Void) -> some View {
-	Button(action: {
-		item.onList.toggle()
-		ShoppingItem.saveChanges()
-	}) {
-		Text(item.onList ? "Mark Purchased" : "Move to ShoppingList")
-			Image(systemName: item.onList ? "purchased" : "cart")
-	}
-	
-	Button(action: { item.mark(available: !item.isAvailable, saveChanges: true) }) {
-		Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
-		Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
-	}
-	
-	if !kTrailingSwipeMeansDelete {
-		Button(action: {
-			deletionTrigger()
-		}) {
-			Text("Delete This Item")
-			Image(systemName: "minus.circle")
-		}
-	}
-}
-
-struct addNewShoppingItemButtonView: View {
-	@Binding var isAddNewItemSheetShowing: Bool
-	var managedObjectContext: NSManagedObjectContext
-	
-	var body: some View {
-		Button(action: { self.isAddNewItemSheetShowing = true }) {
-			Text("Add New Item")
-				.foregroundColor(Color.blue)
-				.padding(10)
-		}
-		.sheet(isPresented: $isAddNewItemSheetShowing) {
-			NavigationView {
-				AddorModifyShoppingItemView(allowsDeletion: false)
-					.environment(\.managedObjectContext, self.managedObjectContext)
-			}
-		}
-	}
-	
-}

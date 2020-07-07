@@ -40,24 +40,27 @@ struct PurchasedTabView: View {
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
 			// inside its own NaviagtionView (so the Picker will work!) but we must pass along the
 			// managedObjectContext manually because sheets don't automatically inherit the environment
-			Button(action: { self.isAddNewItemSheetShowing = true }) {
-				Text("Add New Item")
-					.foregroundColor(Color.blue)
-					.padding(10)
-			}
-			.sheet(isPresented: $isAddNewItemSheetShowing) {
-				NavigationView {
-					AddorModifyShoppingItemView(allowsDeletion: false)
-						.environment(\.managedObjectContext, self.managedObjectContext)
-				}
-			}
+			AddNewShoppingItemButtonView(isAddNewItemSheetShowing: $isAddNewItemSheetShowing,
+																	 managedObjectContext: managedObjectContext,
+																	 addItemToShoppingList: false)
 
 			if purchasedItems.isEmpty {
 				emptyListView(listName: "Purchased")
 			} else {
-			List {
-				Section(header: MySectionHeaderView(title: sectionHeaderTitle())) {
-					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in 
+				// Report purchased item count, or the number of items matching the
+				// current search text, essentially as a section header for just the one section
+				HStack {
+					Text(sectionHeaderTitle())
+						.font(.caption)
+						.italic()
+						.foregroundColor(.secondary)
+						.padding([.leading], 20)
+					Spacer()
+				}
+				Divider()
+				
+				List {
+					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
 							ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
 								.contextMenu {
@@ -74,12 +77,10 @@ struct PurchasedTabView: View {
 										message: Text("Are you sure you want to delete this item?"),
 										primaryButton: .cancel(Text("No")),
 										secondaryButton: .destructive(Text("Yes"),
-										action: { ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true) })
+																									action: { ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true) })
 							)}
-
-				} // end of Section
-			}  // end of List
-				.listStyle(GroupedListStyle())
+					
+				}  // end of List
 				
 			} // end of if-else
 		} // end of VStack

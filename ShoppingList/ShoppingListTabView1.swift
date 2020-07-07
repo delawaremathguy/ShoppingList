@@ -40,7 +40,7 @@ struct ShoppingListTabView1: View {
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
 			// inside its own NavigationView (so the Picker will work!) but we must pass along the
 			// managedObjectContext manually because sheets don't automatically inherit the environment
-			addNewShoppingItemButtonView(isAddNewItemSheetShowing: $isAddNewItemSheetShowing,
+			AddNewShoppingItemButtonView(isAddNewItemSheetShowing: $isAddNewItemSheetShowing,
 																	 managedObjectContext: managedObjectContext)
 
 			// 2.  now come the items, if there are any
@@ -62,9 +62,8 @@ struct ShoppingListTabView1: View {
 											self.isDeleteItemAlertShowing = true
 										})
 								}
-//									.contextMenu { self.contextMenu(for: item) }
 							}
-							.listRowBackground(backgroundColor(for: item))
+							.listRowBackground(Color(item.backgroundColor))
 							
 						} // end of ForEach
 							.onDelete(perform: handleOnDeleteModifier)

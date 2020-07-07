@@ -19,7 +19,7 @@ import SwiftUI
 // else in the code, those changes were not being propagated back here by the
 // List.  that seemed counter-intuitive: the List obviously set up this View with
 // an obvious dependency on a ShoppingItem, didn't it?  wouldn't that force this
-// to be redrawn? apparently, it did not.
+// to be redrawn when the parent view was redrawn? apparently, it did not.
 
 // so to make this work, i passed in a ShoppingItem as an @ObservedObject. then
 // we have other problems.  when this ShoppingItem is deleted elsewhere in
@@ -27,20 +27,25 @@ import SwiftUI
 // upon certain timing conditions, would cause a crash: not because the
 // shopping item reference became meaningless (it was still a Core Data reference
 // to something that was deleted in Core Data terms, but not yet saved out to disk
-// (i.e., a fault for which .isDeleted is true).  so you could no longer refer
+// -- i.e., a fault for which .isDeleted is/maybe true).  so you could no longer refer
 // to the shopping item's name (which was an optional, which would try to
 // load that data and go BOOM) or even reliably refer to the item's quantity
 // (a non-optional Int32).
 
 // short story: this View would want to redraw a deleted item!
 
-// so some re-thinking frced me into this little struct here, to carry the values
-// from the List to this View for display, rather than the shopping item itself.
-// and now this works fine.
+// so some re-thinking forced me into this little struct here, to carry the values of an item
+// from the List to this View for display, rather than hold on to the shopping item itself.
+// and now this works fine, although even here, i'm not convinced it should.  but at least
+// i am not holding on to a reference to the object; and i may be getting some unseen help
+// from @FetchRequest, which performs a lot of magic behind the scenes in how it
+// forces redraws of the List view in which this view displays.
 
-// moral of the story: don't pass along an object if you only want to read some values
-// from it.  instead, just pass along the values (in this case, as a struct for
-// better bookkeeping).
+// moral of the story: don't use ObservableObject if you don't have to (reason: that's
+// more bookkeeping for SwiftUI to backtrack all the dependencies, which could potentially
+// produce memory and performance problems at the expense of fidelity to the holy
+// grail = source of truth).  if you do have a view that depends on an ObservableObject,
+// make sure that object can't be pulled out from under you.
 
 struct ShoppingItemRowData {
 	var isAvailable: Bool = true
@@ -84,7 +89,7 @@ struct ShoppingItemRowView: View {
 			
 			Spacer()
 			
-			Text(String(itemData.quantity))
+			Text("\(itemData.quantity)")
 				.font(.headline)
 				.foregroundColor(Color.blue)
 			

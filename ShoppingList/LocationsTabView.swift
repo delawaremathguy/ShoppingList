@@ -38,16 +38,13 @@ struct LocationsTabView: View {
 			
 			// 2. then the list of location
 			List {
-//				Section(header: MySectionHeaderView(title: "Locations Listed: \(locations.count)")) {
-					ForEach(locations) { location in
-						NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
-							LocationRowView(rowData: LocationRowData(location: location))
-						}
-						.listRowBackground(Color(location.uiColor())) 
-					} // end of ForEach
-//				} // end of Section
+				ForEach(locations) { location in
+					NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
+						LocationRowView(rowData: LocationRowData(location: location))
+					}
+					.listRowBackground(Color(location.uiColor()))
+				} // end of ForEach
 			} // end of List
-				//.listStyle(GroupedListStyle())
 			
 		} // end of VStack
 	} // end of var body: some View

@@ -28,11 +28,13 @@
 		D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */; };
 		D66FF35424926B6400B3ABC8 /* DevToolsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */; };
 		D66FF3562492E67100B3ABC8 /* SLCenteredButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */; };
+		D6A0DCF424B4B88F006A2BA2 /* AddNewShoppingItemButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A0DCF324B4B88F006A2BA2 /* AddNewShoppingItemButtonView.swift */; };
 		D6ADB3B2247C266F00376271 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B1247C266E00376271 /* locations.json */; };
 		D6ADB3B4247C267900376271 /* shoppingItems.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B3247C267900376271 /* shoppingItems.json */; };
 		D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */; };
 		D6B8A95424636711005F8EF2 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A95324636711005F8EF2 /* MainView.swift */; };
 		D6B8A9562463693D005F8EF2 /* LocationsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */; };
+		D6C75D3324B4B123003E445B /* ViewBuildingCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C75D3224B4B123003E445B /* ViewBuildingCode.swift */; };
 		D6C91D8524A8E69F008C8DFF /* ShoppingItemEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C91D8424A8E69F008C8DFF /* ShoppingItemEditView.swift */; };
 		D6C91D8724A8EC09008C8DFF /* EditableShoppingItemData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */; };
 		D6DE39BD247314B40013F9B4 /* SLFormLabelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */; };
@@ -68,11 +70,13 @@
 		D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingListTabView2.swift; sourceTree = "<group>"; };
 		D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevToolsTabView.swift; sourceTree = "<group>"; };
 		D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLCenteredButton.swift; sourceTree = "<group>"; };
+		D6A0DCF324B4B88F006A2BA2 /* AddNewShoppingItemButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddNewShoppingItemButtonView.swift; sourceTree = "<group>"; };
 		D6ADB3B1247C266E00376271 /* locations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 		D6ADB3B3247C267900376271 /* shoppingItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = shoppingItems.json; sourceTree = "<group>"; };
 		D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		D6B8A95324636711005F8EF2 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsTabView.swift; sourceTree = "<group>"; };
+		D6C75D3224B4B123003E445B /* ViewBuildingCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBuildingCode.swift; sourceTree = "<group>"; };
 		D6C91D8424A8E69F008C8DFF /* ShoppingItemEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemEditView.swift; sourceTree = "<group>"; };
 		D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableShoppingItemData.swift; sourceTree = "<group>"; };
 		D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLFormLabelText.swift; sourceTree = "<group>"; };
@@ -125,6 +129,8 @@
 				D62B88312451162D0051A7CE /* ShoppingListTabView1.swift */,
 				D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */,
 				D6EF557C246D7421007D636B /* PurchasedTabView.swift */,
+				D6A0DCF324B4B88F006A2BA2 /* AddNewShoppingItemButtonView.swift */,
+				D6C75D3224B4B123003E445B /* ViewBuildingCode.swift */,
 				D606197E2481510E005CE575 /* SearchBarView.swift */,
 				D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */,
 				D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */,
@@ -259,7 +265,9 @@
 				D62B88322451162D0051A7CE /* ShoppingListTabView1.swift in Sources */,
 				D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */,
 				D612E16124898EBB007E1412 /* Array+Extensions.swift in Sources */,
+				D6A0DCF424B4B88F006A2BA2 /* AddNewShoppingItemButtonView.swift in Sources */,
 				D6EF5587246D97C3007D636B /* Development.swift in Sources */,
+				D6C75D3324B4B123003E445B /* ViewBuildingCode.swift in Sources */,
 				D66FF35424926B6400B3ABC8 /* DevToolsTabView.swift in Sources */,
 				D6C91D8724A8EC09008C8DFF /* EditableShoppingItemData.swift in Sources */,
 				D65B206C2493005600DB55F1 /* SLSliderControl.swift in Sources */,
