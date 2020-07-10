@@ -95,6 +95,10 @@ struct PurchasedTabView: View {
 	}
 	
 	func handleOnDeleteModifier(indexSet: IndexSet) {
+		
+		// identify what items these indices refer to
+		let items = purchasedItems.filter({ searchTextAppears(in: $0.name!) })
+		
 		// you can choose what happens here according to the value of kTrailingSwipeMeansDelete
 		// that is defined in Development.swift
 		if kTrailingSwipeMeansDelete {
@@ -104,8 +108,8 @@ struct PurchasedTabView: View {
 		} else {
 			// this moves the item(s) "to the other list"
 			for index in indexSet {
-				let item = purchasedItems[index]
-				item.onList.toggle()
+				let item = items[index]
+				item.onList = true
 			}
 			ShoppingItem.saveChanges()
 		}

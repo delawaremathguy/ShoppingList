@@ -45,7 +45,17 @@ struct ShoppingListTabView2: View {
 			if shoppingItems.isEmpty {
 				emptyListView(listName: "Shopping")
 			} else {
-				
+
+				HStack {
+					Text("Items Listed: \(shoppingItems.count)")
+						.font(.caption)
+						.italic()
+						.foregroundColor(.secondary)
+						.padding([.leading], 20)
+					Spacer()
+				}
+				Divider()
+
 				List {
 					ForEach(locations(for: shoppingItems)) { location in
 						Section(header: MySectionHeaderView(title: location.name!)) {
@@ -126,7 +136,7 @@ struct ShoppingListTabView2: View {
 			// this moves the item(s) "to the other list"
 			for index in indexSet {
 				let item = itemsInThisLocation[index]
-				item.onList.toggle()
+				item.onList = false
 			}
 			ShoppingItem.saveChanges()
 		}

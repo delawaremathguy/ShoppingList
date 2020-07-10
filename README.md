@@ -14,9 +14,9 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 4, 2020**, when these were some of the changes I made.
+My Last Update of note was **July 10, 2020**, when these were some of the changes I made.
 
-* I pulled out the Core Data code from the AppDelegate to a PersistentStore singleton object in a separate file.  It's a simple transition, but it will be easier to use the code if you're working with XCode12 and iOS 14, since there's a lot of confusion about the new App structure that has no AppDelegate.
+* I fixed a glaring, obvious *coding inaccuracy* in doing a "swipe to delete" action in the PurchasedItemView.  It's been there since forever -- I was "deleting" items using indices in the purchasedItems list, not the list of items as filtered by a (non-empty) searchtext.  *duh!*
 
 
 
@@ -76,7 +76,7 @@ If you plan to play with or use this app, the app will start with an empty shopp
 
   - **ShoppingListTabView1** is a single list of items as described above, with items listed by their location's visitationOrder (and then alphabetically for each location).  Since Locations have different colors, the list is manageable in use, but not ideal.  
 
-  - **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far.  I already seen some things from WWDC2020 that i will investigate further, to see if there's a more natural paradigm for sectioning a List.
+  - **ShoppingListTabView2** is an alternative view with the list of items parceled out into **sections** with listStyle = GroupedListStyle.  After a gazillion attempts and coding and recoding, this version seems to be working almost pretty well so far.  I have already seen some things from WWDC2020 that i will investigate further, to see if there's a more natural paradigm for sectioning a List.
 
 *  I have made the "Add New Shopping Item" button present as a Sheet, although if you later want to edit it, you'll transition using a NavigationLink.  (The same happens for "Add a New Location.")  You might be interested in seeing how to do this -- it turns out to be pretty simple.
 
@@ -100,7 +100,7 @@ The project is what it is -- it's an on-going, out-in-public offering of code th
 
 By the way: what you see today may not look anything like what it looks like tomorrow.  I've already had cases of getting something to work, then found it didn't work after the next change, and I've gone back and re-architected.  The CoreData model has changed multiple times -- but I do not rely on data migrations. (Yes, migrations were working correctly and I've done them in other projects, but at this stage, it's easier to just dump the database as JSON; delete the app; change the data model; and reload the data in code at startup ... which may require some coding changes to the code that loads it.)  Please see the code and comments in Development.swift and look at the new "Dev Tools" tab view for some explanations about how to load sample data, or dump the CoreData database to JSON.
 
-Finally, a story. I have another sizeable UIKit-based project, completely unrelated to this Shopping List project. I had every intention of moving to the App Store. But it lacked a couple of features (mostly synching with the Cloud across devices). And curiously, I had originally used CoreData to persist data when i started building it, when there was some cloud integration.
+Finally, a story. I have another sizeable UIKit-based project, completely unrelated to this Shopping List project. I had every intention of moving it to the App Store. But it lacked a couple of features (mostly synching with the Cloud across devices). And curiously, I had originally used CoreData to persist data when i started building it, when there was some cloud integration.
 
 But Apple deprecated its sort-of-support for the cloud with CoreData somewhere around iOS 10.  So I rearchitected the app to use a database singleton to abstract the persistence specifics from the app, and then changed the persistence back-end to use UIDocuments with autosaving, which seemed to be an easier, supported path to the cloud.  And I learned a lot about UIDocuments and autosaving in the process.
 

@@ -40,7 +40,7 @@ func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping 
 		item.onList.toggle()
 		ShoppingItem.saveChanges()
 	}) {
-		Text(item.onList ? "Mark Purchased" : "Move to ShoppingList")
+		Text(item.onList ? "Move to Purchased" : "Move to ShoppingList")
 		Image(systemName: item.onList ? "purchased" : "cart")
 	}
 	

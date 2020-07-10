@@ -35,7 +35,7 @@ struct ShoppingListTabView1: View {
 	@State private var isDeleteItemAlertShowing = false
 	
 	var body: some View {
-		VStack {
+		VStack(spacing: 0) {
 			
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
 			// inside its own NavigationView (so the Picker will work!) but we must pass along the
@@ -48,9 +48,20 @@ struct ShoppingListTabView1: View {
 				emptyListView(listName: "Shopping")				
 			} else {
 				
+				HStack {
+					Text("Items Listed: \(shoppingItems.count)")
+						.font(.caption)
+						.italic()
+						.foregroundColor(.secondary)
+						.padding([.leading], 20)
+					Spacer()
+				}
+				.padding([.bottom], 4)
+				Divider()
+
 				List {
 					// one main section, showing all items
-					Section(header: MySectionHeaderView(title: "Items Listed: \(shoppingItems.count)")) {
+//					Section(header: MySectionHeaderView(title: "Items Listed: \(shoppingItems.count)")) {
 						ForEach(shoppingItems) { item in
 							
 							// display a single row here for 'item'
@@ -76,9 +87,9 @@ struct ShoppingListTabView1: View {
 									})
 						}
 
-					} // end of Section
+//					} // end of Section
 				}  // end of List
-					.listStyle(GroupedListStyle())
+//					.listStyle(GroupedListStyle())
 				
 				// clear/ mark as unavailable shopping list buttons
 				if !shoppingItems.isEmpty {
@@ -108,7 +119,7 @@ struct ShoppingListTabView1: View {
 			// this moves the item(s) "to the other list"
 			for index in indexSet {
 				let item = shoppingItems[index]
-				item.onList.toggle()
+				item.onList = false
 			}
 			ShoppingItem.saveChanges()
 		}
