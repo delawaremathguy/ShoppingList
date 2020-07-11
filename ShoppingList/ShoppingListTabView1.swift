@@ -117,10 +117,7 @@ struct ShoppingListTabView1: View {
 			itemToDelete = shoppingItems[indexSet.first!]
 		} else {
 			// this moves the item(s) "to the other list"
-			for index in indexSet {
-				let item = shoppingItems[index]
-				item.onList = false
-			}
+			indexSet.forEach({ shoppingItems[$0].onList.toggle() })
 			ShoppingItem.saveChanges()
 		}
 	}

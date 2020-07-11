@@ -26,7 +26,7 @@ struct MainView: View {
 			
 			TabView(selection: $selectedTab) {
 				
-				ShoppingListTabView1() // <--- see note above about changing the 2 to a 1
+				ShoppingListTabView1() // <--- see note above about whether this is 1 or 2
 					.tabItem {
 						Image(systemName: "cart")
 						Text("Shopping List")

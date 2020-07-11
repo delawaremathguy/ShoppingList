@@ -24,6 +24,27 @@ final class PersistentStore {
 		error conditions that could cause the creation of the store to fail.
 		*/
 		let container = NSPersistentContainer(name: "ShoppingList")
+		
+		// several of the lines below are commented out because they apply to using
+		// a cloud-based NSPersistentCluodkitContainer
+		// some are per suggestion by "Apple Staff" on the Apple Developer Forums
+		// for the case when you have an NSPersistentCloudKitContainer and iCloud synching
+		// https://developer.apple.com/forums/thread/650173
+		// you'll also see there how to use this code with the new XCode 12 App/Scene structure
+		// that replaced the AppDelegate/SceneDelegate of XCode 11 and iOS 13.  additionally,
+		// follow along with this discussion https://developer.apple.com/forums/thread/650876
+
+		// Enable history tracking
+		// (to facilitate previous NSPersistentCloudKitContainer's to load as NSPersistentContainer's)
+		// (not required when only using NSPersistentCloudKitContainer)
+//		guard let persistentStoreDescriptions = container.persistentStoreDescriptions.first else {
+//			fatalError("\(#function): Failed to retrieve a persistent store description.")
+//		}
+//		persistentStoreDescriptions.setOption(true as NSNumber,
+//																					forKey: NSPersistentHistoryTrackingKey)
+//		persistentStoreDescriptions.setOption(true as NSNumber,
+//																					forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+
 		container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 			if let error = error as NSError? {
 				// Replace this implementation with code to handle the error appropriately.
@@ -41,10 +62,11 @@ final class PersistentStore {
 			}
 			
 		})
-		// these next two lines added per suggestion by "Apple Staff" on the Apple Developer Forums
-		// https://developer.apple.com/forums/thread/650173
-		container.viewContext.automaticallyMergesChangesFromParent = true
-		container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+		
+		// also suggested for cloud-based Core Data are these two lines
+//		container.viewContext.automaticallyMergesChangesFromParent = true
+//		container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+		
 		return container
 	}()
 	
