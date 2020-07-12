@@ -45,51 +45,38 @@ struct ShoppingListTabView1: View {
 
 			// 2.  now come the items, if there are any
 			if shoppingItems.isEmpty {
-				emptyListView(listName: "Shopping")				
+				EmptyListView(listName: "Shopping")				
 			} else {
 				
-				HStack {
-					Text("Items Listed: \(shoppingItems.count)")
-						.font(.caption)
-						.italic()
-						.foregroundColor(.secondary)
-						.padding([.leading], 20)
-					Spacer()
-				}
-				.padding([.bottom], 4)
-				Divider()
-
+				SLSimpleHeaderView(label: "Items Listed: \(shoppingItems.count)")
 				List {
 					// one main section, showing all items
-//					Section(header: MySectionHeaderView(title: "Items Listed: \(shoppingItems.count)")) {
-						ForEach(shoppingItems) { item in
-							
-							// display a single row here for 'item'
-							NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-								ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
-									.contextMenu {
-										shoppingItemContextMenu(for: item, deletionTrigger: {
-											self.itemToDelete = item
-											self.isDeleteItemAlertShowing = true
-										})
-								}
-							}
-							.listRowBackground(Color(item.backgroundColor))
-							
-						} // end of ForEach
-							.onDelete(perform: handleOnDeleteModifier)
-							.alert(isPresented: $isDeleteItemAlertShowing) {
-								Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
-											message: Text("Are you sure you want to delete this item?"),
-											primaryButton: .cancel(Text("No")),
-											secondaryButton: .destructive(Text("Yes")) {
-												ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true)
+					ForEach(shoppingItems) { item in
+						
+						// display a single row here for 'item'
+						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
+							ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
+								.contextMenu {
+									shoppingItemContextMenu(for: item, deletionTrigger: {
+										self.itemToDelete = item
+										self.isDeleteItemAlertShowing = true
 									})
+							}
 						}
-
-//					} // end of Section
+						.listRowBackground(Color(item.backgroundColor))
+						
+					} // end of ForEach
+						.onDelete(perform: handleOnDeleteModifier)
+						.alert(isPresented: $isDeleteItemAlertShowing) {
+							Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
+										message: Text("Are you sure you want to delete this item?"),
+										primaryButton: .cancel(Text("No")),
+										secondaryButton: .destructive(Text("Yes")) {
+											ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true)
+								})
+					}
+					
 				}  // end of List
-//					.listStyle(GroupedListStyle())
 				
 				// clear/ mark as unavailable shopping list buttons
 				if !shoppingItems.isEmpty {

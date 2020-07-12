@@ -58,7 +58,7 @@ struct AddorModifyLocationView: View {
 	var body: some View {
 		Form {
 			// 1: Name, Visitation Order, Colors
-			Section(header: MySectionHeaderView(title: "Basic Information")) {
+			Section(header: SLSectionHeaderView(title: "Basic Information")) {
 				HStack {
 					SLFormLabelText(labelText: "Name: ")
 					TextField("Location name", text: $editableData.locationName)
@@ -91,7 +91,7 @@ struct AddorModifyLocationView: View {
 			
 			// Section 2: Delete button, if present (must be editing a user location)
 			if editableLocation != nil && editableData.visitationOrder != kUnknownLocationVisitationOrder  {
-				Section(header: MySectionHeaderView(title: "Location Management")) {
+				Section(header: SLSectionHeaderView(title: "Location Management")) {
 					SLCenteredButton(title: "Delete This Location", action: { self.showDeleteConfirmation = true })
 						.foregroundColor(Color.red)
 				}
@@ -99,7 +99,7 @@ struct AddorModifyLocationView: View {
 			
 			// Section 3: Items assigned to this Location, if we are editing a Location
 			if editableLocation != nil {
-				Section(header: MySectionHeaderView(title: "At this Location: \(editableLocation?.items?.count ?? 0) items")) {
+				Section(header: SLSectionHeaderView(title: "At this Location: \(editableLocation?.items?.count ?? 0) items")) {
 					ForEach(itemsArray(at: editableLocation)) { item in
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item, allowsDeletion: false)) {
 							Text(item.name!)

@@ -22,7 +22,7 @@ struct ShoppingItemEditView: View {
     var body: some View {
 			Form {
 				// 1. Basic Information Fields
-				Section(header: MySectionHeaderView(title: "Basic Information")) {
+				Section(header: SLSectionHeaderView(title: "Basic Information")) {
 					
 					HStack(alignment: .firstTextBaseline) {
 						SLFormLabelText(labelText: "Name: ")
@@ -58,7 +58,7 @@ struct ShoppingItemEditView: View {
 				
 				// 2. Item Management (Delete), if present
 				if allowsDeletion {
-					Section(header: MySectionHeaderView(title: "Shopping Item Management")) {
+					Section(header: SLSectionHeaderView(title: "Shopping Item Management")) {
 						SLCenteredButton(title: "Delete This Shopping Item",
 														 action: { self.showDeleteConfirmation = true })
 							.foregroundColor(Color.red)

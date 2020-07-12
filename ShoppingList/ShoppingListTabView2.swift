@@ -33,7 +33,7 @@ struct ShoppingListTabView2: View {
 	@State private var itemToDelete: ShoppingItem?
 
 	var body: some View {
-		VStack {
+		VStack(spacing: 0) {
 			
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
 			// inside its own NavigationView (so the Picker will work!) but we must pass along the
@@ -43,22 +43,13 @@ struct ShoppingListTabView2: View {
 			
 			// 2. now comes the sectioned list of items, by Location (or a "no items" message)
 			if shoppingItems.isEmpty {
-				emptyListView(listName: "Shopping")
+				EmptyListView(listName: "Shopping")
 			} else {
 
-				HStack {
-					Text("Items Listed: \(shoppingItems.count)")
-						.font(.caption)
-						.italic()
-						.foregroundColor(.secondary)
-						.padding([.leading], 20)
-					Spacer()
-				}
-				Divider()
-
+				SLSimpleHeaderView(label: "Items Listed: \(shoppingItems.count)")
 				List {
 					ForEach(locations(for: shoppingItems)) { location in
-						Section(header: MySectionHeaderView(title: location.name!)) {
+						Section(header: SLSectionHeaderView(title: location.name!)) {
 							
 							ForEach(self.shoppingItems.filter({ $0.location! == location })) { item in
 								

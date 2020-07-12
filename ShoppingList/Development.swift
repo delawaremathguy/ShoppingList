@@ -17,6 +17,15 @@ import UIKit
 
 let kShowDevToolsTab = true
 
+// this boolean control whether the Shopping List is shown as multiple Sections,
+// one Section per Location, or whether it shows only a one simple list (items
+// will still be listed in the same order, just not sectioned).  you can change
+// this value here directly (i have multiple sections on by default).  additionally,
+// if you have the Dev Tools tab showing, you can change it in real time to see
+// the effect.
+
+var kShowMultiSectionShoppingList = true
+
 // i'm torn about this next setting.  i find it easier when i am in the store shopping to swipe
 // to say "i just put that in the cart, take it off today's shopping list."  but
 // SwiftUI only allows (even with WWDC2020 now in the rear view mirror) a traling

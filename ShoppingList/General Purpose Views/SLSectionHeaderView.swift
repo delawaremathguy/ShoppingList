@@ -12,7 +12,7 @@ import SwiftUI
 // there's certainly a better way to do it using a customized ListStyle.
 // but that's a matter for another day.  besides, the View we provide
 // here does not really own the space in which it appears.
-struct MySectionHeaderView: View {
+struct SLSectionHeaderView: View {
 	
 	var title: String
 	

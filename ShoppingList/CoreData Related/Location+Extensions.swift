@@ -121,6 +121,10 @@ extension Location: Identifiable {
 		UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(opacity))
 	}
 	
+	func isUnknownLocation() -> Bool {
+		return visitationOrder == kUnknownLocationVisitationOrder
+	}
+	
 }
 
 extension Location: CodableStructRepresentable {

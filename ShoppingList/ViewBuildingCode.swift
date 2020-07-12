@@ -11,19 +11,6 @@ import SwiftUI
 
 // this is common code for both shopping list tabs and the purchased tab
 
-// this consolidates the code for what to show when a list is empty
-@ViewBuilder
-func emptyListView(listName: String) -> some View {
-	Group {
-		Text("There are no items")
-			.padding([.top], 200)
-		Text("on your \(listName) List.")
-	}
-	.font(.title)
-	.foregroundColor(.secondary)
-	Spacer()
-}
-
 // note for shoppingItemContextMenu below: in XCode 11.5/iOS 13.5, you'll get plenty of layout
 // messages about unsatisfiable constraints in the console when displaying a contextMenu.
 // that's apparently a SwiftUI problem that seems to not be present in XCode 12/iOS 14 beta.
@@ -54,7 +41,7 @@ func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping 
 			deletionTrigger()
 		}) {
 			Text("Delete This Item")
-			Image(systemName: "minus.circle")
+			Image(systemName: "trash")
 		}
 	}
 }

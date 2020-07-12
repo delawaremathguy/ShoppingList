@@ -20,18 +20,25 @@ struct MainView: View {
 
 	var body: some View {
 		NavigationView {
-			
-			// the first tabView is the shopping list.  change ShoppingListTabView1 to ShoppingListTabView2
-			// to see what happens with my current investigation into sectioning the list of shopping items.
-			
 			TabView(selection: $selectedTab) {
 				
-				ShoppingListTabView1() // <--- see note above about whether this is 1 or 2
-					.tabItem {
-						Image(systemName: "cart")
-						Text("Shopping List")
+				// the first tabView is the shopping list.  changing the value of
+				// kShowMultiSectionShoppingList in Development.swift (or interactively
+				// in the Dev Tools tab if you have it showing) will let you see the
+				// two different options.
+				
+				Group {
+					if kShowMultiSectionShoppingList {
+						ShoppingListTabView2()
+					} else {
+						ShoppingListTabView1()
+					}
+				}
+				.tabItem {
+					Image(systemName: "cart")
+					Text("Shopping List")
 				}.tag(1)
-
+				
 				PurchasedTabView()
 					.tabItem {
 						Image(systemName: "purchased")
@@ -44,7 +51,7 @@ struct MainView: View {
 						Text("Locations")
 				}.tag(3)
 
-				if kShowDevToolsTab {
+				if kShowDevToolsTab { // this setting is in Development.swift
 					DevToolsTabView()
 						.tabItem {
 							Image(systemName: "wrench")

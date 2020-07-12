@@ -14,6 +14,7 @@ struct DevToolsTabView: View {
 	@State private var confirmDataHasBeenAdded = false
 	@State private var locationsAdded: Int = 0
 	@State private var shoppingItemsAdded: Int = 0
+	@State private var multiSectionShoppingListDisplay = kShowMultiSectionShoppingList
 	
     var body: some View {
 			VStack(spacing: 20) {
@@ -49,10 +50,25 @@ struct DevToolsTabView: View {
 					writeAsJSON(items: Location.allUserLocations(), to: kLocationsFilename)
 				}
 				
+				VStack(spacing: 3) {
+					Text("Shopping list display is: ") + Text(multiSectionShoppingListDisplay ? "Multi-Section" : "Single Section")
+					Button(changeDisplayButtonName()) {
+						self.multiSectionShoppingListDisplay.toggle()
+						kShowMultiSectionShoppingList.toggle()
+					}
+				}
+
 				Spacer()
 				
 			}
 
+	}
+	
+	func changeDisplayButtonName() -> String {
+		if multiSectionShoppingListDisplay {
+			return "Change to single section display"
+		}
+		return "Change to multiple section display"
 	}
 	
 }

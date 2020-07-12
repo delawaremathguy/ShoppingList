@@ -45,20 +45,12 @@ struct PurchasedTabView: View {
 																	 addItemToShoppingList: false)
 
 			if purchasedItems.isEmpty {
-				emptyListView(listName: "Purchased")
+				EmptyListView(listName: "Purchased")
 			} else {
+				
 				// Report purchased item count, or the number of items matching the
 				// current search text, essentially as a section header for just the one section
-				HStack {
-					Text(sectionHeaderTitle())
-						.font(.caption)
-						.italic()
-						.foregroundColor(.secondary)
-						.padding([.leading], 20)
-					Spacer()
-				}
-				Divider()
-				
+				SLSimpleHeaderView(label: sectionHeaderTitle())
 				List {
 					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {

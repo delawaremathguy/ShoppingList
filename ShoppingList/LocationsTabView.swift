@@ -17,8 +17,12 @@ struct LocationsTabView: View {
 	var locations: FetchedResults<Location>
 	@State private var isAddNewLocationSheetShowing = false
 	
+	// support for context menu deletion
+	@State private var locationToDelete: Location?
+	@State private var showDeleteConfirmation = false
+	
 	var body: some View {
-		VStack {
+		VStack(spacing: 0) {
 			
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyLocationView
 			// inside its own NaviagtionView (so the Picker will work!) and we must pass along the
@@ -27,28 +31,44 @@ struct LocationsTabView: View {
 																	 managedObjectContext: managedObjectContext)
 
 			// 1a. Report location count, essentially as a section header for just the one section
-			HStack {
-				Text("Locations Listed: \(locations.count)")
-					.font(.caption)
-					.italic()
-					.foregroundColor(.secondary)
-					.padding([.leading], 20)
-				Spacer()
-			}
+			SLSimpleHeaderView(label: "Locations Listed: \(locations.count)")
 			
 			// 2. then the list of location
 			List {
 				ForEach(locations) { location in
 					NavigationLink(destination: AddorModifyLocationView(editableLocation: location)) {
 						LocationRowView(rowData: LocationRowData(location: location))
+							.contextMenu {
+								Button(action: {
+									if !location.isUnknownLocation() {
+										self.locationToDelete = location
+										self.showDeleteConfirmation = true
+									}
+								}) {
+									Text("Delete This Location")
+									Image(systemName: "trash")
+								}
+						}
 					}
 					.listRowBackground(Color(location.uiColor()))
 				} // end of ForEach
+					.alert(isPresented: $showDeleteConfirmation) {
+						Alert(title: Text("Delete \'\(locationToDelete!.name!)\'?"),
+									message: Text("Are you sure you want to delete this location?"),
+									primaryButton: .cancel(Text("No")),
+									secondaryButton: .destructive(Text("Yes"), action: self.deleteLocation)
+						)}
 			} // end of List
 			
 		} // end of VStack
 	} // end of var body: some View
 	
+	func deleteLocation() {
+		if let location = locationToDelete {
+			Location.delete(location: location, saveChanges: true)
+		}
+	}
+
 }
 
 // this is its own View, just to keep the code above a little more readable
