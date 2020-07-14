@@ -64,18 +64,25 @@ Tapping on a Location in the list lets you edit location information, including 
 * Why not let the user drag the Locations around to reset the order? Well, it's partly the SwiftUI visual problem with .onMove() mentioned below, but persisting the order the way I'd like to do (using visitationOrder markers) has a few wrinkles that seem to conflict with SwiftUI's @FetchRequest.
 * What happens to ShoppingItems in a Location when a Location is deleted?  The items are not deleted, but simply moved to the Unknown Location.
 
-Finally, there is a fourth tab for "development-only" puroses, that allows wholesale loading of sample data, removal of all data, offloading data for later use, and changing the sectioned-display of the shopping list. It's easier to make changes and see here, rather than hunt through the source code to make these changes (although there is plenty of commentary in the source code).
+Finally, there is a fourth tab for "development-only" purposes, that allows wholesale loading of sample data, removal of all data, offloading data for later use, and changing the sectioned-display of the shopping list. It's easier to make changes and see them here, rather than hunt through the source code to make these changes (although there is plenty of commentary in the source code).
 
-So, if you plan to play with or use this app, the app will start with an empty shopping list; from there you can create your own shopping items and locations associated with those items.  Alternatively,  go straight  to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
+So, if you plan to play with or use this app, the app will start with an empty shopping list and an almost-empty location list (it will contain the sacred "Unknown Location"); from there you can create your own shopping items and locations associated with those items.  Alternatively,  go straight  to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
 
 
 ## Some Things I'm Working On
 
 * There still remains an issue with the deletion of objects (ShoppingItems and Locations) and the use of @FetchRequest. 
-Running in XCode 11.5 and iOS 13.5, the current code appears stable and does not blow up with deletions; however the iOS 14 beta situation looks worse. 
-I am sure that the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed on the navigation stack from View A).  Even using a context menu in View A to delete a Core Data item in View A exhibits the problem.
+Running in XCode 11.5 and iOS 13.5, the current code appears stable and does not blow up with deletions; 
+however the initial iOS 14 beta situation does not look good. 
+I am sure that the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and 
+the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed 
+on the navigation stack from View A) -- especially if View B references the object as an @ObservedObject.   
+Even using a context menu in View A to delete a Core Data item in View A itself can exhibit the problem.
 
-* I have encountered this same deletion/@FetchRequest issue in another project, and am stuggling there, so I hope to have a resolution soon. Indeed, it's another example of a conundrum where   "an object must be an @Observed object for a view to update properly" and, at the same time, "not be an @Observed object because the program will crash if the item is deleted." 
+* I have encountered this same deletion/@FetchRequest issue in another project, and have mostly resolved the issue in that case.
+So I have a better understanding of this problem from this exercise, especially now that I have learned more 
+about how @ObservedObject really works *as an argument* in a View. *I'll work more on the problem and get back to you real soon!*.
+
 
 * I discovered a crash with a simple, benign operation or two while running the app on my iPhone 11 with iOS 13.5.1 recently.  The crash logs showed the app very deep inside UITableVIew code when it crashed (virtually identical logs, by the way), so I am guessing **something changed in iOS 13.5.1** that wasn't there in 13.5.  It may also be related to use of a contextMenu, which I was using at the time.
 

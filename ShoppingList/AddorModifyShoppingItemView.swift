@@ -50,12 +50,6 @@ struct AddorModifyShoppingItemView: View {
 	// to confirm deletion of a ShoppingItem
 	@State private var showDeleteConfirmation: Bool = false
 	
-	// this "itemToDeleteAfterDisappear" variable is a place to stash an item to be deleted, if any,
-	// after the view has disappeared.  seems like a kludgey way to do this, but also seems
-	// to work without incident (instead of deleting first then popping this view back
-	// to its navigation parent, which seems to want to crash sometimes)
-//	@State private var itemToDeleteAfterDisappear: ShoppingItem?
-
 	var body: some View {
 		
 		ShoppingItemEditView(editableData: $editableData, showDeleteConfirmation: $showDeleteConfirmation, allowsDeletion: allowsDeletion)

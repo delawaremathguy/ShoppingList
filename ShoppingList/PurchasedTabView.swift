@@ -54,7 +54,7 @@ struct PurchasedTabView: View {
 				List {
 					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-							ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
+							ShoppingItemRowView(item: item)
 								.contextMenu {
 									shoppingItemContextMenu(for: item, deletionTrigger: {
 										self.itemToDelete = item
@@ -69,7 +69,9 @@ struct PurchasedTabView: View {
 										message: Text("Are you sure you want to delete this item?"),
 										primaryButton: .cancel(Text("No")),
 										secondaryButton: .destructive(Text("Yes"),
-																									action: { ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true) })
+										action: {
+											ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true)
+										})
 							)}
 					
 				}  // end of List
