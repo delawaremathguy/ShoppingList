@@ -35,6 +35,7 @@ struct ShoppingListTabView1: View {
 	@State private var isDeleteItemAlertShowing = false
 	
 	var body: some View {
+		NavigationView {
 		VStack(spacing: 0) {
 			
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
@@ -80,9 +81,10 @@ struct ShoppingListTabView1: View {
 				
 				// clear/ mark as unavailable shopping list buttons
 				if !shoppingItems.isEmpty {
-					Divider()
+					Rectangle()
+						.frame(minWidth: 0, maxWidth: .infinity, minHeight: 1, idealHeight: 1, maxHeight: 1)
 					SLCenteredButton(title: "Move All Items off-list", action: { ShoppingItem.moveAllItemsOffList() })
-						.padding([.bottom], 6)
+						.padding([.bottom, .top], 6)
 					
 					if shoppingItems.filter({ !$0.isAvailable }).count > 0 {
 						SLCenteredButton(title: "Mark All Items Available", action: { ShoppingItem.markAllItemsAvailable() })
@@ -93,6 +95,8 @@ struct ShoppingListTabView1: View {
 
 			} // end of else for if shoppingItems.isEmpty
 		} // end of VStack
+			.navigationBarTitle("Shopping List")
+		} // end of NavigationView
 	} // end of body: some View
 	
 	func handleOnDeleteModifier(indexSet: IndexSet) {

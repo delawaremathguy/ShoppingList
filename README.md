@@ -14,8 +14,10 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 12, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **July 14, 2020**, when these were some of the recent changes I made.
 
+* I switched out the order of TabView and NavigationView in the MainView.  Previously the TabView was inside a NavigationView (*there was some advantage to this, but with several disadvantages*).  This is now reversed and each of the views shown in the MainView has its own NavigationView wrapper.  But I don't particularly like the visual transitions from tab to tab.
+* I fixed the coding for adjusting the ShoppingList display (single-section or multi-section) that i had added because it really did not work after all.  *duh!*
 * Previous versions required that you change the source code to see the effect of viewing the shopping list as one section, or in multiple sections.  You can set the default in the source code, but also change during execution in the Dev Tools tab (if shown).
 * I fixed a glaring, obvious *coding inaccuracy* in doing a "swipe to delete" action in the PurchasedItemView.  It's been there since forever -- I was "deleting" items using indices in the purchasedItems list, not the list of items as filtered by a (non-empty) searchtext.  *duh!*
 
@@ -93,7 +95,7 @@ about how @ObservedObject really works *as an argument* in a View. *I'll work mo
 
 *  I have made the "Add New Shopping Item" button present as a Sheet, although if you later want to edit it, you'll transition using a NavigationLink.  (The same happens for "Add a New Location.")  You might be interested in seeing how to do this -- it turns out to be pretty simple.
 
-*  I'm puzzled for now on one thing. The MainView of this app is a TabView, embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView apparently cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation bar to be configured.  
+*  ~~I'm puzzled for now on one thing. The MainView of this app is a TabView, embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView apparently cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation bar to be configured~~.  
 
 
 *  I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, and I have already seen fewer or none of these in testing out XCode 12. Several internet comments  seem to be saying ignoring most of these messages is the right thing to do for now.

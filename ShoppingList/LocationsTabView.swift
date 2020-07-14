@@ -22,6 +22,7 @@ struct LocationsTabView: View {
 	@State private var showDeleteConfirmation = false
 	
 	var body: some View {
+		NavigationView {
 		VStack(spacing: 0) {
 			
 			// 1. add new item "button" is at top.  note that this will put up the AddorModifyLocationView
@@ -61,6 +62,7 @@ struct LocationsTabView: View {
 			} // end of List
 			
 		} // end of VStack
+		} // end of NavigationView
 	} // end of var body: some View
 	
 	func deleteLocation() {
@@ -82,6 +84,8 @@ struct addNewLocationButtonView: View {
 				.foregroundColor(Color.blue)
 				.padding(10)
 		}
+		.navigationBarTitle("Locations")
+
 		.sheet(isPresented: $isAddNewLocationSheetShowing) {
 			NavigationView {
 				AddorModifyLocationView()

@@ -17,67 +17,65 @@ import CoreData
 
 struct MainView: View {
 	@State private var selectedTab = 1
-
+	@State private var showMultiSectionShoppingList = kShowMultiSectionShoppingList
+	
 	var body: some View {
-		NavigationView {
-			TabView(selection: $selectedTab) {
-				
-				// the first tabView is the shopping list.  changing the value of
-				// kShowMultiSectionShoppingList in Development.swift (or interactively
-				// in the Dev Tools tab if you have it showing) will let you see the
-				// two different options.
-				
-				Group {
-					if kShowMultiSectionShoppingList {
-						ShoppingListTabView2()
-					} else {
-						ShoppingListTabView1()
-					}
+		TabView(selection: $selectedTab) {
+			
+			// the first tabView is the shopping list.  changing the value of
+			// kShowMultiSectionShoppingList in Development.swift (or interactively
+			// in the Dev Tools tab if you have it showing) will let you see the
+			// two different options.
+			
+			Group {
+				if showMultiSectionShoppingList {
+					ShoppingListTabView2()
+				} else {
+					ShoppingListTabView1()
 				}
+			}
+			.tabItem {
+				Image(systemName: "cart")
+				Text("Shopping List")
+			}.tag(1)
+			
+			PurchasedTabView()
 				.tabItem {
-					Image(systemName: "cart")
-					Text("Shopping List")
-				}.tag(1)
-				
-				PurchasedTabView()
+					Image(systemName: "purchased")
+					Text("Purchased")
+			}.tag(2)
+			
+			LocationsTabView()
+				.tabItem {
+					Image(systemName: "map")
+					Text("Locations")
+			}.tag(3)
+			
+			if kShowDevToolsTab { // this setting is in Development.swift
+				DevToolsTabView(shoppingListSectionSwitch: $showMultiSectionShoppingList)
 					.tabItem {
-						Image(systemName: "purchased")
-						Text("Purchased")
-				}.tag(2)
-
-				LocationsTabView()
-					.tabItem {
-						Image(systemName: "map")
-						Text("Locations")
-				}.tag(3)
-
-				if kShowDevToolsTab { // this setting is in Development.swift
-					DevToolsTabView()
-						.tabItem {
-							Image(systemName: "wrench")
-							Text("Dev Tools")
-					}.tag(4)
-				}
-
-				
-			} // end of TabView
-				.navigationBarTitle(tabTitle(selectedTab: selectedTab))
-				.onAppear(perform: reportEntityCounts) // just for testing ...
-
-		} // end of NavigationView
+						Image(systemName: "wrench")
+						Text("Dev Tools")
+				}.tag(4)
+			}
+			
+			
+		} // end of TabView
+			.onAppear(perform: reportEntityCounts) // just for testing ...
+		
 	}
 	
-	func tabTitle(selectedTab: Int) -> String {
-		if selectedTab == 1 {
-			return "Shopping List"
-		} else if selectedTab == 2 {
-			return "Purchased"
-		} else if selectedTab == 3 {
-			return "Locations"
-		} else {
-			return "Dev Tools"
-		}
-	}
+//	func tabTitle(selectedTab: Int) -> String {
+//		if selectedTab == 1 {
+//			return "Shopping List"
+//		} else if selectedTab == 2 {
+//			return "Purchased"
+//		} else if selectedTab == 3 {
+//			return "Locations"
+//		} else {
+//			return "Dev Tools"
+//		}
+//	}
 	
 	func reportEntityCounts() {
 //		print("Number of shopping items is \(ShoppingItem.count())")

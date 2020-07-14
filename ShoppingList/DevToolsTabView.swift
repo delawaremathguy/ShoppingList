@@ -14,9 +14,10 @@ struct DevToolsTabView: View {
 	@State private var confirmDataHasBeenAdded = false
 	@State private var locationsAdded: Int = 0
 	@State private var shoppingItemsAdded: Int = 0
-	@State private var multiSectionShoppingListDisplay = kShowMultiSectionShoppingList
+	@Binding var shoppingListSectionSwitch: Bool
 	
 	var body: some View {
+		NavigationView {
 		VStack(spacing: 20) {
 			
 			Text("These controls are here so that you can add some sample data, play with it, and later delete it.  This tab view can be hidden if you wish (see Development.swift)")
@@ -50,22 +51,24 @@ struct DevToolsTabView: View {
 			}
 			
 			VStack(spacing: 3) {
-				Text("Shopping list display is: ") + Text(multiSectionShoppingListDisplay ? "Multi-Section" : "Single Section")
+				Text("Shopping list display is: ") + Text(shoppingListSectionSwitch ? "Multi-Section" : "Single Section")
 				Button("Change") {
-					self.multiSectionShoppingListDisplay.toggle()
-					kShowMultiSectionShoppingList.toggle()
+					self.shoppingListSectionSwitch.toggle()
+					// kShowMultiSectionShoppingList.toggle()
 				}
 			}
 			
 			Spacer()
 			
 		} // end of VStack
+			.navigationBarTitle("Dev Tools")
+		} // end of NavigationView
 	} // end of body
 	
 }
 
-struct OperationTabView_Previews: PreviewProvider {
-	static var previews: some View {
-		DevToolsTabView()
-	}
-}
+//struct OperationTabView_Previews: PreviewProvider {
+//	static var previews: some View {
+//		DevToolsTabView()
+//	}
+//}

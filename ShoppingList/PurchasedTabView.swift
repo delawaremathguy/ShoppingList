@@ -33,7 +33,7 @@ struct PurchasedTabView: View {
 	@State private var isAddNewItemSheetShowing = false
 
 	var body: some View {
-			
+		NavigationView {
 		VStack {
 			SearchBarView(text: $searchText)
 			
@@ -78,6 +78,8 @@ struct PurchasedTabView: View {
 				
 			} // end of if-else
 		} // end of VStack
+			.navigationBarTitle("Purchased List")
+		} // end of NavigationView
 	}
 	
 	func sectionHeaderTitle() -> String {
