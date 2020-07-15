@@ -72,7 +72,7 @@ struct ShoppingItemRowData {
 
 struct ShoppingItemRowView: View {
 	// shows one line in a list for a shopping item.
-	@State var itemData: ShoppingItemRowData
+	var itemData: ShoppingItemRowData
 	
 	var body: some View {
 		HStack {
