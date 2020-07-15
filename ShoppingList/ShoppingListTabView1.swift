@@ -96,6 +96,14 @@ struct ShoppingListTabView1: View {
 			} // end of else for if shoppingItems.isEmpty
 		} // end of VStack
 			.navigationBarTitle("Shopping List")
+			.navigationBarItems(
+				trailing:
+					Button(action: { self.isAddNewItemSheetShowing = true }) {
+					Image(systemName: "plus")
+						.resizable()
+						.frame(width: 16, height: 16)
+				})
+
 		} // end of NavigationView
 	} // end of body: some View
 	

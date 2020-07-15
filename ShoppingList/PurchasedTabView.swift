@@ -79,6 +79,14 @@ struct PurchasedTabView: View {
 			} // end of if-else
 		} // end of VStack
 			.navigationBarTitle("Purchased List")
+			.navigationBarItems(
+				trailing:
+				Button(action: { self.isAddNewItemSheetShowing = true }) {
+					Image(systemName: "plus")
+						.resizable()
+						.frame(width: 16, height: 16)
+			})
+
 		} // end of NavigationView
 	}
 	

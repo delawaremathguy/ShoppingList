@@ -62,6 +62,15 @@ struct LocationsTabView: View {
 			} // end of List
 			
 		} // end of VStack
+			.navigationBarTitle("Locations")
+			.navigationBarItems(
+				trailing:
+				Button(action: { self.isAddNewLocationSheetShowing = true }) {
+					Image(systemName: "plus")
+						.resizable()
+						.frame(width: 16, height: 16)
+			})
+
 		} // end of NavigationView
 	} // end of var body: some View
 	
@@ -84,7 +93,6 @@ struct addNewLocationButtonView: View {
 				.foregroundColor(Color.blue)
 				.padding(10)
 		}
-		.navigationBarTitle("Locations")
 
 		.sheet(isPresented: $isAddNewLocationSheetShowing) {
 			NavigationView {
