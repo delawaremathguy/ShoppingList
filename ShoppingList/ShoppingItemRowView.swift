@@ -37,7 +37,7 @@ import SwiftUI
 // without the body property ever being called to draw it
 
 // so some re-thinking forced me into this little struct below, to hold the values of an item
-// from the List for this View for display, and set it up whenever the view is redrawn
+// from the List for this View for display, and set those up whenever the view is redrawn
 // (when its body property is called), rather than hold on to or refer to the shopping item itself.
 // and now this works fine, although even here, i'm not convinced it should.  but at least
 // i am not holding on to a reference to the object; and i may be getting some unseen help
@@ -66,15 +66,13 @@ struct ShoppingItemRowData {
 		self.showLocation = showLocation
 	}
 	
-	init() { /* everything is fine as a default until we load data */ }
+	init() { }
 	
 }
 
 struct ShoppingItemRowView: View {
 	// shows one line in a list for a shopping item.
-	var item: ShoppingItem
-	var showLocation: Bool = true
-	@State var itemData = ShoppingItemRowData()
+	@State var itemData: ShoppingItemRowData
 	
 	var body: some View {
 		HStack {
@@ -102,11 +100,7 @@ struct ShoppingItemRowView: View {
 				.foregroundColor(Color.blue)
 			
 		} // end of HStack
-			.onAppear(perform: loadData)
 	}
-	
-	func loadData() {
-		itemData = ShoppingItemRowData(item: item, showLocation: showLocation)
-	}
+
 }
 

@@ -56,7 +56,7 @@ struct ShoppingListTabView2: View {
 								
 								// display a single row here for 'item'
 								NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-									ShoppingItemRowView(item: item, showLocation: false)
+									ShoppingItemRowView(itemData: ShoppingItemRowData(item: item, showLocation: false))
 										.contextMenu {
 											shoppingItemContextMenu(for: item, deletionTrigger: {
 												self.itemToDelete = item

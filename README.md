@@ -14,7 +14,9 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 14, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **July 15, 2020**, when these were some of the recent changes I made.
+
+* **I discovered a regression**: marking an item "available" and "unavailable" in the shopping or purchased lists now suddently does not update on screen. This is the frustration I have had since day 1 of this project: a small syntactic change seems to have killed the visual display that (*I swear*) I had working correctly. I am working to identify the issue, once again ...
 
 * I switched out the order of TabView and NavigationView in the MainView.  Previously the TabView was inside a NavigationView (*there was some advantage to this, but with several disadvantages*).  This is now reversed and each of the views shown in the MainView has its own NavigationView wrapper.  But I don't particularly like the visual transitions from tab to tab.
 * I fixed the coding for adjusting the ShoppingList display (single-section or multi-section) that i had added because it really did not work after all.  *duh!*

@@ -54,7 +54,7 @@ struct PurchasedTabView: View {
 				List {
 					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in
 						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-							ShoppingItemRowView(item: item)
+							ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
 								.contextMenu {
 									shoppingItemContextMenu(for: item, deletionTrigger: {
 										self.itemToDelete = item

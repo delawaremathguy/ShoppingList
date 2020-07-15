@@ -31,7 +31,10 @@ func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping 
 		Image(systemName: item.onList ? "purchased" : "cart")
 	}
 	
-	Button(action: { item.mark(available: !item.isAvailable, saveChanges: true) }) {
+	Button(action: {
+		item.isAvailable.toggle()
+		ShoppingItem.saveChanges()
+	}) {
 		Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
 		Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
 	}
