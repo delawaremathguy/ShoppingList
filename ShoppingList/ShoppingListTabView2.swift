@@ -111,6 +111,7 @@ struct ShoppingListTabView2: View {
 			})
 
 		} // end of NavigationView
+
 	} // end of body: some View
 			
 	func locations(for items: FetchedResults<ShoppingItem>) -> [Location] {

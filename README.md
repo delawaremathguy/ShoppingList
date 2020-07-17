@@ -1,8 +1,8 @@
 #  About "ShoppingList"
 
-This is a simple, in-progress iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
+This is a simple, in-progress, "fail-in-public" iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
-I'm making this repo publicly available.  I may be interested in asking some questions about what I am doing (e.g., in the Apple Developer forums, on the HackingWithSwift forums), and it's easier to do that if I expose all the source for inspection.  There was also a recent question on the Apple Developer's forum, *[Example using Core Data between views](https://forums.developer.apple.com/thread/133370)* that expressed some frustration in not being able to find enough examples of working with CoreData and getting list updates done correctly (that whole thing about Identifiable, id:\.self, @ObservedObject, etc).  My hope is this project will fill some of that need, even if it's not yet demonstrated to be 100% bullet-proof.
+I'm making this repo publicly available.  I am interested in asking some questions about what I am doing (e.g., in the Apple Developer forums, on the HackingWithSwift forums), and possibly getting some feedback, and it's easier to do that if I expose all the source for inspection.  There was also a recent question on the Apple Developer's forum, *[Example using Core Data between views](https://forums.developer.apple.com/thread/133370)* that expressed some frustration in not being able to find enough examples of working with CoreData and getting list updates done correctly (that whole thing about Identifiable, id:\.self, @ObservedObject, etc).  My hope is this project will fill some of that need, even if it's not yet demonstrated to be 100% bullet-proof.
 
 However, be warned: 
 
@@ -14,14 +14,13 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 15, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **July 17, 2020**, when these were some of the recent changes I made.
 
-* The Shopping List (both the single-section and multi-section versions) and the Locations List now have a "plus" sign as a trailing bar button item to add a new ShoppingItem or Location.  You can decide which you like better: the "plus" in the navigation bar, or the explicit "Add New Item/Location" button that appears at the top of the list (*using both would seem overkill*).
+* The Shopping List (both the single-section and multi-section versions) and the Locations List now have a "plus" sign as a trailing bar button item to add a new ShoppingItem or Location.  You can decide which you like better: the "plus" in the navigation bar, or the explicit "Add New Item/Location" button that appears at the top of the list (*using both would seem overkill*).  But caution on this: tapping the "plus" sign in the navigationbar is very much hit-or-miss (*this seems to be a SwiftUI thing*), so you may want to replace the "plus" sign with explicit text such as "Add New Item" or "Add New Location."
 * ~~I discovered a regression: suddenly an edit of a ShoppingItem was not being respected visually~~.  It turns out I had set `var itemData: ShoppingItemRowData` in ShoppingItemRowView to be `@State`.  that was a terrible idea.  removing `@State` fixed the problem.  *I may revisit this particular parameter-passing strategy later*.
 * I switched out the order of TabView and NavigationView in the MainView.  Previously the TabView was inside a NavigationView (*there was some advantage to this, but several disadvantages*).  This is now reversed and each of the views shown in the MainView has its own NavigationView wrapper.  But I don't particularly like the visual transitions from tab to tab.
 * I fixed the coding for adjusting the ShoppingList display (single-section or multi-section) that i had added because it really did not work after all.  *duh!*
 * Previous versions required that you change the source code to see the effect of viewing the shopping list as one section, or in multiple sections.  You can set the default in the source code, but also change during execution in the Dev Tools tab (if shown).
-* I fixed a glaring, obvious *coding inaccuracy* in doing a "swipe to delete" action in the PurchasedItemView.  It's been there since forever -- I was "deleting" items using indices in the purchasedItems list, not the list of items as filtered by a (non-empty) searchtext.  *duh!*
 
 
 
@@ -76,20 +75,15 @@ So, if you plan to play with or use this app, the app will start with an empty s
 ## Some Things I'm Working On
 
 * There still remains an issue with the deletion of objects (ShoppingItems and Locations) and the use of @FetchRequest. 
+*It may be as simple as my misunderstanding of the whole process*.
 Running in XCode 11.5 and iOS 13.5, the current code appears stable and does not blow up with deletions; 
-however the initial iOS 14 beta situation does not look good. 
+however my initial try with iOS 14 beta situation did not look good. 
 I am sure that the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and 
 the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed 
 on the navigation stack from View A) -- especially if View B references the object as an @ObservedObject.   
 Even using a context menu in View A to delete a Core Data item in View A itself can exhibit the problem.
 
-* I have encountered this same deletion/@FetchRequest issue in another project, and have mostly resolved the issue in that case.
-So I have a better understanding of this problem from this exercise, especially now that I have learned more 
-about how @ObservedObject really works *as an argument* in a View. *I'll work more on the problem and get back to you real soon!*.
-
-
-* I discovered a crash with a simple, benign operation or two while running the app on my iPhone 11 with iOS 13.5.1 recently.  The crash logs showed the app very deep inside UITableVIew code when it crashed (virtually identical logs, by the way), so I am guessing **something changed in iOS 13.5.1** that wasn't there in 13.5.  It may also be related to use of a contextMenu, which I was using at the time.
-
+* I have encountered this same deletion/@FetchRequest issue in another project, and have resolved the issue in that case. So I have a better understanding of this problem from this exercise, especially now that I have learned more  about how @ObservedObject really works *as an argument* in a View. *I'll work more on the problem and get back to you real soon!*.
 
 * I have provided two options for the ShoppingListTabView. One is a single (section) list of items, and the other is a multi-section list, one section for each Location. Which is displayed by default is set in Development.swift, but if you're playing around in the code, try each one of them.  There's a "toggle" in the "Dev Tools" tab to see the difference in real time.
 
@@ -97,14 +91,20 @@ about how @ObservedObject really works *as an argument* in a View. *I'll work mo
 
 *  I have made the "Add New Shopping Item" button present as a Sheet, although if you later want to edit it, you'll transition using a NavigationLink.  (The same happens for "Add a New Location.")  You might be interested in seeing how to do this -- it turns out to be pretty simple.
 
+* I am puzzled by how to handle rotation.  Rotate from a compact-width orientation into a regular-width orientation  (e.g., iPhone 11) and, yes, you get something surprising (I understand that part and think I can handle that later).  But then rotate back into a compact-width orientation and the display goes a little strange.
+
 *  ~~I'm puzzled for now on one thing. The MainView of this app is a TabView, embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView apparently cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation bar to be configured~~.  
 
 
-*  I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). I'm ignoring them for now, and I have already seen fewer or none of these in testing out XCode 12. Several internet comments  seem to be saying ignoring most of these messages is the right thing to do for now.
+*  I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). Since I added contextMenus, I get a plenty of "Unable to simultaneously satisfy constraints" messages.  I'm ignoring them for now, and I have already seen fewer or none of these in testing out XCode 12. Several internet comments  seem to be saying ignoring most of these messages is the right thing to do for now.
 
 *  I have been constantly struggling with visual updates in SwiftUI, although not so much anymore.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating and you may see a comment or two in the code about this.
 
-*  I'm looking at the new SwiftUI releases from WWDC right now and can definitely use quite a bit of it very easily (e.g., a ColorPicker); i think you may see a ShoppingList14 (for iOS 14) from me sometime soon to play with.
+*  I'm looking at the new SwiftUI releases from WWDC right now and can definitely use quite a bit of it very easily (e.g., a ColorPicker); i think you may see a ShoppingList14 (for iOS 14) from me sometime soon to play with. 
+
+However, please be aware that there will be a point  where I will stop working on this project in  public.  **That time is coming soon**.  I'd like to look at CloudKit support for the database separately for my own use (this could return to public view if I run into trouble and have to ask for help); but after that, any future development is probably not going to happen.  For example, expanding the app and database to support multiple "Stores," each of which has "Locations," and having "ShoppingItems" being many-to-many with Locations so one item can be available in many Stores would be a nice exercise. But I don't gain anything more in the way of learning about SwiftUI to support that.
+
+I built this project  in  public only as an experiment, and as a reference in trying to offer some suggested code to the many developers who keep running into the generic problem of: an item appears in View A; it is edited in View B; but its appearance in View A does not get updated properly.  I was also hoping I might get a comment or two along the way about what I am doing right or doing wrong. But I am  not at all interested in creating the next great shopping list app or moving any of this to the App Store.  *The world really does not need a new list-making app*.
 
 
 

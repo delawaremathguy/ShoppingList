@@ -105,6 +105,7 @@ struct ShoppingListTabView1: View {
 				})
 
 		} // end of NavigationView
+
 	} // end of body: some View
 	
 	func handleOnDeleteModifier(indexSet: IndexSet) {

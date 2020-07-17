@@ -72,6 +72,7 @@ struct LocationsTabView: View {
 			})
 
 		} // end of NavigationView
+
 	} // end of var body: some View
 	
 	func deleteLocation() {

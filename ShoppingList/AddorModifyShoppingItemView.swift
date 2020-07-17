@@ -71,20 +71,7 @@ struct AddorModifyShoppingItemView: View {
 							secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
 				)}
 	}
-	
-	// called when view disappears, which is when we'll take the opportunity
-	// to delete this ShoppingItem.  the problem is one of timing, however.
-	// if you delete too soon, you are deleting "underneath" the shopping list
-	// and that's a potential crash, and so that's why we wait for onDisappear()
-	// so the shopping list has "almost" fully taken control back.  but even
-	// that seems to be a timing issue in iOS 14, so this now has an additional
-	// 0.35 second delay.  even this has other issues associated with it, since we're
-	// trying to guess on timing; and what happens if the user tries to use this item
-	// before the delete comes around?  we could put a boolean mark on the ShoppingItem
-	// to say that it's going to be deleted, then not allow ourselves to do anything
-	// to such an item (!)
-
-	
+		
 	func barTitle() -> Text {
 		return editableItem == nil ? Text("Add New Item") : Text("Modify Item")
 	}
