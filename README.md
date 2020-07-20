@@ -14,13 +14,12 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 17, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **July 20, 2020**, when these were some of the recent changes I made.
 
-* The Shopping List (both the single-section and multi-section versions) and the Locations List now have a "plus" sign as a trailing bar button item to add a new ShoppingItem or Location.  You can decide which you like better: the "plus" in the navigation bar, or the explicit "Add New Item/Location" button that appears at the top of the list (*using both would seem overkill*).  But caution on this: tapping the "plus" sign in the navigationbar is very much hit-or-miss (*this seems to be a SwiftUI thing*), so you may want to replace the "plus" sign with explicit text such as "Add New Item" or "Add New Location."
-* ~~I discovered a regression: suddenly an edit of a ShoppingItem was not being respected visually~~.  It turns out I had set `var itemData: ShoppingItemRowData` in ShoppingItemRowView to be `@State`.  that was a terrible idea.  removing `@State` fixed the problem.  *I may revisit this particular parameter-passing strategy later*.
+* After yesterday's shopping experience, I decided I wanted to track how much time I was in the store.  There is now a new tab with a simple timer display ("start," "stop," and "Reset" buttons).  Whether the timer is suspended when the app goes into the background is something you can configure (ee Development.swift).  Funny, I wasn't looking to add new features, but it's something I want for my own experience (!) and it was easy to do (just needed to transplant some code from an earlier project).
+* The Shopping List (both the single-section and multi-section versions) and the Locations List now have a "plus" sign as a trailing bar button item to add a new ShoppingItem or Location.  You can decide which you like better: the "plus" in the navigation bar, or the explicit "Add New Item/Location" button that appears at the top of the list (*using both would seem overkill*).  But caution on this: tapping the "plus" sign in the navigationbar is very much hit-or-miss (*this seems to be a SwiftUI thing*), so you may want to replace the "plus" sign with explicit text such as "Add New Item" or "Add New Location" so it has a better chance of being tapped.
 * I switched out the order of TabView and NavigationView in the MainView.  Previously the TabView was inside a NavigationView (*there was some advantage to this, but several disadvantages*).  This is now reversed and each of the views shown in the MainView has its own NavigationView wrapper.  But I don't particularly like the visual transitions from tab to tab.
 * I fixed the coding for adjusting the ShoppingList display (single-section or multi-section) that i had added because it really did not work after all.  *duh!*
-* Previous versions required that you change the source code to see the effect of viewing the shopping list as one section, or in multiple sections.  You can set the default in the source code, but also change during execution in the Dev Tools tab (if shown).
 
 
 
@@ -37,8 +36,9 @@ Otherwise, almost all of the code is original,  and it's yours if you want it --
 The main screen is a TabView, to show 
 * a current shopping list, 
 * a list of previously purchased items, and
-* a list of "locations" in a store, such as "Dairy," "Fruits & Vegetables," "Deli," and so forth.  
-* and, for purposes of demonstration, a "Dev Tools" tab to make wholesale adjustments to the data and the shopping list display (this can be hidden for usage).
+* a list of "locations" in a store, such as "Dairy," "Fruits & Vegetables," "Deli," and so forth, and
+* an in-store timer, to track how long it takes you to complete shopping, and
+* optionally, for purposes of demonstration, a "Dev Tools" tab to make wholesale adjustments to the data and the shopping list display (this can be hidden for real usage).
 
 The CoreData model has only two entities named "ShoppingItem" and "Location," with every ShoppingItem having a to-one relationship to a Location (the inverse is to-many).
 
@@ -67,7 +67,9 @@ Tapping on a Location in the list lets you edit location information, including 
 * Why not let the user drag the Locations around to reset the order? Well, it's partly the SwiftUI visual problem with .onMove() mentioned below, but persisting the order the way I'd like to do (using visitationOrder markers) has a few wrinkles that seem to conflict with SwiftUI's @FetchRequest.
 * What happens to ShoppingItems in a Location when a Location is deleted?  The items are not deleted, but simply moved to the Unknown Location.
 
-Finally, there is a fourth tab for "development-only" purposes, that allows wholesale loading of sample data, removal of all data, offloading data for later use, and changing the sectioned-display of the shopping list. It's easier to make changes and see them here, rather than hunt through the source code to make these changes (although there is plenty of commentary in the source code).
+* The fourth tab is an in-store timer, with three simple button controls: "Start," "Stop," and "Reset."  This timer will be (optionally) paused when the app goes inactive (e.g., if you get a phone call while you're shopping), although the default is to not pause it when going inactive. (See Development.swift to change this default.)
+
+* Finally, there is a  tab for "development-only" purposes, that allows wholesale loading of sample data, removal of all data, offloading data for later use, and changing the sectioned-display of the shopping list. It's easier to make changes and see them here, rather than hunt through the source code to make these changes (although there is plenty of commentary in the source code).
 
 So, if you plan to play with or use this app, the app will start with an empty shopping list and an almost-empty location list (it will contain the sacred "Unknown Location"); from there you can create your own shopping items and locations associated with those items.  Alternatively,  go straight  to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
 
@@ -76,7 +78,7 @@ So, if you plan to play with or use this app, the app will start with an empty s
 
 * There still remains an issue with the deletion of objects (ShoppingItems and Locations) and the use of @FetchRequest. 
 *It may be as simple as my misunderstanding of the whole process*.
-Running in XCode 11.5 and iOS 13.5, the current code appears stable and does not blow up with deletions; 
+Running on the simulator in XCode 11.6 and iOS 13.6, as well as on my iPhone 11 (also iOS 13.6), the current code appears stable and does not blow up with deletions; 
 however my initial try with iOS 14 beta situation did not look good. 
 I am sure that the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and 
 the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed 
@@ -102,9 +104,19 @@ Even using a context menu in View A to delete a Core Data item in View A itself 
 
 *  I'm looking at the new SwiftUI releases from WWDC right now and can definitely use quite a bit of it very easily (e.g., a ColorPicker); i think you may see a ShoppingList14 (for iOS 14) from me sometime soon to play with. 
 
-However, please be aware that there will be a point  where I will stop working on this project in  public.  **That time is coming soon**.  I'd like to look at CloudKit support for the database separately for my own use (this could return to public view if I run into trouble and have to ask for help); but after that, any future development is probably not going to happen.  For example, expanding the app and database to support multiple "Stores," each of which has "Locations," and having "ShoppingItems" being many-to-many with Locations so one item can be available in many Stores would be a nice exercise. But I don't gain anything more in the way of learning about SwiftUI to support that.
+However, please be aware that there will be a point  where I will stop working on this project in  public.  
+**That time is coming soon**.  I'd like to look at CloudKit support for the database separately for my own use 
+(this could return to public view if I run into trouble and have to ask for help); but after that, 
+any future development is probably not going to happen.  
+For example, expanding the app and database to support multiple "Stores," each of which has "Locations," 
+and having "ShoppingItems" being many-to-many with Locations so one item can be available in many Stores would be a nice exercise. 
+But I don't gain anything more in the way of learning about SwiftUI to support that.
 
-I built this project  in  public only as an experiment, and as a reference in trying to offer some suggested code to the many developers who keep running into the generic problem of: an item appears in View A; it is edited in View B; but its appearance in View A does not get updated properly.  I was also hoping I might get a comment or two along the way about what I am doing right or doing wrong. But I am  not at all interested in creating the next great shopping list app or moving any of this to the App Store.  *The world really does not need a new list-making app*.
+I built this project  in  public only as an experiment, and as a reference in trying to offer some suggested code to the 
+many developers who keep running into the generic problem of: an item appears in View A; it is edited in View B; 
+but its appearance in View A does not get updated properly.  I was also hoping I might get a comment or two 
+along the way about what I am doing right or doing wrong. But I am  not at all interested in creating the next great 
+shopping list app or moving any of this to the App Store.  *The world really does not need a new list-making app*.
 
 
 

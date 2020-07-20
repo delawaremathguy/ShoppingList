@@ -51,12 +51,18 @@ struct MainView: View {
 					Text("Locations")
 			}.tag(3)
 			
+			TimerTabView()
+				.tabItem {
+					Image(systemName: "stopwatch")
+					Text("Stopwatch")
+			}.tag(4)
+			
 			if kShowDevToolsTab { // this setting is in Development.swift
 				DevToolsTabView(shoppingListSectionSwitch: $showMultiSectionShoppingList)
 					.tabItem {
 						Image(systemName: "wrench")
 						Text("Dev Tools")
-				}.tag(4)
+				}.tag(5)
 			}
 			
 			

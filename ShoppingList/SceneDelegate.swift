@@ -62,13 +62,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	func sceneWillEnterForeground(_ scene: UIScene) {
 		// Called as the scene transitions from the background to the foreground.
 		// Use this method to undo the changes made on entering the background.
+		if gInStoreTimer.isSuspended {
+			gInStoreTimer.start()
+		}
 	}
 
 	func sceneDidEnterBackground(_ scene: UIScene) {
 		// Called as the scene transitions from the foreground to the background.
 		// Use this method to save data, release shared resources, and store enough scene-specific state information
 		// to restore the scene back to its current state.
-
+		if kDisableTimerWhenAppIsNotActive {
+			gInStoreTimer.suspend()
+		}
 		// Save changes in the application's managed object context when the application transitions to the background.
 		PersistentStore.shared.saveContext()
 	}

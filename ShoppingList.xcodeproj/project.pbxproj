@@ -27,9 +27,11 @@
 		D648D349246388C100CD881B /* Location+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D648D348246388C100CD881B /* Location+Extensions.swift */; };
 		D65721B32464591700E4AAAF /* AddorModifyLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */; };
 		D65B206C2493005600DB55F1 /* SLSliderControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65B206B2493005600DB55F1 /* SLSliderControl.swift */; };
+		D65C931824C5DC9B003E6EB7 /* GlobalTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65C931724C5DC9B003E6EB7 /* GlobalTimer.swift */; };
 		D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */; };
 		D66FF35424926B6400B3ABC8 /* DevToolsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */; };
 		D66FF3562492E67100B3ABC8 /* SLCenteredButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */; };
+		D6931D6C24C4C60900A61BB6 /* TimerTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6931D6B24C4C60900A61BB6 /* TimerTabView.swift */; };
 		D6A0DCF424B4B88F006A2BA2 /* AddNewShoppingItemButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A0DCF324B4B88F006A2BA2 /* AddNewShoppingItemButtonView.swift */; };
 		D6ADB3B2247C266F00376271 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B1247C266E00376271 /* locations.json */; };
 		D6ADB3B4247C267900376271 /* shoppingItems.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B3247C267900376271 /* shoppingItems.json */; };
@@ -71,9 +73,11 @@
 		D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddorModifyLocationView.swift; sourceTree = "<group>"; };
 		D65A15D22465A137004ACCBB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D65B206B2493005600DB55F1 /* SLSliderControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLSliderControl.swift; sourceTree = "<group>"; };
+		D65C931724C5DC9B003E6EB7 /* GlobalTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalTimer.swift; sourceTree = "<group>"; };
 		D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingListTabView2.swift; sourceTree = "<group>"; };
 		D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevToolsTabView.swift; sourceTree = "<group>"; };
 		D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLCenteredButton.swift; sourceTree = "<group>"; };
+		D6931D6B24C4C60900A61BB6 /* TimerTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTabView.swift; sourceTree = "<group>"; };
 		D6A0DCF324B4B88F006A2BA2 /* AddNewShoppingItemButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddNewShoppingItemButtonView.swift; sourceTree = "<group>"; };
 		D6ADB3B1247C266E00376271 /* locations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 		D6ADB3B3247C267900376271 /* shoppingItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = shoppingItems.json; sourceTree = "<group>"; };
@@ -129,6 +133,8 @@
 				D640329F24BB30BE00CC0B94 /* Convenience Extensions */,
 				D6EF5583246D9489007D636B /* CoreData Related */,
 				D6B8A95324636711005F8EF2 /* MainView.swift */,
+				D6931D6B24C4C60900A61BB6 /* TimerTabView.swift */,
+				D65C931724C5DC9B003E6EB7 /* GlobalTimer.swift */,
 				D62B88312451162D0051A7CE /* ShoppingListTabView1.swift */,
 				D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */,
 				D6EF557C246D7421007D636B /* PurchasedTabView.swift */,
@@ -280,6 +286,7 @@
 				D6B8A95424636711005F8EF2 /* MainView.swift in Sources */,
 				D6DE39BD247314B40013F9B4 /* SLFormLabelText.swift in Sources */,
 				D6F375D62485593D005559E6 /* LocationRowView.swift in Sources */,
+				D6931D6C24C4C60900A61BB6 /* TimerTabView.swift in Sources */,
 				D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */,
 				D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */,
 				D60F14A924686D710077AD3F /* LocationCodable.swift in Sources */,
@@ -296,6 +303,7 @@
 				D65B206C2493005600DB55F1 /* SLSliderControl.swift in Sources */,
 				D63B1A0B248EA76A001CA309 /* SLSectionHeaderView.swift in Sources */,
 				D606197F2481510E005CE575 /* SearchBarView.swift in Sources */,
+				D65C931824C5DC9B003E6EB7 /* GlobalTimer.swift in Sources */,
 				D6C91D8524A8E69F008C8DFF /* ShoppingItemEditView.swift in Sources */,
 				D640329D24BB2F4A00CC0B94 /* EmptyListView.swift in Sources */,
 				D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */,
