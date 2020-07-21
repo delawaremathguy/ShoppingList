@@ -41,15 +41,6 @@ var kShowMultiSectionShoppingList = true
 
 let kTrailingSwipeMeansDelete = false
 
-// with a timer added to the app, it's a real question of whether the timer should be
-// stopped when you switch to a different app or get a phone call.  so, you decide.
-// in my own case, i would not want to disable the timer if i am on the phone when
-// i am in the store because it's probably part of the "shopping experience" if i
-// have to call my wife with a question about which brand of salad dressing to get.
-// this boolean determines this behaviour
-
-let kDisableTimerWhenAppIsNotActive = false
-
 // I used these constants and routines during development to import and
 // export shoppingItems and Locations via JSON
 // these are the filenames for JSON output when dumped from the simulator

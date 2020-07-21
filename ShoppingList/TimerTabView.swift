@@ -15,11 +15,14 @@ struct TimerTabView: View {
 	var body: some View {
 		NavigationView {
 			VStack {
+
 				Spacer()
 				
+				Text("Elased Time")
+					.font(.title)
 				Text(timeString(accumulatedTime: instoreTimer.totalAccumulatedTime))
 					.font(.custom("Times", size: 72))
-					.foregroundColor(instoreTimer.isRunning ? .green : .secondary)
+					.foregroundColor(instoreTimer.isRunning ? .green : .gray)
 				
 				Spacer()
 				
