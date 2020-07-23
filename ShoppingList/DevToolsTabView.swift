@@ -15,7 +15,8 @@ struct DevToolsTabView: View {
 	@State private var locationsAdded: Int = 0
 	@State private var shoppingItemsAdded: Int = 0
 	@Binding var shoppingListSectionSwitch: Bool
-	
+	@State private var disableTimerWhenAppIsNotActive = kDisableTimerWhenAppIsNotActive
+
 	var body: some View {
 		NavigationView {
 		VStack(spacing: 20) {
@@ -51,13 +52,25 @@ struct DevToolsTabView: View {
 			}
 			
 			VStack(spacing: 3) {
-				Text("Shopping list display is: ") + Text(shoppingListSectionSwitch ? "Multi-Section" : "Single Section")
+				Text("Shopping list display is: ") + Text(shoppingListSectionSwitch ? "Multi-Section" : "Single Section").bold()
 				Button("Change") {
 					self.shoppingListSectionSwitch.toggle()
 					// kShowMultiSectionShoppingList.toggle()
 				}
 			}
 			
+			VStack(spacing: 3) {
+				Text("Suspend timer when in background: ") + Text(disableTimerWhenAppIsNotActive ? "Yes" : "No").bold()
+				Button("Change") {
+					// it's a little silly to do this: keep a local @State variable synced up with a global,
+					// but this View needs a @State variable so it knows when to redraw the Yes/No text
+					// and changing only the global won't make that happen.  things could be a little cleaner.
+					// but hey, this is a Dev Tools hack screen!
+					self.disableTimerWhenAppIsNotActive.toggle()
+					kDisableTimerWhenAppIsNotActive.toggle()
+				}
+			}
+
 			Spacer()
 			
 		} // end of VStack
@@ -67,8 +80,3 @@ struct DevToolsTabView: View {
 	
 }
 
-//struct OperationTabView_Previews: PreviewProvider {
-//	static var previews: some View {
-//		DevToolsTabView()
-//	}
-//}
