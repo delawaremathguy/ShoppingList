@@ -21,8 +21,8 @@ struct DevToolsTabView: View {
 		NavigationView {
 		VStack(spacing: 20) {
 			
-			Text("These controls are here so that you can add some sample data, play with it, and later delete it.  This tab view can be hidden if you wish (see Development.swift)")
-				.padding(.horizontal)
+			Text("These controls are here so that you can add some sample data, play with it, and later delete it.")
+				.padding([.leading, .trailing], 10)
 			
 			Button("Load sample data") {
 				let currentLocationCount = Location.count() // what it is now
@@ -46,21 +46,27 @@ struct DevToolsTabView: View {
 							secondaryButton: .destructive(Text("Yes"), action: { deleteAllData() }))
 			}
 			
+			Text("This button lets you offload existing data to JSON. On the simulator, it will dump to files on the Desktop (see Development.swift to get the path right); on a device, it will simply print to the console.")
+				.padding([.leading, .trailing], 10)
+
 			Button("Write database as JSON") {
 				writeAsJSON(items: ShoppingItem.allShoppingItems(), to: kShoppingItemsFilename)
 				writeAsJSON(items: Location.allUserLocations(), to: kLocationsFilename)
 			}
 			
-			VStack(spacing: 3) {
-				Text("Shopping list display is: ") + Text(shoppingListSectionSwitch ? "Multi-Section" : "Single Section").bold()
+			Text("Try out the single-section or multi-section versions of the Shopping List, or set/try out different behaviours of the timer.")
+				.padding([.leading, .trailing], 10)
+
+			HStack(spacing: 5) {
+				Text("Shopping list display: ") + Text(shoppingListSectionSwitch ? "Multi-Section" : "Single Section").bold()
 				Button("Change") {
 					self.shoppingListSectionSwitch.toggle()
 					// kShowMultiSectionShoppingList.toggle()
 				}
 			}
 			
-			VStack(spacing: 3) {
-				Text("Suspend timer when in background: ") + Text(disableTimerWhenAppIsNotActive ? "Yes" : "No").bold()
+			HStack(spacing: 5) {
+				Text("Suspend timer in background: ") + Text(disableTimerWhenAppIsNotActive ? "Yes" : "No").bold()
 				Button("Change") {
 					// it's a little silly to do this: keep a local @State variable synced up with a global,
 					// but this View needs a @State variable so it knows when to redraw the Yes/No text
@@ -72,6 +78,10 @@ struct DevToolsTabView: View {
 			}
 
 			Spacer()
+
+			Text("This tab view can be hidden if you wish (see Development.swift)")
+				.padding([.leading, .trailing], 10)
+
 			
 		} // end of VStack
 			.navigationBarTitle("Dev Tools")

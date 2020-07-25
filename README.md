@@ -14,13 +14,16 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 20, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **July 25, 2020**, when these were some of the recent changes I made.
 
-* After yesterday's shopping experience, I decided I wanted to track how much time I was in the store.  There is now a new tab with a simple timer display ("Start," "Stop," and "Reset" buttons).  Whether the timer is suspended when the app goes into the background is something you can configure (see GlobalTimer.swift) or even now change while running in the Dev Tools tab.  Funny, I wasn't looking to add new features in this project, but it's something I want for my own experience (!) and it was easy to do (just needed to transplant some code from an earlier project).
+* After last week's shopping experience, I decided I wanted to track how much time I was in the store.  There is now a new tab with a simple timer display ("Start," "Stop," and "Reset" buttons).  Whether the timer is suspended when the app goes into the background is something you can configure (see GlobalTimer.swift) or even now change while running in the Dev Tools tab.  Funny, I wasn't looking to add new features in this project, but it's something I want for my own experience (!) and it was easy to do (just needed to transplant some code from an earlier project).
 * The Shopping List (both the single-section and multi-section versions) and the Locations List now have a "plus" sign as a trailing bar button item to add a new ShoppingItem or Location.  You can decide which you like better: the "plus" in the navigation bar, or the explicit "Add New Item/Location" button that appears at the top of the list (*using both would seem overkill*).  But caution on this: tapping the "plus" sign in the navigationbar is very much hit-or-miss (*this seems to be a SwiftUI thing*), so you may want to replace the "plus" sign with explicit text such as "Add New Item" or "Add New Location" so it has a better chance of being tapped.
-* I switched out the order of TabView and NavigationView in the MainView.  Previously the TabView was inside a NavigationView (*there was some advantage to this, but several disadvantages*).  This is now reversed and each of the views shown in the MainView has its own NavigationView wrapper.  But I don't particularly like the visual transitions from tab to tab.
-* I fixed the coding for adjusting the ShoppingList display (single-section or multi-section) that i had added because it really did not work after all.  *duh!*
 
+I'm also now starting to test out this code with XCode 12beta 3, and here are some observations so far:
+
+* Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  (XCode will generate a duplicate conformance error, not on my adding conformance, but *on its own generated file*, which was a little confusing at first.)
+* GroupedListStyle now puts a section header in .uppercase by default, but you can override that by using .textcase(.none) so the header displays the title exactly as you want.
+* And, unfortunately, the infamous **crash-on-delete bug remains**, but only as an edge case.  apparently it happens only when you delete the sole, remaining ShoppingItem on screen (whether single-section or multi-section) and only when using the context menu (and not the click to edit, "Delete this Shopping Item" button). It's the same, recurring problem: a Core Data item is deleted, but seems to be held onto by SwiftUI just long enough as a reference where .isDeleted is false, but isFault is true; when fields of the references are used, we have a crash.
 
 
 ## License
@@ -78,8 +81,7 @@ So, if you plan to play with or use this app, the app will start with an empty s
 
 * There still remains an issue with the deletion of objects (ShoppingItems and Locations) and the use of @FetchRequest. 
 *It may be as simple as my misunderstanding of the whole process*.
-Running on the simulator in XCode 11.6 and iOS 13.6, as well as on my iPhone 11 (also iOS 13.6), the current code appears stable and does not blow up with deletions; 
-however my initial try with iOS 14 beta situation did not look good. 
+Running on the simulator in XCode 11.6 and iOS 13.6, as well as on my iPhone 11 (also iOS 13.6), the current code appears stable and does not blow up with deletions. 
 I am sure that the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and 
 the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed 
 on the navigation stack from View A) -- especially if View B references the object as an @ObservedObject.   
@@ -94,8 +96,6 @@ Even using a context menu in View A to delete a Core Data item in View A itself 
 *  I have made the "Add New Shopping Item" button present as a Sheet, although if you later want to edit it, you'll transition using a NavigationLink.  (The same happens for "Add a New Location.")  You might be interested in seeing how to do this -- it turns out to be pretty simple.
 
 * I am puzzled by how to handle rotation.  Rotate from a compact-width orientation into a regular-width orientation  (e.g., iPhone 11) and, yes, you get something surprising (I understand that part and think I can handle that later).  But then rotate back into a compact-width orientation and the display goes a little strange.
-
-*  ~~I'm puzzled for now on one thing. The MainView of this app is a TabView, embedded in a NavigationView, and therefore the MainView owns the navigation bar. The individual TabViews that appear in the MainView apparently cannot adjust the navigation bar themselves when they appear (e.g., add their own leading or trailing items or even change the title).  There might be a way for the MainView to work with this (I already control the title by the active TabView tag), but it seems counter-intuitive that the MainView needs to know how each individual TabView wants its navigation bar to be configured~~.  
 
 
 *  I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). Since I added contextMenus, I get a plenty of "Unable to simultaneously satisfy constraints" messages.  I'm ignoring them for now, and I have already seen fewer or none of these in testing out XCode 12. Several internet comments  seem to be saying ignoring most of these messages is the right thing to do for now.
