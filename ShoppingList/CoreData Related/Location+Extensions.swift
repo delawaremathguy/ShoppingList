@@ -17,7 +17,7 @@ extension Location: Identifiable {
 	
 	static func count() -> Int {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
+//		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
 		do {
 			let itemCount = try PersistentStore.shared.context.count(for: fetchRequest)
 			return itemCount
@@ -28,9 +28,13 @@ extension Location: Identifiable {
 		return 0
 	}
 
-	static func allUserLocations() -> [Location] {
+	// return a list of all locations, optionally returning only user-defined location
+	// (i.e., excluding the unknown location)
+	static func allLocations(userLocationsOnly: Bool) -> [Location] {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
+		if userLocationsOnly {
+			fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
+		}
 		do {
 			let items = try PersistentStore.shared.context.fetch(fetchRequest)
 			return items
@@ -41,6 +45,8 @@ extension Location: Identifiable {
 		return [Location]()
 	}
 
+	// creates a new Location having an id, but then it's the user's responsibility
+	// to fill in the field values (and eventually save)
 	static func addNewLocation() -> Location {
 		let newLocation = Location(context: PersistentStore.shared.context)
 		newLocation.id = UUID()
@@ -77,23 +83,23 @@ extension Location: Identifiable {
 	}
 	
 	// used to insert data from JSON files in the app bundle
-	static func insertNewLocations(from jsonLocations: [LocationCodable]) {
-		for jsonLocation in jsonLocations {
+	static func insertNewLocations(from codableLocations: [LocationCodable]) {
+		for codableLocation in codableLocations {
 			let newLocation = addNewLocation() // new UUID created here
-			newLocation.name = jsonLocation.name
-			newLocation.visitationOrder = jsonLocation.visitationOrder
-			newLocation.red = jsonLocation.red
-			newLocation.green = jsonLocation.green
-			newLocation.blue = jsonLocation.blue
-			newLocation.opacity = jsonLocation.opacity
+			newLocation.name = codableLocation.name
+			newLocation.visitationOrder = codableLocation.visitationOrder
+			newLocation.red = codableLocation.red
+			newLocation.green = codableLocation.green
+			newLocation.blue = codableLocation.blue
+			newLocation.opacity = codableLocation.opacity
 		}
 	}
 	
 	static func delete(location: Location, saveChanges: Bool = false) {
 		// you cannot delete the unknownLocation
 		guard location.visitationOrder != kUnknownLocationVisitationOrder else { return }
-		// retrieve all items for this location tso we can work with them
-		// this if let should succeed (!)
+		// retrieve all items for this location so we can work with them
+		// the "if let" statement will succeed, since we know the type of location.items (!)
 		var itemsAtThisLocation = Set<ShoppingItem>()
 		if let shoppingItems = location.items as? Set<ShoppingItem> {
 			itemsAtThisLocation = shoppingItems
@@ -103,7 +109,6 @@ extension Location: Identifiable {
 		// move then to the unknown location
 		let theUnknownLocation = Location.unknownLocation()!
 		for item in itemsAtThisLocation {
-			location.removeFromItems(item)
 			item.setLocation(theUnknownLocation)
 		}
 		// and finish the deletion

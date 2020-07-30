@@ -51,7 +51,7 @@ struct DevToolsTabView: View {
 
 			Button("Write database as JSON") {
 				writeAsJSON(items: ShoppingItem.allShoppingItems(), to: kShoppingItemsFilename)
-				writeAsJSON(items: Location.allUserLocations(), to: kLocationsFilename)
+				writeAsJSON(items: Location.allLocations(userLocationsOnly: true), to: kLocationsFilename)
 			}
 			
 			Text("Try out the single-section or multi-section versions of the Shopping List, or set/try out different behaviours of the timer.")

@@ -11,9 +11,10 @@ import SwiftUI
 struct ShoppingItemEditView: View {
 	
 	// we need access to the complete list of Locations to populate the picker
-	@FetchRequest(entity: Location.entity(),
-								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
-	private var locations: FetchedResults<Location>
+//	@FetchRequest(entity: Location.entity(),
+//								sortDescriptors: [NSSortDescriptor(keyPath: \Location.visitationOrder, ascending: true)])
+//	private var locations: FetchedResults<Location>
+	var locations: [Location]
 
 	@Binding var editableData: EditableShoppingItemData
 	@Binding var showDeleteConfirmation: Bool

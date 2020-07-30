@@ -75,8 +75,8 @@ func writeAsJSON<T>(items: [T], to filename: String) where T: CodableStructRepre
 		return
 	}
 	
-	// if in simulator, dump to files somewhere on your Mac (check definition above)
-	// and otherwise if on device (or if file dump doesn't work) print to console.
+	// if in simulator, dump to files somewhere on your Mac (check definition in Development.swift)
+	// and otherwise if on device (or if file dump path doesn't work) print to console.
 	#if targetEnvironment(simulator)
 		let filepath = kJSONDumpDirectory + filename
 		do {
@@ -108,7 +108,7 @@ func deleteAllData() {
 		ShoppingItem.delete(item: item)
 	}
 	
-	let items2 = Location.allUserLocations()
+	let items2 = Location.allLocations(userLocationsOnly: true)
 	for item in items2 {
 		Location.delete(location: item)
 	}

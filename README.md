@@ -14,16 +14,23 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 25, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **July 30, 2020**, when these were some of the recent changes I made.
 
-* After last week's shopping experience, I decided I wanted to track how much time I was in the store.  There is now a new tab with a simple timer display ("Start," "Stop," and "Reset" buttons).  Whether the timer is suspended when the app goes into the background is something you can configure (see GlobalTimer.swift) or even now change while running in the Dev Tools tab.  Funny, I wasn't looking to add new features in this project, but it's something I want for my own experience (!) and it was easy to do (just needed to transplant some code from an earlier project).
-* The Shopping List (both the single-section and multi-section versions) and the Locations List now have a "plus" sign as a trailing bar button item to add a new ShoppingItem or Location.  You can decide which you like better: the "plus" in the navigation bar, or the explicit "Add New Item/Location" button that appears at the top of the list (*using both would seem overkill*).  But caution on this: tapping the "plus" sign in the navigationbar is very much hit-or-miss (*this seems to be a SwiftUI thing*), so you may want to replace the "plus" sign with explicit text such as "Add New Item" or "Add New Location" so it has a better chance of being tapped.
+* I did a major rewrite of the code involving the shopping list (both the single- and multi-section versions) and the purchased items list to **not use @FetchRequest**.  Rather, there's now a proper "view model," at least as i understand what a view model is, so that these views don't do much of anything with shopping items themselves, but send everything back to their view model to do for them.  This allows me to manage a list of items in each view (loaded in onAppear()) and be sure that changes to items are properly coordinated and signaled back to the view using objectWillChange.send().
+
+* A similar rewrite of the Locations list will be next, eliminating all use of @FetchRequest in the program. 
+
+* Additionally, I really do now believe that while @FetchRequest is a convenience for many simple cases, it breaks the MVVM architecture.  Perhaps I'll say more on this later.
+
+* With this rewrite, the deletion bug issue seems to have disappeared, *I think* (XCode 11.6/iOS 13.6), and the reason is that I am not letting SwiftUI use its @FetchRequest to manage a list of items for me.  The crash I kept getting was always the same: a Core Data object was deleted, but the @FetchRequest seemed to be still be using a phantom reference to it where .isDeleted is false, but .isFault is true.  Everytime you tried to access the optional fields of the object, we go BOOM because it's not a real object. There's an issue of timing and coordination here that just was not working right (*or I was not understanding correctly*).
+
+* I also am using a little bit of a new technique with the new code to do some deletions. If an item listed in View1 is marked for deletion in a detail-like View2, View2 dismisses and queues the actual deletion with the right viewModel on the main queue with a short delay (about 1/2 second).  That way, we return to View1 and we see a nice transition as the item is deleted; and it avoids all the ugly messages about a tableview being laid out outside the view hierarchy.
 
 I'm also now starting to test out this code with XCode 12beta 3, and here are some observations so far:
 
 * Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  (XCode will generate a duplicate conformance error, not on my adding conformance, but *on its own generated file*, which was a little confusing at first.)
 * GroupedListStyle now puts a section header in .uppercase by default, but you can override that by using .textcase(.none) so the header displays the title exactly as you want.
-* And, unfortunately, the infamous **crash-on-delete bug remains**, but only as an edge case.  apparently it happens only when you delete the sole, remaining ShoppingItem on screen (whether single-section or multi-section) and only when using the context menu (and not the click to edit, "Delete this Shopping Item" button). It's the same, recurring problem: a Core Data item is deleted, but seems to be held onto by SwiftUI just long enough as a reference where .isDeleted is false, but isFault is true; when fields of the references are used, we have a crash.
+* Unfortunately, there is a **new crash**, even with (and possibly independent of) my rewrite. I think the problem now is that the .onAppear() and .onDisappear() modifiers are not doing the right thing in XCode 12beta3 when switching between tabs.  For example, see [iOS 14 .onAppear() is called on DISappear instead of appear](https://developer.apple.com/forums/thread/655338) in the Apple Developer's Forum. I rely on these working as advertised to initialize a viewModel in each tab.
 
 
 ## License
@@ -60,7 +67,7 @@ Tapping on any item in either list lets you edit it for name, quantity, assign/e
 The shopping list is sorted by the visitation order of the location in which it is found (and then alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered, although all items in the same Location have the same color as a form of grouping.
 
 * Why don't you let me drag these items to reorder them, you ask?  Well, I did the reordering thing one time with .onMove(), and discovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  And I also don't see that you can drag between Sections of a list.
-* The current code offers you the choice to see the shopping list either as one big list where the coloring helps distinguish between different location (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine for now.
+* The current code offers you the choice to see the shopping list either as one big list where the coloring helps distinguish between different location (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine for now; and the DevTools tab lets you flip between these on the fly.
 
 
 The third tab shows a list of all locations, listed in visitationOrder (an integer from 1...100).  One special Location is the "Unknown Location," which serves as the default location for all new items.  I use this special location to mean that "I don't really know where this item is yet, but I'll figure it out at the store." In programming terms, this location has the highest of all visitationOrder values, so that it comes last in the list of Locations, and shopping items with an unassigned/unknown location will come at the bottom of the shopping list. 
@@ -79,19 +86,6 @@ So, if you plan to play with or use this app, the app will start with an empty s
 
 ## Some Things I'm Working On
 
-* There still remains an issue with the deletion of objects (ShoppingItems and Locations) and the use of @FetchRequest. 
-*It may be as simple as my misunderstanding of the whole process*.
-Running on the simulator in XCode 11.6 and iOS 13.6, as well as on my iPhone 11 (also iOS 13.6), the current code appears stable and does not blow up with deletions. 
-I am sure that the real issue concerns the exact connection between the magic of a @FetchRequest in ViewA and 
-the deletion of one of its Core Data objects in View B (presented in a sheet above View A or pushed 
-on the navigation stack from View A) -- especially if View B references the object as an @ObservedObject.   
-Even using a context menu in View A to delete a Core Data item in View A itself can exhibit the problem.
-
-* I have encountered this same deletion/@FetchRequest issue in another project, and have resolved the issue in that case. So I have a better understanding of this problem from this exercise, especially now that I have learned more  about how @ObservedObject really works *as an argument* in a View. *I'll work more on the problem and get back to you real soon!*.
-
-* I have provided two options for the ShoppingListTabView. One is a single (section) list of items, and the other is a multi-section list, one section for each Location. Which is displayed by default is set in Development.swift, but if you're playing around in the code, try each one of them.  There's a "toggle" in the "Dev Tools" tab to see the difference in real time.
-
-  - After a gazillion attempts and coding and recoding, the multi-section list seems to be working quite fine, so it you're having trouble getting lists sectioned out in SwiftUI, take a look at the code I use (what appears was about the gazillionth attempt to get the List/ForEach/Section/ForEach construct working right).  I have already seen some things from WWDC2020 that i will investigate further, to see if there's a more natural paradigm for sectioning a List.
 
 *  I have made the "Add New Shopping Item" button present as a Sheet, although if you later want to edit it, you'll transition using a NavigationLink.  (The same happens for "Add a New Location.")  You might be interested in seeing how to do this -- it turns out to be pretty simple.
 
@@ -102,17 +96,18 @@ Even using a context menu in View A to delete a Core Data item in View A itself 
 
 *  I have been constantly struggling with visual updates in SwiftUI, although not so much anymore.  For example, this is the classic update problem: say List A has an array of (CoreData) objects.  Tap on an item in List A, navigate to View B in which you can edit the fields of the object, save the changes to CoreData, then return to List A -- only to find that data for the object has not been visually updated.  The current code is working quite fine on visual updating and you may see a comment or two in the code about this.
 
-*  I'm looking at the new SwiftUI releases from WWDC right now and can definitely use quite a bit of it very easily (e.g., a ColorPicker); i think you may see a ShoppingList14 (for iOS 14) from me sometime soon to play with. 
+*  I'm looking at the new SwiftUI releases from WWDC right now and can definitely use quite a bit of it very easily (e.g., a ColorPicker).
 
 However, please be aware that there will be a point  where I will stop working on this project in  public.  
 **That time is coming soon**.  I'd like to look at CloudKit support for the database separately for my own use 
 (this could return to public view if I run into trouble and have to ask for help); but after that, 
 any future development is probably not going to happen.  
+
 For example, expanding the app and database to support multiple "Stores," each of which has "Locations," 
 and having "ShoppingItems" being many-to-many with Locations so one item can be available in many Stores would be a nice exercise. 
 But I don't gain anything more in the way of learning about SwiftUI to support that.
 
-I built this project  in  public only as an experiment, and as a reference in trying to offer some suggested code to the 
+I built this project in public only as an experiment, and as a reference in trying to offer some suggested code to the 
 many developers who keep running into the generic problem of: an item appears in View A; it is edited in View B; 
 but its appearance in View A does not get updated properly.  I was also hoping I might get a comment or two 
 along the way about what I am doing right or doing wrong. But I am  not at all interested in creating the next great 

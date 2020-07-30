@@ -17,10 +17,6 @@ extension ShoppingItem: Identifiable {
 	// so that i don't have to litter a whole bunch of try? moc.save() statements
 	// out in the Views.
 	
-//	fileprivate static var appDelegate: AppDelegate = {
-//		UIApplication.shared.delegate as! AppDelegate
-//	}()
-	
 	static func count() -> Int {
 		let context = PersistentStore.shared.context
 		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
@@ -47,35 +43,24 @@ extension ShoppingItem: Identifiable {
 		return [ShoppingItem]()
 	}
 	
-	static func moveAllItemsOffList() {
+	static func currentShoppingList(onList: Bool) -> [ShoppingItem] {
 		let context = PersistentStore.shared.context
 		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "onList == true")
+		if onList {
+			fetchRequest.predicate = NSPredicate(format: "onList == true")
+		} else {
+			fetchRequest.predicate = NSPredicate(format: "onList == false")
+		}
 		do {
 			let items = try context.fetch(fetchRequest)
-			items.forEach({ $0.onList = false })
+			return items
 		}
 		catch let error as NSError {
-			print("Error getting items onList: \(error.localizedDescription), \(error.userInfo)")
+			print("Error getting ShoppingItems on the list: \(error.localizedDescription), \(error.userInfo)")
 		}
-		saveChanges()
+		return [ShoppingItem]()
 	}
 	
-	static func markAllItemsAvailable() {
-		let context = PersistentStore.shared.context
-		let fetchRequest: NSFetchRequest<ShoppingItem> = ShoppingItem.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "isAvailable == false")
-		do {
-			let items = try context.fetch(fetchRequest)
-			items.forEach({ $0.isAvailable = true })
-		}
-		catch let error as NSError {
-			print("Error getting items not available: \(error.localizedDescription), \(error.userInfo)")
-		}
-		saveChanges()
-	}
-	
-
 	// addNewItem is the user-facing add of a new entity.  since these are
 	// Identifiable objects, this makes sure we give the entity a unique id, then
 	// hand it back so the user can fill in what's important to them.
@@ -90,7 +75,7 @@ extension ShoppingItem: Identifiable {
 		
 		// get all Locations that are not the unknown location
 		// group by id for faster lookup below when adding an item to a location
-		let locations = Location.allUserLocations()
+		let locations = Location.allLocations(userLocationsOnly: true)
 		let name2Location = Dictionary(grouping: locations, by: { $0.name! })
 		
 		for codableShoppingItem in codableShoppingItems {
@@ -118,8 +103,7 @@ extension ShoppingItem: Identifiable {
 		// remove reference to this item from its associated location first, then delete
 		let location = item.location
 		location?.removeFromItems(item)
-		let context = PersistentStore.shared.context
-		context.delete(item)
+		item.managedObjectContext?.delete(item)
 		if saveChanges {
 			Self.saveChanges()
 		}
@@ -131,26 +115,26 @@ extension ShoppingItem: Identifiable {
 	
 	// these functions coordinate state transitions of ShoppingItems,
 	// which are onList or not.
-	func moveToShoppingList(saveChanges: Bool = false) {
-		onList = true
-		if saveChanges {
-			Self.saveChanges()
-		}
-	}
+//	func moveToShoppingList(saveChanges: Bool = false) {
+//		onList = true
+//		if saveChanges {
+//			Self.saveChanges()
+//		}
+//	}
 	
-	func moveToPuchased(saveChanges: Bool = false) {
-		onList = false
-		if saveChanges {
-			Self.saveChanges()
-		}
-	}
+//	func moveToPuchased(saveChanges: Bool = false) {
+//		onList = false
+//		if saveChanges {
+//			Self.saveChanges()
+//		}
+//	}
 	
-	func mark(available: Bool, saveChanges: Bool = false) {
-		isAvailable = available
-		if saveChanges {
-			Self.saveChanges()
-		}
-	}
+//	func mark(available: Bool, saveChanges: Bool = false) {
+//		isAvailable = available
+//		if saveChanges {
+//			Self.saveChanges()
+//		}
+//	}
 	
 	func setLocation(_ location: Location) {
 		// if this ShoppingItem is already linked to a Location,

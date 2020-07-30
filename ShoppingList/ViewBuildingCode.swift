@@ -9,7 +9,8 @@
 import Foundation
 import SwiftUI
 
-// this is common code for both shopping list tabs and the purchased tab
+// this is common code for both shopping list tabs and the purchased tab to build a
+// context menu
 
 // note for shoppingItemContextMenu below: in XCode 11.5/iOS 13.5, you'll get plenty of layout
 // messages about unsatisfiable constraints in the console when displaying a contextMenu.
@@ -22,18 +23,17 @@ import SwiftUI
 /// - Parameter deletionTrigger: a closure to call to set state variables and put up an "Are you sure?" alert before allowing deletion of the item
 /// - Returns: Void
 @ViewBuilder
-func shoppingItemContextMenu(for item: ShoppingItem, deletionTrigger: @escaping () -> Void) -> some View {
+func shoppingItemContextMenu(viewModel: ShoppingListViewModel, for item: ShoppingItem,
+														 deletionTrigger: @escaping () -> Void) -> some View {
 	Button(action: {
-		item.onList.toggle()
-		ShoppingItem.saveChanges()
+		viewModel.toggleOnListStatus(for: item)
 	}) {
 		Text(item.onList ? "Move to Purchased" : "Move to ShoppingList")
 		Image(systemName: item.onList ? "purchased" : "cart")
 	}
 	
 	Button(action: {
-		item.isAvailable.toggle()
-		ShoppingItem.saveChanges()
+		viewModel.toggleAvailableStatus(for: item)
 	}) {
 		Text(item.isAvailable ? "Mark as Unavailable" : "Mark as Available")
 		Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")

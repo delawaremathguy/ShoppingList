@@ -13,6 +13,8 @@ struct AddorModifyShoppingItemView: View {
 	// in a NavigationLink)
 	@Environment(\.presentationMode) var presentationMode
 
+	// this is the viewModel within which we're doing Add/Edit
+	var viewModel: ShoppingListViewModel
 	// editableItem is either a ShoppingItem to edit, or nil to signify
 	// that we're creating a new ShoppingItem in this View.
 	var editableItem: ShoppingItem? = nil
@@ -52,7 +54,7 @@ struct AddorModifyShoppingItemView: View {
 	
 	var body: some View {
 		
-		ShoppingItemEditView(editableData: $editableData, showDeleteConfirmation: $showDeleteConfirmation, allowsDeletion: allowsDeletion)
+		ShoppingItemEditView(locations: viewModel.allLocations(), editableData: $editableData, showDeleteConfirmation: $showDeleteConfirmation, allowsDeletion: allowsDeletion)
 			.navigationBarTitle(barTitle(), displayMode: .inline)
 			.navigationBarBackButtonHidden(true)
 			.navigationBarItems(
@@ -94,29 +96,31 @@ struct AddorModifyShoppingItemView: View {
 		}
 	}
 	
+	// called when you tap the Save button.  we dismiss() and then tell the viewModel
+	// to make the update fo us, with a slight delay.  see comment below on deleteItem.
 	func commitDataEntry() {
 		guard editableData.canBeSaved else { return }
-		
-		// if we already have an editableItem, use it, else create it now
-		var itemForCommit: ShoppingItem
-		if let item = editableItem {
-			itemForCommit = item
-		} else {
-			itemForCommit = ShoppingItem.addNewItem()
-		}
-		
-		// update for all edits made and we're done.  i created an extension
-		// on ShoppingItem below to do this update
-		itemForCommit.updateValues(from: editableData)
-		ShoppingItem.saveChanges()
 		presentationMode.wrappedValue.dismiss()
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+			self.viewModel.updateDataFor(item: self.editableItem, using: self.editableData)
+		}
 	}
 	
-	// called after confirmation to delete an item. 
+	// called after confirmation to delete an item. currently we use a 1/2 second
+	// delay in calling for the deletion after dismiss(), long enough to let SwifUI
+	// leave this View and go back to the list it came from, and
+	// THEN be told that something's been removed. this seems a little silly, but
+	// for XCode 11.6/iOS 13.6, this eliminates the console messages about views being told
+	// to layout outside their view hierarchy -- this View will be gone and we'll have returned
+	// to the View we came from and it will be onscreen when it gets the deletion.
+	// curiously, in the Stanford CS193p lectures of Spring, 2020, Paul Hegarty used
+	// this technique at one point in a similar situation to "let things settle down."
 	func deleteItem() {
 		if let item = editableItem {
-			ShoppingItem.delete(item: item, saveChanges: true)
 			presentationMode.wrappedValue.dismiss()
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+				self.viewModel.delete(item: item)
+			}
 		}
 	}
 }

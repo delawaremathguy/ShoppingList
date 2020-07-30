@@ -16,14 +16,6 @@ import SwiftUI
 
 struct PurchasedTabView: View {
 	
-	// CoreData setup
-	@Environment(\.managedObjectContext) var managedObjectContext
-	@FetchRequest(entity: ShoppingItem.entity(),
-								sortDescriptors: [
-									NSSortDescriptor(keyPath: \ShoppingItem.name, ascending: true)],
-								predicate: NSPredicate(format: "onList == false")
-	) var purchasedItems: FetchedResults<ShoppingItem>
-	
 	// the usual @State variables to handle the Search field and control
 	// the action of the confirmation alert that you really do want to
 	// delete an item
@@ -31,92 +23,104 @@ struct PurchasedTabView: View {
 	@State private var isDeleteItemAlertShowing: Bool = false
 	@State private var itemToDelete: ShoppingItem?
 	@State private var isAddNewItemSheetShowing = false
-
+	@ObservedObject var viewModel = ShoppingListViewModel(type: .purchasedItemShoppingList)
+	
 	var body: some View {
 		NavigationView {
-		VStack {
-			SearchBarView(text: $searchText)
-			
-			// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
-			// inside its own NaviagtionView (so the Picker will work!) but we must pass along the
-			// managedObjectContext manually because sheets don't automatically inherit the environment
-			AddNewShoppingItemButtonView(isAddNewItemSheetShowing: $isAddNewItemSheetShowing,
-																	 managedObjectContext: managedObjectContext,
-																	 addItemToShoppingList: false)
-
-			if purchasedItems.isEmpty {
-				EmptyListView(listName: "Purchased")
-			} else {
+			VStack {
+				SearchBarView(text: $searchText)
 				
-				// Report purchased item count, or the number of items matching the
-				// current search text, essentially as a section header for just the one section
-				SLSimpleHeaderView(label: sectionHeaderTitle())
-				List {
-					ForEach(purchasedItems.filter({ searchTextAppears(in: $0.name!) })) { item in
-						NavigationLink(destination: AddorModifyShoppingItemView(editableItem: item)) {
-							 ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
-								.contextMenu {
-									shoppingItemContextMenu(for: item, deletionTrigger: {
-										self.itemToDelete = item
-										self.isDeleteItemAlertShowing = true
-									})
-							}
-						} // end of NavigationLink
-					} // end of ForEach
-						.onDelete(perform: handleOnDeleteModifier)
-						.alert(isPresented: $isDeleteItemAlertShowing) {
-							Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
-										message: Text("Are you sure you want to delete this item?"),
-										primaryButton: .cancel(Text("No")),
-										secondaryButton: .destructive(Text("Yes"),
-										action: {
-											ShoppingItem.delete(item: self.itemToDelete!, saveChanges: true)
-										})
-							)}
-					
-				}  // end of List
-				
-			} // end of if-else
-		} // end of VStack
-			.navigationBarTitle("Purchased List")
-			.navigationBarItems(
-				trailing:
+				// 1. add new item "button" is at top.  note that this will put up the AddorModifyShoppingItemView
+				// inside its own NavigationView (so the Picker will work!)
 				Button(action: { self.isAddNewItemSheetShowing = true }) {
-					Image(systemName: "plus")
-						.resizable()
-						.frame(width: 16, height: 16)
-			})
-
+					Text("Add New Item")
+						.foregroundColor(Color.blue)
+						.padding(10)
+				}
+				.sheet(isPresented: $isAddNewItemSheetShowing) {
+					NavigationView {
+						AddorModifyShoppingItemView(viewModel: self.viewModel, allowsDeletion: false, addItemToShoppingList: false)
+					}
+				}
+				
+				if viewModel.itemCount == 0 {
+					EmptyListView(listName: "Purchased")
+				} else {
+					
+					// Report purchased item count, or the number of items matching the
+					// current search text, essentially as a section header for just the one section
+					SLSimpleHeaderView(label: sectionHeaderTitle())
+					List {
+						ForEach(viewModel.items.filter({ searchTextAppears(in: $0.name!) })) { item in
+							NavigationLink(destination: AddorModifyShoppingItemView(viewModel: self.viewModel, editableItem: item)) {
+								ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
+									.contextMenu {
+										shoppingItemContextMenu(viewModel: self.viewModel, for: item, deletionTrigger: {
+											self.itemToDelete = item
+											self.isDeleteItemAlertShowing = true
+										})
+								}
+							} // end of NavigationLink
+						} // end of ForEach
+							.onDelete(perform: handleOnDeleteModifier)
+							.alert(isPresented: $isDeleteItemAlertShowing) {
+								Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
+											message: Text("Are you sure you want to delete this item?"),
+											primaryButton: .cancel(Text("No")),
+											secondaryButton: .destructive(Text("Yes"),
+																										action: {
+																											self.viewModel.delete(item: self.itemToDelete!)
+											})
+								)}
+						
+					}  // end of List
+					
+				} // end of if-else
+			} // end of VStack
+				.navigationBarTitle("Purchased List")
+				.navigationBarItems(
+					trailing:
+						Button(action: { self.isAddNewItemSheetShowing = true }) {
+							Image(systemName: "plus")
+								.resizable()
+								.frame(width: 16, height: 16)
+						}
+					)
+			
 		} // end of NavigationView
-
+			.onAppear {
+				print("onAppear in Parchased tab")
+				self.viewModel.loadItems()
+				self.searchText = ""
+		}
+		
 	}
 	
 	func sectionHeaderTitle() -> String {
 		if searchText.isEmpty {
-			return "Items Listed: \(purchasedItems.count)"
+			return "Items Listed: \(viewModel.itemCount)"
 		}
-		let itemsShowing = purchasedItems.filter({ searchTextAppears(in: $0.name!) })
+		let itemsShowing = viewModel.items.filter({ searchTextAppears(in: $0.name!) })
 		return "Items Matching \"\(searchText)\": \(itemsShowing.count)"
 	}
 	
 	func handleOnDeleteModifier(indexSet: IndexSet) {
 		
 		// identify what items these indices refer to
-		let items = purchasedItems.filter({ searchTextAppears(in: $0.name!) })
+		let items = viewModel.items.filter({ searchTextAppears(in: $0.name!) })
 		
 		// you can choose what happens here according to the value of kTrailingSwipeMeansDelete
 		// that is defined in Development.swift
 		if kTrailingSwipeMeansDelete {
 			// trigger a deletion alert/confirmation
 			isDeleteItemAlertShowing = true
-			itemToDelete = purchasedItems[indexSet.first!]
+			itemToDelete = items[indexSet.first!]
 		} else {
 			// this moves the item(s) "to the other list"
-			indexSet.forEach({ items[$0].onList.toggle() })
-			ShoppingItem.saveChanges()
+			viewModel.toggleOnListStatus(for: indexSet.map({ items[$0] }))
 		}
 	}
-
+	
 	// i added this so that the search is not case sensistive, and also just to
 	// simplify the original coding of the filter function used in ForEach
 	func searchTextAppears(in name: String) -> Bool {
