@@ -18,7 +18,7 @@ My Last Update of note was **July 30, 2020**, when these were some of the recent
 
 * I did a major rewrite of the code involving the shopping list (both the single- and multi-section versions) and the purchased items list to **not use @FetchRequest**.  Rather, there's now a proper "view model," at least as i understand what a view model is, so that these views don't do much of anything with shopping items themselves, but send everything back to their view model to do for them.  This allows me to manage a list of items in each view (loaded in onAppear()) and be sure that changes to items are properly coordinated and signaled back to the view using objectWillChange.send().
 
-* A similar rewrite of the Locations list will be next, eliminating all use of @FetchRequest in the program. 
+* A similar rewrite of the Locations has happened as well, eliminating all use of @FetchRequest in the program. 
 
 * Additionally, I really do now believe that while @FetchRequest is a convenience for many simple cases, it breaks the MVVM architecture.  Perhaps I'll say more on this later.
 

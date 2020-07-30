@@ -41,8 +41,9 @@ struct AddorModifyLocationView: View {
 	@Environment(\.presentationMode) var presentationMode
 	
 	// editableLocation is either a Location to edit, or nil to signify
-	// that we're creating a new Location in this View.
+	// that we're creating a new Location in for the viewModel.
 	var editableLocation: Location? = nil
+	var viewModel: LocationsListViewModel
 	
 	// all editableData is packaged here:
 	@State private var editableData = EditableLocationData()
@@ -137,28 +138,22 @@ struct AddorModifyLocationView: View {
 	
 	func deleteLocation() {
 		if let location = editableLocation {
-			Location.delete(location: location, saveChanges: true)
 			presentationMode.wrappedValue.dismiss()
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+				self.viewModel.delete(location: location)
+			}
 		}
 	}
 
 	func commitData() {
-		// do we have an editableLocation or should we create a new Location?
-		var locationForCommit: Location
-		if let location = editableLocation {
-			locationForCommit = location
-		} else {
-			locationForCommit = Location.addNewLocation()
-		}
-		
-		// copy edited data, save, and we're done
-		locationForCommit.updateValues(from: editableData)
-		Location.saveChanges()
 		presentationMode.wrappedValue.dismiss()
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+			self.viewModel.updateDataFor(location: self.editableLocation, using: self.editableData)
+		}
 	}
 
 	func loadData() {
-		// called on every .onAppear().  if dataLoaded is true, then we have
+		// called on every .onAppear().  if dataHasBeenLoaded is true, then we have
 		// already taken care of setting up the local state variables.
 		if !dataHasBeenLoaded {
 			if let location = editableLocation {
