@@ -52,8 +52,8 @@ struct LocationsTabView: View {
 											self.showDeleteConfirmation = true
 										}
 									}) {
-										Text("Delete This Location")
-										Image(systemName: "trash")
+										Text(location.isUnknownLocation() ? "(Cannot be deleted)" : "Delete This Location")
+										Image(systemName: location.isUnknownLocation() ? "trash.slash" : "trash")
 									}
 							}
 						}
