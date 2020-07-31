@@ -14,7 +14,9 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **July 30, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **July 31, 2020**, when these were some of the recent changes I made.
+
+* I fixed some thing that were broken by implementing code the last two days (see what follows), and after seeing a spectacular crash, I discovered yet one more thing about how SwiftUI works with Views.  *That's why I have this project, right?*  So I have started doing the dirty work of using Combine (which turns out not to be so dirty) in the shopping list view models so that they now watch for changes to any of the items they track by creating a Cancellable for every item in the array, with each objectWillChange message from a shoppingItem then relayed into an objectWillChange message for the view model. So, be forewarned, the changes that follow from yesterday are still being worked on ...
 
 * I did a major rewrite of the code involving the shopping list (both the single- and multi-section versions) and the purchased items list to **not use @FetchRequest**.  Rather, there's now a proper "view model," at least as i understand what a view model is, so that these views don't do much of anything with shopping items themselves, but send everything back to their view model to do for them.  This allows me to manage a list of items in each view (loaded in onAppear()) and be sure that changes to items are properly coordinated and signaled back to the view using objectWillChange.send().
 

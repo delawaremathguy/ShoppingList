@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 
 // a ShoppingListViewModel object provides a window into the Code Data store that
 // can be used by ShoppingListTabView1, ShoppingListTabView2, and PurchasedTabView.
@@ -26,6 +27,17 @@ class ShoppingListViewModel: ObservableObject {
 	
 	// the items on our list
 	@Published var items = [ShoppingItem]()
+	// this is an especially important part: we want to know about any changes
+	// to the items -- remember, items can be altered outside of the view we provide
+	// the model for, e.g., deleting a location moves a whole buch of items to
+	// the Unknown Location, which affects what we model -- so we will subscribe
+	// to their changes (all are Core Data items, so all are ObservableObjects)
+	// and just turn those into "our model has changed messages"
+	var cancellables = Set<AnyCancellable>()
+	
+	// a usage note on the cancellables set: we don't need to keep these directly
+	// in synch with the order in the items array.  but, whenever that array
+	// grows or shrinks, we need to update the cancellables.
 	
 	// quick accessors as computed properties
 	var itemCount: Int { items.count }
@@ -44,7 +56,27 @@ class ShoppingListViewModel: ObservableObject {
 				items = ShoppingItem.currentShoppingList(onList: false)
 		}
 		sortItems()
+		updateCancellables()
 		print("shopping list loaded. \(items.count) items.")
+	}
+	
+	func cancelAllCancellables() {
+		for c in cancellables {
+			c.cancel()
+		}
+		cancellables.removeAll()
+	}
+
+	func updateCancellables() {
+		cancelAllCancellables()
+		for item in items {
+			item.objectWillChange
+				.sink(receiveValue: { _ in
+					self.objectWillChange.send()
+					print("received a value from shopping item")
+				})
+				.store(in: &cancellables)
+		}
 	}
 	
 	// we'll not have Core Data sort anything for us; but be sure to sort the
@@ -62,7 +94,6 @@ class ShoppingListViewModel: ObservableObject {
 	
 	// changes availability flag for an item
 	func toggleAvailableStatus(for item: ShoppingItem) {
-		objectWillChange.send()
 		item.isAvailable.toggle()
 		ShoppingItem.saveChanges()
 	}
@@ -70,45 +101,54 @@ class ShoppingListViewModel: ObservableObject {
 	// helper function to toggle the onList flag and remove the item from
 	// the items array (it's no longer on our list)
 	private func toggleOnListStatusAndRemove(item: ShoppingItem) {
-		item.onList.toggle()
+		cancelAllCancellables()
 		let index = items.firstIndex(of: item)!
 		items.remove(at: index)
+		updateCancellables()
+		item.onList.toggle()
 	}
 	
 	// changes on list status for a single item
 	func toggleOnListStatus(for item: ShoppingItem) {
-		objectWillChange.send()
 		toggleOnListStatusAndRemove(item: item)
 		ShoppingItem.saveChanges()
 	}
 	
 	// changes on list status for a an array of items
 	func toggleOnListStatus(for items: [ShoppingItem]) {
-		objectWillChange.send()
 		for item in items {
 			toggleOnListStatusAndRemove(item: item)
 		}
 		ShoppingItem.saveChanges()
 	}
 	
-	// moves all items off the current list
+	// moves all items off the current list.  that means our array
+	// will shrink down to the empty list
 	func toggleAllItemsOnListStatus() {
-		objectWillChange.send()
-		toggleOnListStatus(for: items)
+		// stop listening to changes from items
+		cancelAllCancellables()
+		// make the changes
+		for item in items {
+			item.onList.toggle()
+		}
+		// then empty the array (this triggers objectWillChange) & reset cancellables
+		items = []
+		updateCancellables()
 	}
 	
 	// marks all items in the display as available
 	func markAllItemsAvailable() {
-		objectWillChange.send()
-		for item in items {
-			item.isAvailable.toggle()
+		for item in items where !item.isAvailable {
+			item.isAvailable = true
 		}
 		ShoppingItem.saveChanges()
 	}
 	
 	func delete(item: ShoppingItem) {
+		cancelAllCancellables()
 		let index = items.firstIndex(of: item)!
 		items.remove(at: index)
+		updateCancellables()
 		ShoppingItem.delete(item: item, saveChanges: true)
 	}
 	

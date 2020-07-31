@@ -104,7 +104,7 @@ struct ShoppingListTabView1: View {
 			.onAppear {
 				print("onAppear ShoppingListTabView1")
 				self.viewModel.loadItems()
-		}
+			}
 		
 	} // end of body: some View
 	
