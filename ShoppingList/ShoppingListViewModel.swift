@@ -16,17 +16,27 @@ import Combine
 
 class ShoppingListViewModel: ObservableObject {
 	
-	// since we're really wrapping three different types of ShoppingListViewModel here
+	// since we're really wrapping four different types of ShoppingListViewModel here
 	// all together, it's useful to define the types for clarity, and record which one we are
 	enum viewModelUsageType {
-		case singleSectionShoppingList
-		case multiSectionShoppingList
-		case purchasedItemShoppingList
+		case singleSectionShoppingList 		// drives ShoppingListTabView1
+		case multiSectionShoppingList 		// drives ShoppingListTabView2
+		case purchasedItemShoppingList 		// drives PurchasedTabView
+		case locationSpecificShoppingList	// drives list of items in LocationsTabView
 	}
 	var usageType: viewModelUsageType
 	
+	// for the case of managing a list of items at a specific location, we will
+	// need to keep track of which location we're watching.  it's a little
+	// clumsy to do it this way -- it'd be nicer to attach the location directly
+	// to the case locationSpecificShoppingList as associated data; this may happen
+	// eventually, but in the current code sequence at the call site, i don't
+	// know the location at the time i create the model.
+	var specificLocation: Location? = nil
+	
 	// the items on our list
 	@Published var items = [ShoppingItem]()
+	
 	// this is an especially important part: we want to know about any changes
 	// to the items -- remember, items can be altered outside of the view we provide
 	// the model for, e.g., deleting a location moves a whole buch of items to
@@ -43,51 +53,64 @@ class ShoppingListViewModel: ObservableObject {
 	var itemCount: Int { items.count }
 	var hasUnavailableItems: Bool { items.count(where: { !$0.isAvailable }) > 0 }
 	
+	// init to be one of four different types.
 	init(type: viewModelUsageType) {
 		usageType = type
 	}
 	
-	// call this loadItems once the object has been created and we need the items populated
-	func loadItems() {
+	// call this loadItems once the object has been created, before using it. in usage,
+	// this is called in .onAppear().  the location parameter only plays a role
+	// for usage = .locationSpecificShoppingList, and this is where we associate the
+	// location for this case
+	func loadItems(at location: Location? = nil) {
 		switch usageType {
 			case .singleSectionShoppingList, .multiSectionShoppingList:
 				items = ShoppingItem.currentShoppingList(onList: true)
 			case .purchasedItemShoppingList:
 				items = ShoppingItem.currentShoppingList(onList: false)
+			case .locationSpecificShoppingList:
+				specificLocation = location!
+				if let locationItems = location!.items as? Set<ShoppingItem> {
+					items = Array(locationItems)
+				}
 		}
 		sortItems()
-		updateCancellables()
+		establishSubscriptions()
 		print("shopping list loaded. \(items.count) items.")
 	}
 	
-	func cancelAllCancellables() {
-		for c in cancellables {
-			c.cancel()
-		}
+	// cancellation of subscriptions.  use this is the items array is
+	// about to change size, because we'll need to remove a cancellable or
+	// add a cancellable.
+	func cancelSubscriptions() {
+		cancellables.forEach({ $0.cancel() })
 		cancellables.removeAll()
 	}
 
-	func updateCancellables() {
-		cancelAllCancellables()
+	// establish subscriptions sets up the cancellables array.  when called,
+	// we assume that the set of cancellables is empty
+	func establishSubscriptions() {
 		for item in items {
+			// add a subscription that will spit back an objectWillChange of ourself
 			item.objectWillChange
 				.sink(receiveValue: { _ in
 					self.objectWillChange.send()
-					print("received a value from shopping item")
+					//print("received a value from shopping item")
 				})
 				.store(in: &cancellables)
 		}
 	}
 	
-	// we'll not have Core Data sort anything for us; but be sure to sort the
-	// items after loading from Core Data and any other time you make an edit
+	// we'll do all the sorting ourself and not rely on Core Data sorting anything
+	// for us -- we'll need to do this when loading data, of course, (yes, Core Data
+	// would be better for this), bat also whenever we make an edit of an item
 	// that could change the sort order (which is pretty much any edit or addition).
 	private func sortItems() {
 		switch usageType {
 			case .singleSectionShoppingList, .multiSectionShoppingList:
 				items.sort(by: { $0.name! < $1.name! })
 				items.sort(by: { $0.visitationOrder <= $1.visitationOrder })
-			case .purchasedItemShoppingList:
+			case .purchasedItemShoppingList, .locationSpecificShoppingList:
 				items.sort(by: { $0.name! < $1.name! })
 		}
 	}
@@ -98,23 +121,23 @@ class ShoppingListViewModel: ObservableObject {
 		ShoppingItem.saveChanges()
 	}
 	
-	// helper function to toggle the onList flag and remove the item from
+	// changes the onList flag and removes the item from
 	// the items array (it's no longer on our list)
 	private func toggleOnListStatusAndRemove(item: ShoppingItem) {
-		cancelAllCancellables()
+		item.onList.toggle()
+		cancelSubscriptions()
 		let index = items.firstIndex(of: item)!
 		items.remove(at: index)
-		updateCancellables()
-		item.onList.toggle()
+		establishSubscriptions()
 	}
 	
-	// changes on list status for a single item
+	// changes onList status for a single item
 	func toggleOnListStatus(for item: ShoppingItem) {
 		toggleOnListStatusAndRemove(item: item)
 		ShoppingItem.saveChanges()
 	}
 	
-	// changes on list status for a an array of items
+	// changes onList status for a an array of items
 	func toggleOnListStatus(for items: [ShoppingItem]) {
 		for item in items {
 			toggleOnListStatusAndRemove(item: item)
@@ -126,14 +149,14 @@ class ShoppingListViewModel: ObservableObject {
 	// will shrink down to the empty list
 	func toggleAllItemsOnListStatus() {
 		// stop listening to changes from items
-		cancelAllCancellables()
+		cancelSubscriptions()
 		// make the changes
 		for item in items {
 			item.onList.toggle()
 		}
-		// then empty the array (this triggers objectWillChange) & reset cancellables
+		// empty the array (this triggers objectWillChange)
+		// and there's no need here to establish subscriptions
 		items = []
-		updateCancellables()
 	}
 	
 	// marks all items in the display as available
@@ -144,11 +167,14 @@ class ShoppingListViewModel: ObservableObject {
 		ShoppingItem.saveChanges()
 	}
 	
+	// in deleting an item, get the subscriptions out of the way (we do not
+	// want to hang on to a Core Data item that's going away), drop the item
+	// out of the array, and reset the subscriptions to all items
 	func delete(item: ShoppingItem) {
-		cancelAllCancellables()
+		cancelSubscriptions()
 		let index = items.firstIndex(of: item)!
 		items.remove(at: index)
-		updateCancellables()
+		establishSubscriptions()
 		ShoppingItem.delete(item: item, saveChanges: true)
 	}
 	
@@ -157,6 +183,8 @@ class ShoppingListViewModel: ObservableObject {
 		// otherwise, we must create the new ShoppingItem here and add it to
 		// our list of items
 
+		// we may be adding a new item here; plus, lets' turn off the change messages
+		cancelSubscriptions()
 		// if we already have an editableItem, use it, else create it now and add to items
 		var itemForCommit: ShoppingItem
 		if let itemBeingEdited = item {
@@ -169,17 +197,22 @@ class ShoppingListViewModel: ObservableObject {
 		// apply the update
 		itemForCommit.updateValues(from: editableData) // an extension on ShoppingItem
 		
+		// special case: if we're a locationSpecificShoppingList, we have to do a removal
+		// of this item from the items array if the item's location was changed.
+		if usageType == .locationSpecificShoppingList {
+			if itemForCommit.location != specificLocation {
+				let index = items.firstIndex(of: itemForCommit)!
+				items.remove(at: index)
+			}
+		}
+		
 		// the order of items is likely affected, either because of a new object
 		// being added, or a name/location change affects the sort order.
 		sortItems()
+		establishSubscriptions()
+		ShoppingItem.saveChanges()
 	}
-	
-	// this is needed because when we get down to the edit screen, we need the list
-	// of locations so one can be assigned to the item
-	func allLocations() -> [Location] {
-		return Location.allLocations(userLocationsOnly: false).sorted(by: <)
-	}
-	
+		
 	// provides a list of locations currently represented by objects in
 	// the items array
 	func locationsForItems() -> [Location] {

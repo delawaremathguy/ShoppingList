@@ -33,7 +33,8 @@ struct DevToolsTabView: View {
 				self.confirmDataHasBeenAdded = true
 			}
 			.alert(isPresented: $confirmDataHasBeenAdded) {
-				Alert(title: Text("Data Added"), message: Text("Sample data for the app (\(locationsAdded) locations and \(shoppingItemsAdded) shopping items) have been added."),
+				Alert(title: Text("Data Added"),
+							message: Text("Sample data for the app (\(locationsAdded) locations and \(shoppingItemsAdded) shopping items) have been added."),
 							dismissButton: .default(Text("OK")))
 			}
 			
@@ -41,7 +42,8 @@ struct DevToolsTabView: View {
 				self.confirmDeleteAllDataShowing = true
 			}
 			.alert(isPresented: $confirmDeleteAllDataShowing) {
-				Alert(title: Text("Remove All Data?"), message: Text("All application data will be cleared and this cannot be undone. Are you sure you want to delete all data?"),
+				Alert(title: Text("Remove All Data?"),
+							message: Text("All application data will be cleared and this cannot be undone. Are you sure you want to delete all data?"),
 							primaryButton: .cancel(Text("No")),
 							secondaryButton: .destructive(Text("Yes"), action: { deleteAllData() }))
 			}

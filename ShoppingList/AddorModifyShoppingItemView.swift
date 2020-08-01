@@ -18,20 +18,7 @@ struct AddorModifyShoppingItemView: View {
 	// editableItem is either a ShoppingItem to edit, or nil to signify
 	// that we're creating a new ShoppingItem in this View.
 	var editableItem: ShoppingItem? = nil
-	
-	// allowsDeletion is usually true: we will show a "Delete this Item"
-	// button.  however, if we do Locations -> EditorModify -> select one
-	// of the items at this location -> Delete this Item, we have a problem.
-	// the editableLocation in AddOrModifyLocationView cannot be an observable
-	// object, because i allow it to be nil; and so deleting an item this deep
-	// in the navigation hierarchy doesn't trickle back to the AddOrModifyLocationView
-	// and the view still shows the item at that location.  then, trying to look
-	// at the item causes a crash, because it's not there and we crash.
-	// so when AddOrModifyLocationView presents this view, we'll set this
-	// to false.  yes, it's kludgey, but time will tell if there's an easier
-	// way to do this.  you just can't make a binding to an optional ObservedObject?
-	var allowsDeletion: Bool = true
-	
+		
 	// addItemToShoppingList just means that by default, a new item will be added to
 	// the shopping list, and so this is true.
 	// however, if inserting a new item from the Purchased list,
@@ -52,19 +39,70 @@ struct AddorModifyShoppingItemView: View {
 	// to confirm deletion of a ShoppingItem
 	@State private var showDeleteConfirmation: Bool = false
 	
+	// we need all locations so we can populate the Picker
+	let locations = Location.allLocations(userLocationsOnly: false).sorted(by: <)
+
+	
 	var body: some View {
-		
-		ShoppingItemEditView(locations: viewModel.allLocations(), editableData: $editableData, showDeleteConfirmation: $showDeleteConfirmation, allowsDeletion: allowsDeletion)
+		Form {
+			// Section 1. Basic Information Fields
+			Section(header: SLSectionHeaderView(title: "Basic Information")) {
+				
+				HStack(alignment: .firstTextBaseline) {
+					SLFormLabelText(labelText: "Name: ")
+					TextField("Item name", text: $editableData.itemName)
+				}
+				
+				Stepper(value: $editableData.itemQuantity, in: 1...10) {
+					HStack {
+						SLFormLabelText(labelText: "Quantity: ")
+						Text("\(editableData.itemQuantity)")
+					}
+				}
+				
+				Picker(selection: $editableData.location, label: SLFormLabelText(labelText: "Location: ")) {
+					ForEach(locations) { location in
+						Text(location.name!).tag(location)
+					}
+				}
+				
+				HStack(alignment: .firstTextBaseline) {
+					Toggle(isOn: $editableData.onList) {
+						SLFormLabelText(labelText: "On Shopping List: ")
+					}
+				}
+				
+				HStack(alignment: .firstTextBaseline) {
+					Toggle(isOn: $editableData.isAvailable) {
+						SLFormLabelText(labelText: "Is Available: ")
+					}
+				}
+				
+			} // end of Section
+			
+			// Section 2. Item Management (Delete), if present
+			if editableItem != nil {
+				Section(header: SLSectionHeaderView(title: "Shopping Item Management")) {
+					SLCenteredButton(title: "Delete This Shopping Item",
+													 action: { self.showDeleteConfirmation = true })
+						.foregroundColor(Color.red)
+				}
+			} // end of Section
+			
+		} // end of Form
+			
 			.navigationBarTitle(barTitle(), displayMode: .inline)
 			.navigationBarBackButtonHidden(true)
 			.navigationBarItems(
-				leading: Button(action : { self.presentationMode.wrappedValue.dismiss() }){
-					Text("Cancel")
-				},
-				trailing: Button(action : { self.commitDataEntry() }){
-					Text("Save")
-						.disabled(!editableData.canBeSaved)
-			})
+				leading:
+					Button(action : { self.presentationMode.wrappedValue.dismiss() }){
+						Text("Cancel")
+					},
+				trailing:
+					Button(action : { self.commitDataEntry() }){
+						Text("Save")
+							.disabled(!editableData.canBeSaved)
+				})
 			.onAppear(perform: loadData)
 			.alert(isPresented: $showDeleteConfirmation) {
 				Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),

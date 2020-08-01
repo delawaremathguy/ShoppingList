@@ -36,7 +36,7 @@ struct ShoppingListTabView1: View {
 				}
 				.sheet(isPresented: $isAddNewItemSheetShowing) {
 					NavigationView {
-						AddorModifyShoppingItemView(viewModel: self.viewModel, allowsDeletion: false, addItemToShoppingList: true)
+						AddorModifyShoppingItemView(viewModel: self.viewModel, addItemToShoppingList: true)
 					}
 				}
 				

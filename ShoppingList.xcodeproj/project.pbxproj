@@ -32,6 +32,7 @@
 		D668A0CC248ACF4F0031E67B /* ShoppingListTabView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */; };
 		D66FF35424926B6400B3ABC8 /* DevToolsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */; };
 		D66FF3562492E67100B3ABC8 /* SLCenteredButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */; };
+		D677946224D58F34006EB9CF /* EditableLocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D677946124D58F34006EB9CF /* EditableLocationData.swift */; };
 		D6923DD824D1E3F1004A0975 /* ShoppingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6923DD724D1E3F1004A0975 /* ShoppingListViewModel.swift */; };
 		D6931D6C24C4C60900A61BB6 /* TimerTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6931D6B24C4C60900A61BB6 /* TimerTabView.swift */; };
 		D6ADB3B2247C266F00376271 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = D6ADB3B1247C266E00376271 /* locations.json */; };
@@ -40,7 +41,6 @@
 		D6B8A95424636711005F8EF2 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A95324636711005F8EF2 /* MainView.swift */; };
 		D6B8A9562463693D005F8EF2 /* LocationsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */; };
 		D6C75D3324B4B123003E445B /* ViewBuildingCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C75D3224B4B123003E445B /* ViewBuildingCode.swift */; };
-		D6C91D8524A8E69F008C8DFF /* ShoppingItemEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C91D8424A8E69F008C8DFF /* ShoppingItemEditView.swift */; };
 		D6C91D8724A8EC09008C8DFF /* EditableShoppingItemData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */; };
 		D6DE39BD247314B40013F9B4 /* SLFormLabelText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */; };
 		D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF557C246D7421007D636B /* PurchasedTabView.swift */; };
@@ -79,6 +79,7 @@
 		D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingListTabView2.swift; sourceTree = "<group>"; };
 		D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevToolsTabView.swift; sourceTree = "<group>"; };
 		D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLCenteredButton.swift; sourceTree = "<group>"; };
+		D677946124D58F34006EB9CF /* EditableLocationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableLocationData.swift; sourceTree = "<group>"; };
 		D6923DD724D1E3F1004A0975 /* ShoppingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListViewModel.swift; sourceTree = "<group>"; };
 		D6931D6B24C4C60900A61BB6 /* TimerTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTabView.swift; sourceTree = "<group>"; };
 		D6ADB3B1247C266E00376271 /* locations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
@@ -87,7 +88,6 @@
 		D6B8A95324636711005F8EF2 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsTabView.swift; sourceTree = "<group>"; };
 		D6C75D3224B4B123003E445B /* ViewBuildingCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBuildingCode.swift; sourceTree = "<group>"; };
-		D6C91D8424A8E69F008C8DFF /* ShoppingItemEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemEditView.swift; sourceTree = "<group>"; };
 		D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableShoppingItemData.swift; sourceTree = "<group>"; };
 		D6DE39BC247314B40013F9B4 /* SLFormLabelText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SLFormLabelText.swift; sourceTree = "<group>"; };
 		D6EF557C246D7421007D636B /* PurchasedTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasedTabView.swift; sourceTree = "<group>"; };
@@ -148,9 +148,9 @@
 				D6F375D52485593D005559E6 /* LocationRowView.swift */,
 				D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */,
 				D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */,
-				D6C91D8424A8E69F008C8DFF /* ShoppingItemEditView.swift */,
 				D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */,
 				D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */,
+				D677946124D58F34006EB9CF /* EditableLocationData.swift */,
 				D640329E24BB2FE400CC0B94 /* General Purpose Views */,
 				D62B88332451162E0051A7CE /* Assets.xcassets */,
 				D62B88382451162E0051A7CE /* LaunchScreen.storyboard */,
@@ -298,6 +298,7 @@
 				D62B88322451162D0051A7CE /* ShoppingListTabView1.swift in Sources */,
 				D65E0E3B24D35B3A000167B2 /* LocationsListViewModel.swift in Sources */,
 				D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */,
+				D677946224D58F34006EB9CF /* EditableLocationData.swift in Sources */,
 				D612E16124898EBB007E1412 /* Array+Extensions.swift in Sources */,
 				D6EF5587246D97C3007D636B /* Development.swift in Sources */,
 				D64032A124BB318B00CC0B94 /* SLSimpleHeaderView.swift in Sources */,
@@ -308,7 +309,6 @@
 				D63B1A0B248EA76A001CA309 /* SLSectionHeaderView.swift in Sources */,
 				D606197F2481510E005CE575 /* SearchBarView.swift in Sources */,
 				D65C931824C5DC9B003E6EB7 /* GlobalTimer.swift in Sources */,
-				D6C91D8524A8E69F008C8DFF /* ShoppingItemEditView.swift in Sources */,
 				D640329D24BB2F4A00CC0B94 /* EmptyListView.swift in Sources */,
 				D6EF557D246D7421007D636B /* PurchasedTabView.swift in Sources */,
 				D6B8A9562463693D005F8EF2 /* LocationsTabView.swift in Sources */,

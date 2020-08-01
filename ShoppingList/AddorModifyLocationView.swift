@@ -8,33 +8,6 @@
 
 import SwiftUI
 
-// *** see more detailed comments about the use of this
-// struct over in AddOrModifyShoppingItemView
-
-struct EditableLocationData {
-	// all of the values here provide suitable defaults for a new Location
-	var locationName: String = ""
-	var visitationOrder: Int = 50
-	var red: Double = 0.25
-	var green: Double = 0.25
-	var blue: Double = 0.25
-	var opacity: Double = 0.40
-
-	// this copies all the editable data from an incoming Location
-	init(location: Location) {
-		locationName = location.name!
-		visitationOrder = Int(location.visitationOrder)
-		red = location.red
-		green = location.green
-		blue = location.blue
-		opacity = location.opacity
-	}
-	
-	// provides simple, default init with values specified above
-	init() { }
-	
-}
-
 // MARK: - View Definition
 
 struct AddorModifyLocationView: View {
@@ -44,6 +17,13 @@ struct AddorModifyLocationView: View {
 	// that we're creating a new Location in for the viewModel.
 	var editableLocation: Location? = nil
 	var viewModel: LocationsListViewModel
+	
+	// we use a specialized form of a ShoppingListViewModel in this View to
+	// drive the list of items at this location.  it must be an observed object
+	// so that if move over to the AddorModifyShoppingItemView, we can track
+	// edits back here, especially if we either change the object's location
+	// or delete the object.
+	@ObservedObject var shoppingItemsViewModel = ShoppingListViewModel(type: .locationSpecificShoppingList)
 	
 	// all editableData is packaged here:
 	@State private var editableData = EditableLocationData()
@@ -101,10 +81,10 @@ struct AddorModifyLocationView: View {
 			// Section 3: Items assigned to this Location, if we are editing a Location
 			if editableLocation != nil {
 				Section(header: SLSectionHeaderView(title: "At this Location: \(editableLocation?.items?.count ?? 0) items")) {
-					ForEach(itemsArray(at: editableLocation)) { item in
-//						NavigationLink(destination: AddorModifyShoppingItemView(viewModel: self.viewModel, editableItem: item, allowsDeletion: false)) {
+					ForEach(shoppingItemsViewModel.items) { item in
+						NavigationLink(destination: AddorModifyShoppingItemView(viewModel: self.shoppingItemsViewModel, editableItem: item)) {
 							Text(item.name!)
-//						}
+						}
 					}
 				} // end of Section 3
 			}
@@ -139,7 +119,7 @@ struct AddorModifyLocationView: View {
 	func deleteLocation() {
 		if let location = editableLocation {
 			presentationMode.wrappedValue.dismiss()
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) { // seems to want more time in simulator
 				self.viewModel.delete(location: location)
 			}
 		}
@@ -158,41 +138,21 @@ struct AddorModifyLocationView: View {
 		if !dataHasBeenLoaded {
 			if let location = editableLocation {
 				editableData = EditableLocationData(location: location)
+				shoppingItemsViewModel.loadItems(at: location)
 			} // else we already have default, editable data set up right
 			dataHasBeenLoaded = true
 		}
 	}
 	
-	func itemsArray(at location: Location?) -> [ShoppingItem] {
-		// note: we could add a sorted parameter, here, to indicated whether
-		// the array returned should be sorted, but it's not worth the
-		// extra code to turn a Set into an Array for the non-sorted case.
-		// besides, the list of items in a Location is usually quite short.
-		if let shoppingItems = location?.items as? Set<ShoppingItem> {
-			return shoppingItems.sorted(by: { $0.name! < $1.name! })
-		}
-		return [ShoppingItem]()
-	}
+//	func itemsArray(at location: Location?) -> [ShoppingItem] {
+//		// note: we could add a sorted parameter, here, to indicated whether
+//		// the array returned should be sorted, but it's not worth the
+//		// extra code to turn a Set into an Array for the non-sorted case.
+//		// besides, the list of items in a Location is usually quite short.
+//		if let shoppingItems = location?.items as? Set<ShoppingItem> {
+//			return shoppingItems.sorted(by: { $0.name! < $1.name! })
+//		}
+//		return [ShoppingItem]()
+//	}
 }
 
-// MARK: - ShoppingItem Convenience Extension
-
-extension Location {
-	
-	func updateValues(from editableData: EditableLocationData) {
-		name = editableData.locationName
-		visitationOrder = Int32(editableData.visitationOrder)
-		red = editableData.red
-		green = editableData.green
-		blue = editableData.blue
-		opacity = editableData.opacity
-		
-		// make sure all shopping items at this location have the
-		// updated visitation information
-		if let items = items as? Set<ShoppingItem> {
-			for item in items {
-				item.visitationOrder = visitationOrder
-			}
-		}
-	}
-}

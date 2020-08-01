@@ -39,7 +39,7 @@ struct PurchasedTabView: View {
 				}
 				.sheet(isPresented: $isAddNewItemSheetShowing) {
 					NavigationView {
-						AddorModifyShoppingItemView(viewModel: self.viewModel, allowsDeletion: false, addItemToShoppingList: false)
+						AddorModifyShoppingItemView(viewModel: self.viewModel, addItemToShoppingList: false)
 					}
 				}
 				
@@ -68,8 +68,8 @@ struct PurchasedTabView: View {
 											message: Text("Are you sure you want to delete this item?"),
 											primaryButton: .cancel(Text("No")),
 											secondaryButton: .destructive(Text("Yes"),
-																										action: {
-																											self.viewModel.delete(item: self.itemToDelete!)
+											action: {
+												self.viewModel.delete(item: self.itemToDelete!)
 											})
 								)}
 						
