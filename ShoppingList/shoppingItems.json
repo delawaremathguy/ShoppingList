@@ -8,14 +8,14 @@
 	},
 	{
 		"onList" : false,
-		"quantity" : 1,
+		"quantity" : 2,
 		"isAvailable" : true,
 		"locationName" : "Office Supplies (14)",
 		"name" : "Scotch Shipping Tape"
 	},
 	{
 		"onList" : false,
-		"quantity" : 2,
+		"quantity" : 1,
 		"isAvailable" : true,
 		"locationName" : "Bread and salad dressings (10)",
 		"name" : "Bread"
@@ -42,9 +42,9 @@
 		"name" : "Hot dogs"
 	},
 	{
-		"onList" : true,
+		"onList" : false,
 		"quantity" : 1,
-		"isAvailable" : false,
+		"isAvailable" : true,
 		"locationName" : "Meats",
 		"name" : "Meatloaf mix"
 	},
@@ -157,7 +157,7 @@
 		"onList" : false,
 		"quantity" : 1,
 		"isAvailable" : true,
-		"locationName" : "Baking Supplies (8)",
+		"locationName" : "BJ — Baking",
 		"name" : "Confectioners sugar (10x)"
 	},
 	{
@@ -218,15 +218,14 @@
 	},
 	{
 		"onList" : false,
-		"quantity" : 1,
+		"quantity" : 2,
 		"isAvailable" : true,
 		"locationName" : "Dairy (18)",
-		"name" : "Hazelnut coffee creamer"
+		"name" : "Hazelnut Coffee Creamer, fat free"
 	},
 	{
 		"onList" : false,
 		"quantity" : 1,
-		
 		"isAvailable" : true,
 		"locationName" : "Fruits & Vegetables",
 		"name" : "Watermelon chunks"
@@ -288,7 +287,7 @@
 		"name" : "Peanuts"
 	},
 	{
-		"onList" : false,
+		"onList" : true,
 		"quantity" : 1,
 		"isAvailable" : true,
 		"locationName" : "Fruits & Vegetables",
@@ -352,7 +351,7 @@
 	},
 	{
 		"onList" : false,
-		"quantity" : 1,
+		"quantity" : 2,
 		"isAvailable" : true,
 		"locationName" : "Deli",
 		"name" : "Sliced ham, Boar's Head, 1\/2 lb."
@@ -381,14 +380,14 @@
 	{
 		"onList" : true,
 		"quantity" : 1,
-		"isAvailable" : false,
+		"isAvailable" : true,
 		"locationName" : "Canned Vegetables (9)",
 		"name" : "Creamed corn"
 	},
 	{
-		"onList" : true,
+		"onList" : false,
 		"quantity" : 1,
-		"isAvailable" : false,
+		"isAvailable" : true,
 		"locationName" : "Meats",
 		"name" : "Ham steak (Giant brand)"
 	},
@@ -436,10 +435,10 @@
 	},
 	{
 		"onList" : false,
-		"quantity" : 1,
+		"quantity" : 2,
 		"isAvailable" : true,
 		"locationName" : "Fruits & Vegetables",
-		"name" : "Onions"
+		"name" : "Yellow Onions"
 	},
 	{
 		"onList" : false,
@@ -480,7 +479,7 @@
 		"onList" : false,
 		"quantity" : 1,
 		"isAvailable" : true,
-		"locationName" : "Laundry (11)",
+		"locationName" : "BJ — Kitchen & Laundry",
 		"name" : "Cascade"
 	},
 	{
@@ -519,9 +518,9 @@
 		"name" : "Chicken Breast Tenderloin"
 	},
 	{
-		"onList" : true,
+		"onList" : false,
 		"quantity" : 1,
-		"isAvailable" : false,
+		"isAvailable" : true,
 		"locationName" : "Meats",
 		"name" : "Turkey breast"
 	},
@@ -638,7 +637,7 @@
 		"name" : "Stubb’s Original BBQ Sauce"
 	},
 	{
-		"onList" : false,
+		"onList" : true,
 		"quantity" : 2,
 		"isAvailable" : true,
 		"locationName" : "Dairy (18)",
@@ -659,11 +658,11 @@
 		"name" : "Half & Half, 1 qt"
 	},
 	{
-		"onList" : true,
+		"onList" : false,
 		"quantity" : 1,
-		"isAvailable" : false,
+		"isAvailable" : true,
 		"locationName" : "Frozen Vegetables (17)",
-		"name" : "Potatoes O’Brien (OreIda)"
+		"name" : "Potatoes O’Brien (OreIda)\/ hash browns"
 	},
 	{
 		"onList" : false,
@@ -701,9 +700,9 @@
 		"name" : "English Raisin Bread"
 	},
 	{
-		"onList" : true,
+		"onList" : false,
 		"quantity" : 1,
-		"isAvailable" : false,
+		"isAvailable" : true,
 		"locationName" : "Baking Supplies (8)",
 		"name" : "Garlic Salt"
 	},
@@ -715,25 +714,18 @@
 		"name" : "Seriously Sharp Cheddar"
 	},
 	{
-		"onList" : true,
+		"onList" : false,
 		"quantity" : 1,
 		"isAvailable" : true,
-		"locationName" : "BJs",
+		"locationName" : "BJ — Coffee & Tea",
 		"name" : "Regular Coffee"
-	},
-	{
-		"onList" : true,
-		"quantity" : 1,
-		"isAvailable" : true,
-		"locationName" : "BJs",
-		"name" : "Decaf Coffee"
 	},
 	{
 		"onList" : false,
 		"quantity" : 1,
 		"isAvailable" : true,
-		"locationName" : "BJs",
-		"name" : "Wellesley Farms Butter , 4 lb"
+		"locationName" : "BJ — Coffee & Tea",
+		"name" : "Decaf Coffee"
 	},
 	{
 		"onList" : false,
@@ -743,10 +735,297 @@
 		"name" : "Fiber One Oats & Chocolate "
 	},
 	{
-		"onList" : true,
+		"onList" : false,
 		"quantity" : 1,
-		"isAvailable" : false,
+		"isAvailable" : true,
 		"locationName" : "Meats",
 		"name" : "Giant center sliced smoked ham, 1.4 lb"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Bags & Paper Goods (12)",
+		"name" : "Giant food storage bags, 1 gal"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Toothpaste & Soap",
+		"name" : "Green Soap"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Toothpaste & Soap",
+		"name" : "Arm and Hammer Toothpaste"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Freezer",
+		"name" : "Wellesley Farms Butter, 4 lb"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Baking",
+		"name" : "Brown Sugar"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Baking",
+		"name" : "Pompeian Olive Oil"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Kitchen & Laundry",
+		"name" : "Ziploc Bags, 1 gal."
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Paper",
+		"name" : "Tissue Cubes"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Toothpaste & Soap",
+		"name" : "Foaming Hand Soap — refill"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Candy",
+		"name" : "Buckets peppermints "
+	},
+	{
+		"onList" : false,
+		"quantity" : 2,
+		"isAvailable" : true,
+		"locationName" : "BJ — Kitchen & Laundry",
+		"name" : "Clorox Wipes"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Baking",
+		"name" : "White sugar (10x)"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Baking",
+		"name" : "Flour"
+	},
+	{
+		"onList" : false,
+		"quantity" : 2,
+		"isAvailable" : true,
+		"locationName" : "BJ — Freezer",
+		"name" : "Eggs XL"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Bread and salad dressings (10)",
+		"name" : "Raspberry Preserves (or Jam)"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Dairy (18)",
+		"name" : "Whole Milk, small"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Dairy (18)",
+		"name" : "Heavy Cream, small"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Dairy (18)",
+		"name" : "Butter, unsalted"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Bread and salad dressings (10)",
+		"name" : "Ranch Dressing"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Frozen Vegetables (17)",
+		"name" : "Zesty Fries"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Baking Supplies (8)",
+		"name" : "Progresso Plain Bread Crumbs"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Bread and salad dressings (10)",
+		"name" : "Chili Sauce Heinz"
+	},
+	{
+		"onList" : false,
+		"quantity" : 2,
+		"isAvailable" : true,
+		"locationName" : "BJ — Freezer",
+		"name" : "Hazelnut Coffee Creamer, fat free"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Dairy (18)",
+		"name" : "Turkey Hill Decaf ice tea, 1 gal"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Toothpaste & Soap",
+		"name" : "Secret Deodorant, unscented\/plain (or Dove)"
+	},
+	{
+		"onList" : false,
+		"quantity" : 3,
+		"isAvailable" : true,
+		"locationName" : "Fruits & Vegetables",
+		"name" : "Oranges"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Bakery",
+		"name" : "Thomas’s English Muffins"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "BJ — Freezer",
+		"name" : "Bubba Burgers"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Fruits & Vegetables",
+		"name" : "Pineapple Chunks"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Bags & Paper Goods (12)",
+		"name" : "Jumbo 2.5 gal storage bags"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Beverages (5)",
+		"name" : "Diet Root Beer 12 oz A&W"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Cereal (7)",
+		"name" : "Honey"
+	},
+	{
+		"onList" : false,
+		"quantity" : 6,
+		"isAvailable" : true,
+		"locationName" : "Fruits & Vegetables",
+		"name" : "Corn Ears"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Baking Supplies (8)",
+		"name" : "Confectioner’s Sugar (10x)"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Dairy (18)",
+		"name" : "Orange Juice"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Bread and salad dressings (10)",
+		"name" : "Dijon Mustard"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Baking Supplies (8)",
+		"name" : "McCormack au jus Gravy Mix"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Bread and salad dressings (10)",
+		"name" : "Grape Jelly"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Baking Supplies (8)",
+		"name" : "Jimmies"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Liquor Store",
+		"name" : "Beer"
+	},
+	{
+		"onList" : false,
+		"quantity" : 1,
+		"isAvailable" : true,
+		"locationName" : "Fruits & Vegetables",
+		"name" : "Baby Carrots"
 	}
 ]

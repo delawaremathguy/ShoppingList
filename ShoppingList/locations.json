@@ -17,7 +17,7 @@
 	},
 	{
 		"opacity" : 0.08959537744522092,
-		"visitationOrder" : 25,
+		"visitationOrder" : 18,
 		"red" : 0.90000000000000002,
 		"name" : "Dairy (18)",
 		"blue" : 0.90462428331375122,
@@ -33,7 +33,7 @@
 	},
 	{
 		"opacity" : 0.15606936812400818,
-		"visitationOrder" : 30,
+		"visitationOrder" : 21,
 		"red" : 0,
 		"name" : "Frozen Vegetables (17)",
 		"blue" : 0,
@@ -41,7 +41,7 @@
 	},
 	{
 		"opacity" : 0.10000000000000001,
-		"visitationOrder" : 95,
+		"visitationOrder" : 89,
 		"red" : 0.90000000000000002,
 		"name" : "Service Desk",
 		"blue" : 0.10000000000000001,
@@ -64,16 +64,16 @@
 		"green" : 0.25
 	},
 	{
-		"opacity" : 0.5,
+		"opacity" : 0.36127167940139771,
 		"visitationOrder" : 45,
-		"red" : 0.5,
+		"red" : 0,
 		"name" : "Bags & Paper Goods (12)",
-		"blue" : 0.5,
-		"green" : 0.5
+		"blue" : 1,
+		"green" : 0
 	},
 	{
 		"opacity" : 0.22832369804382324,
-		"visitationOrder" : 20,
+		"visitationOrder" : 15,
 		"red" : 0.89306360483169556,
 		"name" : "Meats",
 		"blue" : 0.92196530103683472,
@@ -81,7 +81,7 @@
 	},
 	{
 		"opacity" : 0.53468209505081177,
-		"visitationOrder" : 5,
+		"visitationOrder" : 4,
 		"red" : 0.060693640261888504,
 		"name" : "Fruits & Vegetables",
 		"blue" : 0.10000000000000001,
@@ -113,7 +113,7 @@
 	},
 	{
 		"opacity" : 0.52601158618927002,
-		"visitationOrder" : 12,
+		"visitationOrder" : 8,
 		"red" : 0.90000000000000002,
 		"name" : "Deli",
 		"blue" : 0.10000000000000001,
@@ -121,13 +121,12 @@
 	},
 	{
 		"opacity" : 0.10000000000000001,
-		"visitationOrder" : 87,
+		"visitationOrder" : 85,
 		"red" : 0,
 		"name" : "Snacks & Chips (4)",
 		"blue" : 0.67919075489044189,
 		"green" : 0.65606933832168579
 	},
-	
 	{
 		"opacity" : 0.53468209505081177,
 		"visitationOrder" : 40,
@@ -138,11 +137,11 @@
 	},
 	{
 		"opacity" : 0.5,
-		"visitationOrder" : 13,
-		"red" : 0.5,
+		"visitationOrder" : 9,
+		"red" : 0.92485547065734863,
 		"name" : "Beyond Deli",
 		"blue" : 0.5,
-		"green" : 0.5
+		"green" : 0.89595377445220947
 	},
 	{
 		"opacity" : 0.10000000000000001,
@@ -161,12 +160,12 @@
 		"green" : 0
 	},
 	{
-		"opacity" : 0.40000000000000002,
+		"opacity" : 0.39595374464988708,
 		"visitationOrder" : 99,
-		"red" : 0.25,
-		"name" : "BJs",
-		"blue" : 0.25,
-		"green" : 0.25
+		"red" : 0.25433525443077087,
+		"name" : "BJ — Unknown",
+		"blue" : 1,
+		"green" : 0
 	},
 	{
 		"opacity" : 0.11560693383216858,
@@ -179,8 +178,80 @@
 	{
 		"opacity" : 0.40000000000000002,
 		"visitationOrder" : 35,
-		"red" : 0.25,
+		"red" : 0,
 		"name" : "Pain relief (15)",
+		"blue" : 0.85260117053985596,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 91,
+		"red" : 0.24855491518974304,
+		"name" : "BJ — Paper",
+		"blue" : 1,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 94,
+		"red" : 0.25,
+		"name" : "BJ — Freezer",
+		"blue" : 1,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 95,
+		"red" : 0.26300579309463501,
+		"name" : "BJ — Baking",
+		"blue" : 1,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 98,
+		"red" : 0.25,
+		"name" : "BJ — Toothpaste & Soap",
+		"blue" : 1,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 92,
+		"red" : 0.25,
+		"name" : "BJ — Kitchen & Laundry",
+		"blue" : 1,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 97,
+		"red" : 0.25,
+		"name" : "BJ — Candy",
+		"blue" : 1,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 96,
+		"red" : 0.25,
+		"name" : "BJ — Coffee & Tea",
+		"blue" : 1,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 93,
+		"red" : 0.25,
+		"name" : "BJ — Bakery",
+		"blue" : 1,
+		"green" : 0
+	},
+	{
+		"opacity" : 0.40000000000000002,
+		"visitationOrder" : 82,
+		"red" : 0.25,
+		"name" : "Beverages (5)",
 		"blue" : 0.25,
 		"green" : 0.25
 	}

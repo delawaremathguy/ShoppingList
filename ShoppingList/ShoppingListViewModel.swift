@@ -58,11 +58,32 @@ class ShoppingListViewModel: ObservableObject {
 		usageType = type
 	}
 	
+	// indicates for this viewModel what being on its list means.  for the shopping
+	// list variations, onList is true; for the purchased list variation, onList should
+	// be false.  for a shopping list associated with a Location, we return nil so
+	// not test against this value will fail.
+	var ourOnListValue: Bool? {
+		switch usageType {
+			case .singleSectionShoppingList, .multiSectionShoppingList:
+				return true
+			case .purchasedItemShoppingList:
+				return false
+			case .locationSpecificShoppingList:
+				return nil
+		}
+	}
+	
 	// call this loadItems once the object has been created, before using it. in usage,
-	// this is called in .onAppear().  the location parameter only plays a role
+	// i have called this in .onAppear(), and even though onAppear() can be called
+	// multiple times on the same View (each time you change the tab, you get an onAppear)
+	// and reloading seems wasteful, you really need to do it for certain sequences of changes
+	// (and remember, even though we see that something has changed, we don;t know
+	// exactly what changed).
+	// the location parameter only plays a role
 	// for usage = .locationSpecificShoppingList, and this is where we associate the
 	// location for this case
 	func loadItems(at location: Location? = nil) {
+		cancelSubscriptions()
 		switch usageType {
 			case .singleSectionShoppingList, .multiSectionShoppingList:
 				items = ShoppingItem.currentShoppingList(onList: true)
@@ -74,14 +95,15 @@ class ShoppingListViewModel: ObservableObject {
 					items = Array(locationItems)
 				}
 		}
+		print("shopping list loaded. \(items.count) items.")
 		sortItems()
 		establishSubscriptions()
-		print("shopping list loaded. \(items.count) items.")
 	}
 	
-	// cancellation of subscriptions.  use this is the items array is
+	// cancellation of subscriptions.  use this if the items array is
 	// about to change size, because we'll need to remove a cancellable or
-	// add a cancellable.
+	// add a cancellable. and since we don't know which cancellable matches
+	// which item, we'll just cancel everything.
 	func cancelSubscriptions() {
 		cancellables.forEach({ $0.cancel() })
 		cancellables.removeAll()
@@ -90,6 +112,7 @@ class ShoppingListViewModel: ObservableObject {
 	// establish subscriptions sets up the cancellables array.  when called,
 	// we assume that the set of cancellables is empty
 	func establishSubscriptions() {
+		assert(cancellables.isEmpty, "The set of cancellables should be empty.")
 		for item in items {
 			// add a subscription that will spit back an objectWillChange of ourself
 			item.objectWillChange
@@ -108,11 +131,16 @@ class ShoppingListViewModel: ObservableObject {
 	private func sortItems() {
 		switch usageType {
 			case .singleSectionShoppingList, .multiSectionShoppingList:
-				items.sort(by: { $0.name! < $1.name! })
-				items.sort(by: { $0.visitationOrder <= $1.visitationOrder })
+				items.sort(by: { $0.name! < $1.name! }) 
+				items.sort(by: { $0.visitationOrder < $1.visitationOrder })
 			case .purchasedItemShoppingList, .locationSpecificShoppingList:
 				items.sort(by: { $0.name! < $1.name! })
 		}
+	}
+	
+	func removeFromItems(item: ShoppingItem) {
+		let index = items.firstIndex(of: item)!
+		items.remove(at: index)
 	}
 	
 	// changes availability flag for an item
@@ -121,27 +149,23 @@ class ShoppingListViewModel: ObservableObject {
 		ShoppingItem.saveChanges()
 	}
 	
-	// changes the onList flag and removes the item from
-	// the items array (it's no longer on our list)
-	private func toggleOnListStatusAndRemove(item: ShoppingItem) {
-		item.onList.toggle()
-		cancelSubscriptions()
-		let index = items.firstIndex(of: item)!
-		items.remove(at: index)
-		establishSubscriptions()
-	}
-	
 	// changes onList status for a single item
 	func toggleOnListStatus(for item: ShoppingItem) {
-		toggleOnListStatusAndRemove(item: item)
+		cancelSubscriptions()
+		removeFromItems(item: item)
+		item.onList.toggle()
+		establishSubscriptions()
 		ShoppingItem.saveChanges()
 	}
 	
 	// changes onList status for a an array of items
 	func toggleOnListStatus(for items: [ShoppingItem]) {
+		cancelSubscriptions()
 		for item in items {
-			toggleOnListStatusAndRemove(item: item)
+			item.onList.toggle()
+			removeFromItems(item: item)
 		}
+		establishSubscriptions()
 		ShoppingItem.saveChanges()
 	}
 	
@@ -150,13 +174,13 @@ class ShoppingListViewModel: ObservableObject {
 	func toggleAllItemsOnListStatus() {
 		// stop listening to changes from items
 		cancelSubscriptions()
-		// make the changes
 		for item in items {
 			item.onList.toggle()
 		}
 		// empty the array (this triggers objectWillChange)
 		// and there's no need here to establish subscriptions
 		items = []
+		ShoppingItem.saveChanges()
 	}
 	
 	// marks all items in the display as available
@@ -172,26 +196,37 @@ class ShoppingListViewModel: ObservableObject {
 	// out of the array, and reset the subscriptions to all items
 	func delete(item: ShoppingItem) {
 		cancelSubscriptions()
-		let index = items.firstIndex(of: item)!
-		items.remove(at: index)
+		removeFromItems(item: item)
 		establishSubscriptions()
 		ShoppingItem.delete(item: item, saveChanges: true)
 	}
 	
 	func updateDataFor(item: ShoppingItem?, using editableData: EditableShoppingItemData) {
-		// if the incoming item is not nil, then this is just a straight update.
-		// otherwise, we must create the new ShoppingItem here and add it to
-		// our list of items
+		// if the incoming item is not nil, then this is just a straight update
+		// of an existing object. in some cases, this could mean removing an item
+		// from our list of items if .onList changed.  otherwise, we must create the new
+		// ShoppingItem here and add it to our list of items -- if it's to be on our list!
 
-		// we may be adding a new item here; plus, lets' turn off the change messages
+		// we may be adding a new item here; or even removing a current item.
 		cancelSubscriptions()
-		// if we already have an editableItem, use it, else create it now and add to items
+		// if we already have an editableItem, use it, else create it now.
+		// we'll also do the logic of what's happening with the onList value
+		// of whatever item we're dealing with
 		var itemForCommit: ShoppingItem
 		if let itemBeingEdited = item {
+			// for the case of an existing item that is now on our list, we must
+			// remove it if the new onList value will take it off the list
 			itemForCommit = itemBeingEdited
+			if let onListValue = ourOnListValue, editableData.onList != onListValue {
+				removeFromItems(item: itemForCommit)
+			}
 		} else {
+			// but for a new item, we'll put it on our list only if its onList value to be
+			// agrees with the items we track
 			itemForCommit = ShoppingItem.addNewItem()
-			items.append(itemForCommit)
+			if let onListValue = ourOnListValue, editableData.onList == onListValue {
+				items.append(itemForCommit)
+			}
 		}
 		
 		// apply the update
@@ -201,8 +236,7 @@ class ShoppingListViewModel: ObservableObject {
 		// of this item from the items array if the item's location was changed.
 		if usageType == .locationSpecificShoppingList {
 			if itemForCommit.location != specificLocation {
-				let index = items.firstIndex(of: itemForCommit)!
-				items.remove(at: index)
+				removeFromItems(item: itemForCommit)
 			}
 		}
 		

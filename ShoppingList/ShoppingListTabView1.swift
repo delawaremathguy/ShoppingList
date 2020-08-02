@@ -17,11 +17,10 @@ struct ShoppingListTabView1: View {
 	// notified when changes are made via the ObservableObject protocol
 	@ObservedObject var viewModel = ShoppingListViewModel(type: .singleSectionShoppingList)
 
-	// local states to control
+	// local states
 	@State private var isAddNewItemSheetShowing = false
 	@State private var itemToDelete: ShoppingItem?
 	@State private var isDeleteItemAlertShowing = false
-	
 	
 	var body: some View {
 		NavigationView {
