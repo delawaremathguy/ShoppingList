@@ -99,7 +99,7 @@ struct ShoppingListTabView2: View {
 				if viewModel.itemCount > 0 {
 					Rectangle()
 						.frame(minWidth: 0, maxWidth: .infinity, minHeight: 1, idealHeight: 1, maxHeight: 1)
-					SLCenteredButton(title: "Move All Items off-list", action: { self.viewModel.toggleAllItemsOnListStatus() })
+					SLCenteredButton(title: "Move All Items off-list", action: { self.viewModel.moveAllItemsToOtherList() })
 						.padding([.bottom, .top], 6)
 
 					if viewModel.hasUnavailableItems {
@@ -142,7 +142,7 @@ struct ShoppingListTabView2: View {
 			itemToDelete = itemsInThisLocation[indexSet.first!]
 		} else {
 			// this moves the item(s) "to the other list"
-			viewModel.toggleOnListStatus(for: indexSet.map({ itemsInThisLocation[$0] }))
+			viewModel.moveToOtherList(items: indexSet.map({ itemsInThisLocation[$0] }))
 		}
 	}
 	

@@ -117,7 +117,7 @@ struct PurchasedTabView: View {
 			itemToDelete = items[indexSet.first!]
 		} else {
 			// this moves the item(s) "to the other list"
-			viewModel.toggleOnListStatus(for: indexSet.map({ items[$0] }))
+			viewModel.moveToOtherList(items: indexSet.map({ items[$0] }))
 		}
 	}
 	

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Combine
 
 // a ShoppingListViewModel object provides a window into the Code Data store that
 // can be used by ShoppingListTabView1, ShoppingListTabView2, and PurchasedTabView.
@@ -15,7 +14,7 @@ import Combine
 // back to Core Data (with notification to the View that the viewModel has changed).
 
 class ShoppingListViewModel: ObservableObject {
-	
+		
 	// since we're really wrapping four different types of ShoppingListViewModel here
 	// all together, it's useful to define the types for clarity, and record which one we are
 	enum viewModelUsageType {
@@ -37,40 +36,73 @@ class ShoppingListViewModel: ObservableObject {
 	// the items on our list
 	@Published var items = [ShoppingItem]()
 	
-	// this is an especially important part: we want to know about any changes
-	// to the items -- remember, items can be altered outside of the view we provide
-	// the model for, e.g., deleting a location moves a whole buch of items to
-	// the Unknown Location, which affects what we model -- so we will subscribe
-	// to their changes (all are Core Data items, so all are ObservableObjects)
-	// and just turn those into "our model has changed messages"
-	var cancellables = Set<AnyCancellable>()
-	
-	// a usage note on the cancellables set: we don't need to keep these directly
-	// in synch with the order in the items array.  but, whenever that array
-	// grows or shrinks, we need to update the cancellables.
-	
+	// have we ever been loaded or not
+	private var dataHasNotBeenLoaded = true
+		
 	// quick accessors as computed properties
 	var itemCount: Int { items.count }
 	var hasUnavailableItems: Bool { items.count(where: { !$0.isAvailable }) > 0 }
 	
+	// MARK: - Initialization
+	
 	// init to be one of four different types.
 	init(type: viewModelUsageType) {
 		usageType = type
+		// sign us up for ShoppingItem change operations
+		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemAdded),
+																					 name: .shoppingItemAdded, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemEdited),
+																					 name: .shoppingItemEdited, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemWillBeDeleted),
+																					 name: .shoppingItemWillBeDeleted, object: nil)
 	}
 	
-	// indicates for this viewModel what being on its list means.  for the shopping
-	// list variations, onList is true; for the purchased list variation, onList should
-	// be false.  for a shopping list associated with a Location, we return nil so
-	// not test against this value will fail.
-	var ourOnListValue: Bool? {
+	// MARK: - Responses to changes in ShoppingItem objects
+	
+	@objc func shoppingItemAdded(_ notification: Notification) {
+		// the notification has a reference to the item that has been added
+		// if we're interested in it, now's the time to add it to the items array.
+		guard let item = notification.object as? ShoppingItem else { return }
+		if !items.contains(item) && isOurKind(item: item) {
+			addToItems(item: item)
+		}
+	}
+
+	@objc func shoppingItemEdited(_ notification: Notification) {
+		guard let item = notification.object as? ShoppingItem else { return }
+		// the logic here is mostly:
+		// -- did the edit kick the item off the list? if yes, remove it
+		// -- did the edit put the item on th list? if so, add it
+		// -- if it's on the list, broadcast the change to SwiftUI
+		// if it's not on the list, we don't care
+		if items.contains(item) && !isOurKind(item: item) {
+			removeFromItems(item: item)
+		} else if !items.contains(item) && isOurKind(item: item) {
+			addToItems(item: item)
+		} else if items.contains(item) {
+			objectWillChange.send()
+		}
+	}
+	
+	@objc func shoppingItemWillBeDeleted(_ notification: Notification) {
+		// the notification has a reference to the item that will be deleted
+		// if we're holding on to it, now's the time to remove it from the items array.
+		guard let item = notification.object as? ShoppingItem else { return }
+		if items.contains(item) {
+			removeFromItems(item: item)
+		}
+	}
+		
+	func isOurKind(item: ShoppingItem) -> Bool {
 		switch usageType {
 			case .singleSectionShoppingList, .multiSectionShoppingList:
-				return true
+				return item.onList == true
 			case .purchasedItemShoppingList:
-				return false
+				return item.onList == false
 			case .locationSpecificShoppingList:
-				return nil
+				return item.location == specificLocation
 		}
+
 	}
 	
 	// call this loadItems once the object has been created, before using it. in usage,
@@ -83,51 +115,28 @@ class ShoppingListViewModel: ObservableObject {
 	// for usage = .locationSpecificShoppingList, and this is where we associate the
 	// location for this case
 	func loadItems(at location: Location? = nil) {
-		cancelSubscriptions()
-		switch usageType {
-			case .singleSectionShoppingList, .multiSectionShoppingList:
-				items = ShoppingItem.currentShoppingList(onList: true)
-			case .purchasedItemShoppingList:
-				items = ShoppingItem.currentShoppingList(onList: false)
-			case .locationSpecificShoppingList:
-				specificLocation = location!
-				if let locationItems = location!.items as? Set<ShoppingItem> {
-					items = Array(locationItems)
+		if dataHasNotBeenLoaded {
+			switch usageType {
+				case .singleSectionShoppingList, .multiSectionShoppingList:
+					items = ShoppingItem.currentShoppingList(onList: true)
+				case .purchasedItemShoppingList:
+					items = ShoppingItem.currentShoppingList(onList: false)
+				case .locationSpecificShoppingList:
+					specificLocation = location!
+					if let locationItems = location!.items as? Set<ShoppingItem> {
+						items = Array(locationItems)
 				}
-		}
-		print("shopping list loaded. \(items.count) items.")
-		sortItems()
-		establishSubscriptions()
-	}
-	
-	// cancellation of subscriptions.  use this if the items array is
-	// about to change size, because we'll need to remove a cancellable or
-	// add a cancellable. and since we don't know which cancellable matches
-	// which item, we'll just cancel everything.
-	func cancelSubscriptions() {
-		cancellables.forEach({ $0.cancel() })
-		cancellables.removeAll()
-	}
-
-	// establish subscriptions sets up the cancellables array.  when called,
-	// we assume that the set of cancellables is empty
-	func establishSubscriptions() {
-		assert(cancellables.isEmpty, "The set of cancellables should be empty.")
-		for item in items {
-			// add a subscription that will spit back an objectWillChange of ourself
-			item.objectWillChange
-				.sink(receiveValue: { _ in
-					self.objectWillChange.send()
-					//print("received a value from shopping item")
-				})
-				.store(in: &cancellables)
+			}
+			print("shopping list loaded. \(items.count) items.")
+			sortItems()
+			dataHasNotBeenLoaded = true
 		}
 	}
-	
+		
 	// we'll do all the sorting ourself and not rely on Core Data sorting anything
 	// for us -- we'll need to do this when loading data, of course, (yes, Core Data
-	// would be better for this), bat also whenever we make an edit of an item
-	// that could change the sort order (which is pretty much any edit or addition).
+	// might be better for this), but also whenever we make an edit of an item
+	// that could change the sort order (which varies depending on who we are).
 	private func sortItems() {
 		switch usageType {
 			case .singleSectionShoppingList, .multiSectionShoppingList:
@@ -138,42 +147,44 @@ class ShoppingListViewModel: ObservableObject {
 		}
 	}
 	
-	func removeFromItems(item: ShoppingItem) {
+	// simple utility to remove an item (known to exist)
+	private func removeFromItems(item: ShoppingItem) {
 		let index = items.firstIndex(of: item)!
 		items.remove(at: index)
 	}
-	
+
+	// simple utility to add an item (that we know should be on our list)
+	private func addToItems(item: ShoppingItem) {
+		items.append(item)
+		sortItems()
+	}
+
 	// changes availability flag for an item
 	func toggleAvailableStatus(for item: ShoppingItem) {
+		objectWillChange.send()
 		item.isAvailable.toggle()
 		ShoppingItem.saveChanges()
 	}
 	
 	// changes onList status for a single item
-	func toggleOnListStatus(for item: ShoppingItem) {
-		cancelSubscriptions()
+	func moveToOtherList(item: ShoppingItem) {
 		removeFromItems(item: item)
 		item.onList.toggle()
-		establishSubscriptions()
 		ShoppingItem.saveChanges()
 	}
 	
-	// changes onList status for a an array of items
-	func toggleOnListStatus(for items: [ShoppingItem]) {
-		cancelSubscriptions()
+	// changes onList status for an array of items
+	func moveToOtherList(items: [ShoppingItem]) {
 		for item in items {
 			item.onList.toggle()
 			removeFromItems(item: item)
 		}
-		establishSubscriptions()
 		ShoppingItem.saveChanges()
 	}
 	
 	// moves all items off the current list.  that means our array
-	// will shrink down to the empty list
-	func toggleAllItemsOnListStatus() {
-		// stop listening to changes from items
-		cancelSubscriptions()
+	// will shrink down to the empty array
+	func moveAllItemsToOtherList() {
 		for item in items {
 			item.onList.toggle()
 		}
@@ -185,66 +196,36 @@ class ShoppingListViewModel: ObservableObject {
 	
 	// marks all items in the display as available
 	func markAllItemsAvailable() {
+		objectWillChange.send()
 		for item in items where !item.isAvailable {
 			item.isAvailable = true
 		}
 		ShoppingItem.saveChanges()
 	}
 	
-	// in deleting an item, get the subscriptions out of the way (we do not
-	// want to hang on to a Core Data item that's going away), drop the item
-	// out of the array, and reset the subscriptions to all items
+	// deletes an item.  this results in a callback, both to ourself and the other
+	// view models like us, to take the item out of the array of items, if we
+	// have this item in our array.
 	func delete(item: ShoppingItem) {
-		cancelSubscriptions()
-		removeFromItems(item: item)
-		establishSubscriptions()
+		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item, userInfo: nil)
 		ShoppingItem.delete(item: item, saveChanges: true)
 	}
 	
+	// updates data for a ShoppingItem
 	func updateDataFor(item: ShoppingItem?, using editableData: EditableShoppingItemData) {
-		// if the incoming item is not nil, then this is just a straight update
-		// of an existing object. in some cases, this could mean removing an item
-		// from our list of items if .onList changed.  otherwise, we must create the new
-		// ShoppingItem here and add it to our list of items -- if it's to be on our list!
-
-		// we may be adding a new item here; or even removing a current item.
-		cancelSubscriptions()
-		// if we already have an editableItem, use it, else create it now.
-		// we'll also do the logic of what's happening with the onList value
-		// of whatever item we're dealing with
-		var itemForCommit: ShoppingItem
-		if let itemBeingEdited = item {
-			// for the case of an existing item that is now on our list, we must
-			// remove it if the new onList value will take it off the list
-			itemForCommit = itemBeingEdited
-			if let onListValue = ourOnListValue, editableData.onList != onListValue {
-				removeFromItems(item: itemForCommit)
-			}
-		} else {
-			// but for a new item, we'll put it on our list only if its onList value to be
-			// agrees with the items we track
-			itemForCommit = ShoppingItem.addNewItem()
-			if let onListValue = ourOnListValue, editableData.onList == onListValue {
-				items.append(itemForCommit)
-			}
+		
+		// if item is nil, it's a signal to add a new item with the packaged data
+		guard let item = item else {
+			let newItem = ShoppingItem.addNewItem()
+			newItem.updateValues(from: editableData)
+			NotificationCenter.default.post(name: .shoppingItemAdded, object: newItem)
+			return
 		}
 		
-		// apply the update
-		itemForCommit.updateValues(from: editableData) // an extension on ShoppingItem
-		
-		// special case: if we're a locationSpecificShoppingList, we have to do a removal
-		// of this item from the items array if the item's location was changed.
-		if usageType == .locationSpecificShoppingList {
-			if itemForCommit.location != specificLocation {
-				removeFromItems(item: itemForCommit)
-			}
-		}
-		
-		// the order of items is likely affected, either because of a new object
-		// being added, or a name/location change affects the sort order.
-		sortItems()
-		establishSubscriptions()
+		// the item is not nil, so it's a normal update
+		item.updateValues(from: editableData)
 		ShoppingItem.saveChanges()
+		NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
 	}
 		
 	// provides a list of locations currently represented by objects in

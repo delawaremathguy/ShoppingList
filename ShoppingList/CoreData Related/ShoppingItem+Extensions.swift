@@ -110,32 +110,9 @@ extension ShoppingItem: Identifiable {
 	}
 	
 	var backgroundColor: UIColor {
-		return location!.uiColor()
+		return location?.uiColor() ?? UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
 	}
-	
-	// these functions coordinate state transitions of ShoppingItems,
-	// which are onList or not.
-//	func moveToShoppingList(saveChanges: Bool = false) {
-//		onList = true
-//		if saveChanges {
-//			Self.saveChanges()
-//		}
-//	}
-	
-//	func moveToPuchased(saveChanges: Bool = false) {
-//		onList = false
-//		if saveChanges {
-//			Self.saveChanges()
-//		}
-//	}
-	
-//	func mark(available: Bool, saveChanges: Bool = false) {
-//		isAvailable = available
-//		if saveChanges {
-//			Self.saveChanges()
-//		}
-//	}
-	
+		
 	func setLocation(_ location: Location) {
 		// if this ShoppingItem is already linked to a Location,
 		// remove its reference from that location now (notice use of ?.?.!)

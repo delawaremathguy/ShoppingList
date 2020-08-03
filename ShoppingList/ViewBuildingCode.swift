@@ -26,7 +26,7 @@ import SwiftUI
 func shoppingItemContextMenu(viewModel: ShoppingListViewModel, for item: ShoppingItem,
 														 deletionTrigger: @escaping () -> Void) -> some View {
 	Button(action: {
-		viewModel.toggleOnListStatus(for: item)
+		viewModel.moveToOtherList(item: item)
 	}) {
 		Text(item.onList ? "Move to Purchased" : "Move to ShoppingList")
 		Image(systemName: item.onList ? "purchased" : "cart")

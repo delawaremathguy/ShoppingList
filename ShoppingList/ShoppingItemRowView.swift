@@ -55,8 +55,8 @@ struct ShoppingItemRowData {
 	
 	init(item: ShoppingItem, showLocation: Bool = true) {
 		isAvailable  = item.isAvailable
-		name = item.name!
-		locationName = item.location!.name!
+		name = item.name ?? "Item being deleted"
+		locationName = item.location?.name ?? "Some Location"
 		quantity = item.quantity
 		self.showLocation = showLocation
 	}

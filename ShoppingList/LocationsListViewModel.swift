@@ -9,8 +9,8 @@
 import Foundation
 
 // a LocationsListViewModel object provides a window into the Code Data store that
-// can be used by LocationsTabView.
-// it provides both data out for the view to consume, and handles user intents from the View
+// can be used by LocationsTabView.  it provides both data out for the view to consume,
+// and handles user intents from the View
 // back to Core Data (with notification to the View that the viewModel has changed).
 
 class LocationsListViewModel: ObservableObject {
