@@ -92,18 +92,16 @@ extension Location: Identifiable {
 			newLocation.green = codableLocation.green
 			newLocation.blue = codableLocation.blue
 			newLocation.opacity = codableLocation.opacity
+			NotificationCenter.default.post(name: .locationAdded, object: newLocation)
 		}
 	}
 	
 	static func delete(location: Location, saveChanges: Bool = false) {
 		// you cannot delete the unknownLocation
 		guard location.visitationOrder != kUnknownLocationVisitationOrder else { return }
+		
 		// retrieve all items for this location so we can work with them
-		// the "if let" statement will succeed, since we know the type of location.items (!)
-		var itemsAtThisLocation = Set<ShoppingItem>()
-		if let shoppingItems = location.items as? Set<ShoppingItem> {
-			itemsAtThisLocation = shoppingItems
-		}
+		let itemsAtThisLocation = location.items as? Set<ShoppingItem> ?? Set<ShoppingItem>()
 		
 		// take all shopping items associated with this location and
 		// move then to the unknown location
@@ -112,6 +110,7 @@ extension Location: Identifiable {
 			item.setLocation(theUnknownLocation)
 		}
 		// and finish the deletion
+		NotificationCenter.default.post(name: .locationWillBeDeleted, object: location)
 		location.managedObjectContext?.delete(location)
 		if saveChanges {
 			PersistentStore.shared.saveContext()

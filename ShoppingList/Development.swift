@@ -103,14 +103,16 @@ func populateDatabaseFromJSON() {
 }
 
 func deleteAllData() {
-	let items1 = ShoppingItem.allShoppingItems()
-	for item in items1 {
+	let shoppingItems = ShoppingItem.allShoppingItems()
+	for item in shoppingItems {
+		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item)
 		ShoppingItem.delete(item: item)
 	}
 	
-	let items2 = Location.allLocations(userLocationsOnly: true)
-	for item in items2 {
-		Location.delete(location: item)
+	let locations = Location.allLocations(userLocationsOnly: true)
+	for location in locations {
+		NotificationCenter.default.post(name: .locationWillBeDeleted, object: location)
+		Location.delete(location: location)
 	}
 	
 	Location.saveChanges()

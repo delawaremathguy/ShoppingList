@@ -119,6 +119,7 @@ extension ShoppingItem: Identifiable {
 		self.location?.removeFromItems(self)
 		self.location = location
 		visitationOrder = location.visitationOrder
+		NotificationCenter.default.post(name: .shoppingItemEdited, object: self, userInfo: nil)
 	}
 }
 

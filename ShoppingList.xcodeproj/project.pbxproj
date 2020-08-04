@@ -140,7 +140,6 @@
 				D6931D6B24C4C60900A61BB6 /* TimerTabView.swift */,
 				D65C931724C5DC9B003E6EB7 /* GlobalTimer.swift */,
 				D6923DD724D1E3F1004A0975 /* ShoppingListViewModel.swift */,
-				D69BD17324D84D1100339513 /* NotificationName+Extensions.swift */,
 				D62B88312451162D0051A7CE /* ShoppingListTabView1.swift */,
 				D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */,
 				D6EF557C246D7421007D636B /* PurchasedTabView.swift */,
@@ -191,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				D6AE3642246F035400F7A237 /* Bundle+Extensions.swift */,
+				D69BD17324D84D1100339513 /* NotificationName+Extensions.swift */,
 				D612E16024898EBB007E1412 /* Array+Extensions.swift */,
 			);
 			path = "Convenience Extensions";

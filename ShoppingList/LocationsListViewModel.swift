@@ -21,18 +21,64 @@ class LocationsListViewModel: ObservableObject {
 	// quick access to count
 	var locationCount: Int { locations.count }
 	
+	// have we ever been loaded or not
+	private var dataHasNotBeenLoaded = true
+
+	
+	init() {
+		// sign us up for Location change operations
+		NotificationCenter.default.addObserver(self, selector: #selector(locationAdded),
+																					 name: .locationAdded, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(locationEdited),
+																					 name: .locationEdited, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(locationWillBeDeleted),
+																					 name: .locationWillBeDeleted, object: nil)
+	}
+
+	// MARK: - Responses to changes in Location objects
+	
+
+	@objc func locationAdded(_ notification: Notification) {
+		// the notification has a reference to the location that will be added.
+		// if we don't have it, now's the time to add it to the locations array.
+		guard let location = notification.object as? Location else { return }
+		if !locations.contains(location) {
+			locations.append(location)
+			locations.sort(by: <)
+		}
+	}
+	
+	@objc func locationEdited(_ notification: Notification) {
+		// the notification has a reference to the location that was edited.
+		// if we're holding on to it, a sort may be necessary.
+		guard let location = notification.object as? Location else { return }
+		if locations.contains(location) {
+			locations.sort(by: <)
+		}
+	}
+	
+	@objc func locationWillBeDeleted(_ notification: Notification) {
+		// the notification has a reference to the location that will be deleted.
+		// if we're holding on to it, now's the time to remove it from the locations array.
+		guard let location = notification.object as? Location else { return }
+		if locations.contains(location) {
+			let index = locations.firstIndex(of: location)!
+			locations.remove(at: index)
+		}
+	}
+
 	// call this loadItems once the object has been created, to populate the locations
 	func loadLocations() {
-		locations = Location.allLocations(userLocationsOnly: false)
-		locations.sort(by: <)
-		print("locations list loaded. \(locations.count) location.")
+		if dataHasNotBeenLoaded {
+			locations = Location.allLocations(userLocationsOnly: false)
+			locations.sort(by: <)
+			print("locations list loaded. \(locations.count) location.")
+			dataHasNotBeenLoaded = false
+		}
 	}
 
 	func delete(location: Location) {
-		let index = locations.firstIndex(of: location)!
-		locations.remove(at: index)
-		// the Location class takes care of moving items in this location
-		// over to the unknown location.
+		NotificationCenter.default.post(name: .locationWillBeDeleted, object: location)
 		Location.delete(location: location, saveChanges: true)
 	}
 	
@@ -41,22 +87,37 @@ class LocationsListViewModel: ObservableObject {
 		// otherwise, we must create the new Location here and add it to
 		// our list of locations
 		
-		// if we already have an editableItem, use it, else create it now and add to locations
-		var itemForCommit: Location
-		if let itemBeingEdited = location {
-			itemForCommit = itemBeingEdited
-		} else {
-			itemForCommit = Location.addNewLocation()
-			locations.append(itemForCommit)
+		// if location is nil, it's a signal to add a new item with the packaged data
+		guard let location = location else {
+			let newLocation = Location.addNewLocation()
+			newLocation.updateValues(from: editableData)
+			NotificationCenter.default.post(name: .locationAdded, object: newLocation)
+			return
 		}
-
-		// apply the update
-		itemForCommit.updateValues(from: editableData) // an extension on Location
 		
-		// the order of items is likely affected, either because of a new object
-		// being added, or a name/location change affects the sort order.
-		// this will trigger the @Published notification
-		locations.sort(by: <)
+		// the location is not nil, so it's a normal update
+		location.updateValues(from: editableData)
+		Location.saveChanges()
+		NotificationCenter.default.post(name: .locationAdded, object: location)
+
+//
+//
+//		// if we already have an editableItem, use it, else create it now and add to locations
+//		var itemForCommit: Location
+//		if let itemBeingEdited = location {
+//			itemForCommit = itemBeingEdited
+//		} else {
+//			itemForCommit = Location.addNewLocation()
+//			locations.append(itemForCommit)
+//		}
+//
+//		// apply the update
+//		itemForCommit.updateValues(from: editableData) // an extension on Location
+//
+//		// the order of items is likely affected, either because of a new object
+//		// being added, or a name/location change affects the sort order.
+//		// this will trigger the @Published notification
+//		locations.sort(by: <)
 	}
 
 }
