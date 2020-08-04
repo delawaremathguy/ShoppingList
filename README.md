@@ -26,7 +26,7 @@ My Last Update of note was **August 4, 2020,  about 00:50 GMT**, when these were
 
 * I also am using a little bit of a new technique with the new code to do *some* deletions. If an item listed in View1 appears in a detail-like, child View2 and is to be "deleted" in View2, View2 dismisses and queues the actual deletion with the right viewModel on the main queue with a short delay (about 1/2 second).  That way, View2 goes away, SwiftUI does all the view clean-up, we return to View1, and we see a nice transition as the item is then deleted. this delay tactic seems to avoid all the ugly messages about a tableview being laid out outside the view hierarchy (in XCode 11.6), as well.
 
-I'm have, briefly, tesxted out this code with XCode 12beta 3, and here are some observations so far:
+I have, briefly, tested out this code with XCode 12beta 3, and here are some observations so far:
 
 * Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  However, XCode will generate a duplicate conformance error, not on my adding conformance, but *on its own generated file*, which was a little confusing at first.
 * GroupedListStyle now puts a section header in .uppercase by default, but you can override that by using .textcase(.none) so the header displays the title exactly as you want.
