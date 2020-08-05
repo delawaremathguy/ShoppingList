@@ -43,7 +43,7 @@ struct LocationsTabView: View {
 				// 2. then the list of locations
 				List {
 					ForEach(viewModel.locations) { location in
-						NavigationLink(destination: AddorModifyLocationView(editableLocation: location, viewModel: self.viewModel)) {
+						NavigationLink(destination: AddorModifyLocationView(viewModel: self.viewModel, editableLocation: location)) {
 							LocationRowView(rowData: LocationRowData(location: location))
 								.contextMenu {
 									Button(action: {

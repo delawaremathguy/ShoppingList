@@ -23,7 +23,7 @@ struct AddorModifyLocationView: View {
 	// so that if move over to the AddorModifyShoppingItemView, we can track
 	// edits back here, especially if we either change the object's location
 	// or delete the object.
-	@ObservedObject var shoppingItemsViewModel = ShoppingListViewModel(type: .locationSpecificShoppingList)
+	@ObservedObject var shoppingItemsViewModel: ShoppingListViewModel //(type: .locationSpecificShoppingList)
 	
 	// all editableData is packaged here:
 	@State private var editableData = EditableLocationData()
@@ -35,6 +35,15 @@ struct AddorModifyLocationView: View {
 	// showDeleteConfirmation controls whether an Alert will appear
 	// to confirm deletion of a Location
 	@State private var showDeleteConfirmation: Bool = false
+	
+	// we use an init, so the ShoppingListViewModel for the shopping items at this
+	// locations gets initialized properly
+	init(viewModel: LocationsListViewModel, editableLocation: Location? = nil) {
+		self.viewModel = viewModel
+		self.editableLocation = editableLocation
+		shoppingItemsViewModel = ShoppingListViewModel(type: .locationSpecificShoppingList(editableLocation))
+		
+	}
 	
 	var body: some View {
 		Form {
@@ -144,15 +153,5 @@ struct AddorModifyLocationView: View {
 		}
 	}
 	
-//	func itemsArray(at location: Location?) -> [ShoppingItem] {
-//		// note: we could add a sorted parameter, here, to indicated whether
-//		// the array returned should be sorted, but it's not worth the
-//		// extra code to turn a Set into an Array for the non-sorted case.
-//		// besides, the list of items in a Location is usually quite short.
-//		if let shoppingItems = location?.items as? Set<ShoppingItem> {
-//			return shoppingItems.sorted(by: { $0.name! < $1.name! })
-//		}
-//		return [ShoppingItem]()
-//	}
 }
 

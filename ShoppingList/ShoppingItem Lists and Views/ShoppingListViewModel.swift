@@ -21,22 +21,14 @@ class ShoppingListViewModel: ObservableObject {
 		case singleSectionShoppingList 		// drives ShoppingListTabView1
 		case multiSectionShoppingList 		// drives ShoppingListTabView2
 		case purchasedItemShoppingList 		// drives PurchasedTabView
-		case locationSpecificShoppingList	// drives list of items in LocationsTabView
+		case locationSpecificShoppingList(Location?)	// drives LocationsTabView with associated data
 	}
 	var usageType: viewModelUsageType
-	
-	// for the case of managing a list of items at a specific location, we will
-	// need to keep track of which location we're watching.  it's a little
-	// clumsy to do it this way -- it'd be nicer to attach the location directly
-	// to the case locationSpecificShoppingList as associated data; this may happen
-	// eventually, but in the current code sequence at the call site, i don't
-	// know the location at the time i create the model.
-	var specificLocation: Location? = nil
-	
+		
 	// the items on our list
 	@Published var items = [ShoppingItem]()
 	
-	// have we ever been loaded or not
+	// have we ever been loaded or not?  once is enough, thank you.
 	private var dataHasNotBeenLoaded = true
 		
 	// quick accessors as computed properties
@@ -45,7 +37,8 @@ class ShoppingListViewModel: ObservableObject {
 	
 	// MARK: - Initialization
 	
-	// init to be one of four different types.
+	// init to be one of four different types. for a location-specific model, the
+	// type will have associated data of the location we're attached to
 	init(type: viewModelUsageType) {
 		usageType = type
 		// sign us up for ShoppingItem change operations
@@ -60,7 +53,7 @@ class ShoppingListViewModel: ObservableObject {
 	// MARK: - Responses to changes in ShoppingItem objects
 	
 	@objc func shoppingItemAdded(_ notification: Notification) {
-		// the notification has a reference to the item that has been added
+		// the notification has a reference to the item that has been added.
 		// if we're interested in it, now's the time to add it to the items array.
 		guard let item = notification.object as? ShoppingItem else { return }
 		if !items.contains(item) && isOurKind(item: item) {
@@ -71,10 +64,10 @@ class ShoppingListViewModel: ObservableObject {
 	@objc func shoppingItemEdited(_ notification: Notification) {
 		guard let item = notification.object as? ShoppingItem else { return }
 		// the logic here is mostly:
-		// -- did the edit kick the item off the list? if yes, remove it
-		// -- did the edit put the item on th list? if so, add it
+		// -- did the edit kick the item off our list? if yes, remove it
+		// -- did the edit put the item on our list? if so, add it
 		// -- if it's on the list, broadcast the change to SwiftUI
-		// if it's not on the list, we don't care
+		// -- otherwise, we don't care
 		if items.contains(item) && !isOurKind(item: item) {
 			removeFromItems(item: item)
 		} else if !items.contains(item) && isOurKind(item: item) {
@@ -85,7 +78,7 @@ class ShoppingListViewModel: ObservableObject {
 	}
 	
 	@objc func shoppingItemWillBeDeleted(_ notification: Notification) {
-		// the notification has a reference to the item that will be deleted
+		// the notification has a reference to the item that will be deleted.
 		// if we're holding on to it, now's the time to remove it from the items array.
 		guard let item = notification.object as? ShoppingItem else { return }
 		if items.contains(item) {
@@ -93,16 +86,16 @@ class ShoppingListViewModel: ObservableObject {
 		}
 	}
 		
+	// says whether a shopping item is of interest to us.
 	func isOurKind(item: ShoppingItem) -> Bool {
 		switch usageType {
 			case .singleSectionShoppingList, .multiSectionShoppingList:
 				return item.onList == true
 			case .purchasedItemShoppingList:
 				return item.onList == false
-			case .locationSpecificShoppingList:
-				return item.location == specificLocation
+			case .locationSpecificShoppingList(let location):
+				return item.location == location! // this must be not nil (adding a Location has no items)
 		}
-
 	}
 	
 	// call this loadItems once the object has been created, before using it. in usage,
@@ -112,8 +105,7 @@ class ShoppingListViewModel: ObservableObject {
 	// (and remember, even though we see that something has changed, we don;t know
 	// exactly what changed).
 	// the location parameter only plays a role
-	// for usage = .locationSpecificShoppingList, and this is where we associate the
-	// location for this case
+	// for usage = .locationSpecificShoppingList, the type has the location as associated data
 	func loadItems(at location: Location? = nil) {
 		if dataHasNotBeenLoaded {
 			switch usageType {
@@ -121,15 +113,14 @@ class ShoppingListViewModel: ObservableObject {
 					items = ShoppingItem.currentShoppingList(onList: true)
 				case .purchasedItemShoppingList:
 					items = ShoppingItem.currentShoppingList(onList: false)
-				case .locationSpecificShoppingList:
-					specificLocation = location!
+				case .locationSpecificShoppingList(let location):
 					if let locationItems = location!.items as? Set<ShoppingItem> {
 						items = Array(locationItems)
 				}
 			}
 			print("shopping list loaded. \(items.count) items.")
 			sortItems()
-			dataHasNotBeenLoaded = true
+			dataHasNotBeenLoaded = false
 		}
 	}
 		
