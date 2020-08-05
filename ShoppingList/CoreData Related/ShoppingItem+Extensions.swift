@@ -71,30 +71,6 @@ extension ShoppingItem: Identifiable {
 		return newItem
 	}
 
-	static func insertNewItems(from codableShoppingItems: [ShoppingItemCodable]) {
-		
-		// get all Locations that are not the unknown location
-		// group by id for faster lookup below when adding an item to a location
-		let locations = Location.allLocations(userLocationsOnly: true)
-		let name2Location = Dictionary(grouping: locations, by: { $0.name! })
-		
-		for codableShoppingItem in codableShoppingItems {
-			let newItem = addNewItem() // new UUID is created here
-			newItem.name = codableShoppingItem.name
-			newItem.quantity = codableShoppingItem.quantity
-			newItem.onList = codableShoppingItem.onList
-			newItem.isAvailable = codableShoppingItem.isAvailable
-			
-			// look up matching location by id
-			// anything that doesn't match goes to the unknown location.
-			if let location = name2Location[codableShoppingItem.locationName]?.first {
-				newItem.setLocation(location)
-			} else {
-				newItem.setLocation(Location.unknownLocation()!)
-			}
-		}
-	}
-	
 	static func saveChanges() {
 		PersistentStore.shared.saveContext()
 	}
@@ -119,7 +95,6 @@ extension ShoppingItem: Identifiable {
 		self.location?.removeFromItems(self)
 		self.location = location
 		visitationOrder = location.visitationOrder
-		NotificationCenter.default.post(name: .shoppingItemEdited, object: self, userInfo: nil)
 	}
 }
 

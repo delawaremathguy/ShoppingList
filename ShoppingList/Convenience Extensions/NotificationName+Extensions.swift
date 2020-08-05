@@ -24,7 +24,7 @@ extension Notification.Name {
 	// along as the object when posting these notifications
 	static let shoppingItemAdded = Notification.Name(rawValue: "shoppingItemAdded")
 	static let shoppingItemEdited = Notification.Name(rawValue: "shoppingItemEdited")
-	static let shoppingItemWillBeDeleted = Notification.Name(rawValue: "shoppingItemEdited")
+	static let shoppingItemWillBeDeleted = Notification.Name(rawValue: "shoppingItemDeleted")
 
 	// for changes to locations.  the user should pass the relevant Location
 	// along as the object when posting these notifications

@@ -96,11 +96,54 @@ func writeAsJSON<T>(items: [T], to filename: String) where T: CodableStructRepre
 func populateDatabaseFromJSON() {
 	// it sure is easy to do with HWS's Bundle extension (!)
 	let codableLocations: [LocationCodable] = Bundle.main.decode(from: kLocationsFilename)
-	Location.insertNewLocations(from: codableLocations)
+	insertNewLocations(from: codableLocations)
 	let codableShoppingItems: [ShoppingItemCodable] = Bundle.main.decode(from: kShoppingItemsFilename)
-	ShoppingItem.insertNewItems(from: codableShoppingItems)
+	insertNewItems(from: codableShoppingItems)
 	ShoppingItem.saveChanges()
 }
+
+func insertNewItems(from codableShoppingItems: [ShoppingItemCodable]) {
+	
+	// get all Locations that are not the unknown location
+	// group by id for faster lookup below when adding an item to a location
+	let locations = Location.allLocations(userLocationsOnly: true)
+	let name2Location = Dictionary(grouping: locations, by: { $0.name! })
+	
+	for codableShoppingItem in codableShoppingItems {
+		let newItem = ShoppingItem.addNewItem() // new UUID is created here
+		newItem.name = codableShoppingItem.name
+		newItem.quantity = codableShoppingItem.quantity
+		newItem.onList = codableShoppingItem.onList
+		newItem.isAvailable = codableShoppingItem.isAvailable
+		
+		// look up matching location by id
+		// anything that doesn't match goes to the unknown location.
+		if let location = name2Location[codableShoppingItem.locationName]?.first {
+			newItem.setLocation(location)
+		} else {
+			newItem.setLocation(Location.unknownLocation()!)
+		}
+		
+		NotificationCenter.default.post(name: .shoppingItemAdded, object: newItem, userInfo: nil)
+		NotificationCenter.default.post(name: .locationEdited, object: newItem.location!, userInfo: nil)
+	}
+}
+
+// used to insert data from JSON files in the app bundle
+func insertNewLocations(from codableLocations: [LocationCodable]) {
+	for codableLocation in codableLocations {
+		let newLocation = Location.addNewLocation() // new UUID created here
+		newLocation.name = codableLocation.name
+		newLocation.visitationOrder = codableLocation.visitationOrder
+		newLocation.red = codableLocation.red
+		newLocation.green = codableLocation.green
+		newLocation.blue = codableLocation.blue
+		newLocation.opacity = codableLocation.opacity
+		NotificationCenter.default.post(name: .locationAdded, object: newLocation)
+	}
+}
+
+
 
 func deleteAllData() {
 	let shoppingItems = ShoppingItem.allShoppingItems()

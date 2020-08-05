@@ -82,20 +82,6 @@ extension Location: Identifiable {
 		return nil
 	}
 	
-	// used to insert data from JSON files in the app bundle
-	static func insertNewLocations(from codableLocations: [LocationCodable]) {
-		for codableLocation in codableLocations {
-			let newLocation = addNewLocation() // new UUID created here
-			newLocation.name = codableLocation.name
-			newLocation.visitationOrder = codableLocation.visitationOrder
-			newLocation.red = codableLocation.red
-			newLocation.green = codableLocation.green
-			newLocation.blue = codableLocation.blue
-			newLocation.opacity = codableLocation.opacity
-			NotificationCenter.default.post(name: .locationAdded, object: newLocation)
-		}
-	}
-	
 	static func delete(location: Location, saveChanges: Bool = false) {
 		// you cannot delete the unknownLocation
 		guard location.visitationOrder != kUnknownLocationVisitationOrder else { return }
