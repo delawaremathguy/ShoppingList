@@ -137,22 +137,11 @@
 				D640329F24BB30BE00CC0B94 /* Convenience Extensions */,
 				D6EF5583246D9489007D636B /* CoreData Related */,
 				D6B8A95324636711005F8EF2 /* MainView.swift */,
-				D6931D6B24C4C60900A61BB6 /* TimerTabView.swift */,
+				D6618D9B24D9B00E003523B5 /* ShoppingItem Lists and Views */,
+				D6618D9C24D9B043003523B5 /* Location Lists and Views */,
 				D65C931724C5DC9B003E6EB7 /* GlobalTimer.swift */,
-				D6923DD724D1E3F1004A0975 /* ShoppingListViewModel.swift */,
-				D62B88312451162D0051A7CE /* ShoppingListTabView1.swift */,
-				D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */,
-				D6EF557C246D7421007D636B /* PurchasedTabView.swift */,
-				D6C75D3224B4B123003E445B /* ViewBuildingCode.swift */,
-				D65E0E3A24D35B3A000167B2 /* LocationsListViewModel.swift */,
-				D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */,
-				D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */,
-				D6F375D52485593D005559E6 /* LocationRowView.swift */,
+				D6931D6B24C4C60900A61BB6 /* TimerTabView.swift */,
 				D66FF35324926B6400B3ABC8 /* DevToolsTabView.swift */,
-				D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */,
-				D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */,
-				D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */,
-				D677946124D58F34006EB9CF /* EditableLocationData.swift */,
 				D640329E24BB2FE400CC0B94 /* General Purpose Views */,
 				D62B88332451162E0051A7CE /* Assets.xcassets */,
 				D62B88382451162E0051A7CE /* LaunchScreen.storyboard */,
@@ -194,6 +183,33 @@
 				D612E16024898EBB007E1412 /* Array+Extensions.swift */,
 			);
 			path = "Convenience Extensions";
+			sourceTree = "<group>";
+		};
+		D6618D9B24D9B00E003523B5 /* ShoppingItem Lists and Views */ = {
+			isa = PBXGroup;
+			children = (
+				D6923DD724D1E3F1004A0975 /* ShoppingListViewModel.swift */,
+				D62B88312451162D0051A7CE /* ShoppingListTabView1.swift */,
+				D668A0CB248ACF4F0031E67B /* ShoppingListTabView2.swift */,
+				D6EF557C246D7421007D636B /* PurchasedTabView.swift */,
+				D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */,
+				D6450BD6245F49DB0074DA16 /* AddorModifyShoppingItemView.swift */,
+				D6C75D3224B4B123003E445B /* ViewBuildingCode.swift */,
+				D6C91D8624A8EC09008C8DFF /* EditableShoppingItemData.swift */,
+			);
+			path = "ShoppingItem Lists and Views";
+			sourceTree = "<group>";
+		};
+		D6618D9C24D9B043003523B5 /* Location Lists and Views */ = {
+			isa = PBXGroup;
+			children = (
+				D65E0E3A24D35B3A000167B2 /* LocationsListViewModel.swift */,
+				D6B8A9552463693D005F8EF2 /* LocationsTabView.swift */,
+				D6F375D52485593D005559E6 /* LocationRowView.swift */,
+				D65721B22464591700E4AAAF /* AddorModifyLocationView.swift */,
+				D677946124D58F34006EB9CF /* EditableLocationData.swift */,
+			);
+			path = "Location Lists and Views";
 			sourceTree = "<group>";
 		};
 		D6EF5583246D9489007D636B /* CoreData Related */ = {

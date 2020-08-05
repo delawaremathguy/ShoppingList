@@ -159,6 +159,8 @@ class ShoppingListViewModel: ObservableObject {
 		sortItems()
 	}
 
+	// MARK: - User Intents
+	
 	// changes availability flag for an item
 	func toggleAvailableStatus(for item: ShoppingItem) {
 		objectWillChange.send()
@@ -203,9 +205,9 @@ class ShoppingListViewModel: ObservableObject {
 		ShoppingItem.saveChanges()
 	}
 	
-	// deletes an item.  this results in a callback, both to ourself and the other
-	// view models like us, to take the item out of the array of items, if we
-	// have this item in our array.
+	// deletes an item.  this results in a callback (notification), both to ourself and all other
+	// view models like us, to take the item out of the array of items before
+	// we delete it from Core Data
 	func delete(item: ShoppingItem) {
 		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item, userInfo: nil)
 		ShoppingItem.delete(item: item, saveChanges: true)
@@ -214,7 +216,10 @@ class ShoppingListViewModel: ObservableObject {
 	// updates data for a ShoppingItem
 	func updateDataFor(item: ShoppingItem?, using editableData: EditableShoppingItemData) {
 		
-		// if item is nil, it's a signal to add a new item with the packaged data
+		// if item is nil, it's a signal to add a new item with the packaged data, as well as
+		// notify all other view models like us, that we have just added a new shopping
+		// item and that they should put this item in their array of items if it's
+		// of interest to them
 		guard let item = item else {
 			let newItem = ShoppingItem.addNewItem()
 			newItem.updateValues(from: editableData)
@@ -222,7 +227,8 @@ class ShoppingListViewModel: ObservableObject {
 			return
 		}
 		
-		// the item is not nil, so it's a normal update
+		// the item is not nil, so it's a normal update.  use the same process of
+		// notifying ou and other view models like us, that the item has been edited
 		item.updateValues(from: editableData)
 		ShoppingItem.saveChanges()
 		NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
