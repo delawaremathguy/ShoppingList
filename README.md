@@ -14,9 +14,9 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **August 7, 2020,  about 13:00 GMT**, when these were some of the recent changes I made.
+My Last Update of note was **August 7, 2020,  about 15:00 GMT**, when these were some of the recent changes I made.
 
-* Finally cleaned up shopping list view models (i.e., fixed a bug) to be sure they sent a notification for everything they did and never directly changed the items array on their own, except in response to a notification. This fixes a problem with items not (visually) moving between lists correctly or (visually) being marked as available/unavailable in some cases.
+* Finally cleaned up shopping list and location view models (i.e., fixed a bug or two) to be sure they sent the correct notification for everything they did and never directly changed the items or locations array on their own, except in response to a notification. This fixes a problem with items not updating visually in some places.
 
 * Fixed a silly error (*a coding abnormality*) where the name defining .shoppingItemWillBeDeleted had the wrong string in its definition, so some code was actually treating as edit as both an edit and a WillBeDeleted message.  *duh!*  However, no items actually got deleted from Core Data in the process.  I also reorganized some posting of Notifications so that I was not "over-notifying."
 

@@ -35,7 +35,7 @@ class ShoppingListViewModel: ObservableObject {
 	var itemCount: Int { items.count }
 	var hasUnavailableItems: Bool { items.count(where: { !$0.isAvailable }) > 0 }
 	
-	// MARK: - Initialization
+	// MARK: - Initialization and Startup
 	
 	// init to be one of four different types. for a location-specific model, the
 	// type will have associated data of the location we're attached to
@@ -50,7 +50,39 @@ class ShoppingListViewModel: ObservableObject {
 																					 name: .shoppingItemWillBeDeleted, object: nil)
 	}
 	
+	// call this loadItems once the object has been created, before using it. in usage,
+	// i have called this in .onAppear(), and even though onAppear() can be called
+	// multiple times on the same View -- that's why we have the dataHasNotBeenLoaded so
+	// that we're not constantly reloading the items array.  after all, all changes
+	// to items come through us, no matter whether we are on- or -offscreen, so we
+	// claim that we're always in the right state once loaded.
+	func loadItems() {
+		if dataHasNotBeenLoaded {
+			switch usageType {
+				case .singleSectionShoppingList, .multiSectionShoppingList:
+					items = ShoppingItem.currentShoppingList(onList: true)
+				case .purchasedItemShoppingList:
+					items = ShoppingItem.currentShoppingList(onList: false)
+				case .locationSpecificShoppingList(let location):
+					if let locationItems = location!.items as? Set<ShoppingItem> {
+						items = Array(locationItems)
+				}
+			}
+			print("shopping list loaded. \(items.count) items.")
+			sortItems()
+			dataHasNotBeenLoaded = false
+		}
+	}
+
+	
 	// MARK: - Responses to changes in ShoppingItem objects
+	
+	// ALL THREE OF THESE FUNCTIONS RESPOND TO NOTIFICATIONS that an item has
+	// been created, edited, or deleted.  Each must determine whether
+	// the event affects the items array.  Note that no other functions
+	// should be changing the items array on their own -- the whole idea is that
+	// sending a notification let's every other shopping list view model know about
+	// the change so they can adjust their own list of items.
 	
 	@objc func shoppingItemAdded(_ notification: Notification) {
 		// the notification has a reference to the item that has been added.
@@ -66,14 +98,14 @@ class ShoppingListViewModel: ObservableObject {
 		// the logic here is mostly:
 		// -- did the edit kick the item off our list? if yes, remove it
 		// -- did the edit put the item on our list? if so, add it
-		// -- if it's on the list, broadcast the change to SwiftUI
+		// -- if it's on the list, sort the items (the edit may have changed the sorting order
 		// -- otherwise, we don't care
 		if items.contains(item) && !isOurKind(item: item) {
 			removeFromItems(item: item)
 		} else if !items.contains(item) && isOurKind(item: item) {
 			addToItems(item: item)
 		} else if items.contains(item) {
-			objectWillChange.send()
+			sortItems()
 		}
 	}
 	
@@ -95,32 +127,6 @@ class ShoppingListViewModel: ObservableObject {
 				return item.onList == false
 			case .locationSpecificShoppingList(let location):
 				return item.location == location! // this must be not nil (adding a Location has no items)
-		}
-	}
-	
-	// call this loadItems once the object has been created, before using it. in usage,
-	// i have called this in .onAppear(), and even though onAppear() can be called
-	// multiple times on the same View (each time you change the tab, you get an onAppear)
-	// and reloading seems wasteful, you really need to do it for certain sequences of changes
-	// (and remember, even though we see that something has changed, we don;t know
-	// exactly what changed).
-	// the location parameter only plays a role
-	// for usage = .locationSpecificShoppingList, the type has the location as associated data
-	func loadItems(at location: Location? = nil) {
-		if dataHasNotBeenLoaded {
-			switch usageType {
-				case .singleSectionShoppingList, .multiSectionShoppingList:
-					items = ShoppingItem.currentShoppingList(onList: true)
-				case .purchasedItemShoppingList:
-					items = ShoppingItem.currentShoppingList(onList: false)
-				case .locationSpecificShoppingList(let location):
-					if let locationItems = location!.items as? Set<ShoppingItem> {
-						items = Array(locationItems)
-				}
-			}
-			print("shopping list loaded. \(items.count) items.")
-			sortItems()
-			dataHasNotBeenLoaded = false
 		}
 	}
 		
@@ -151,6 +157,11 @@ class ShoppingListViewModel: ObservableObject {
 	}
 
 	// MARK: - User Intents
+	
+	// ALL FUNCTIONS IN THIS AREA do CRUD changes to an item directly and then send
+	// a notification to this and to all other shopping list view models that we've done something.
+	// if those view models are interested in the item, then they will adjust their
+	// items array accordingly and will publish the change
 	
 	// changes availability flag for an item
 	func toggleAvailableStatus(for item: ShoppingItem) {
@@ -223,6 +234,8 @@ class ShoppingListViewModel: ObservableObject {
 		NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
 	}
 		
+	// MARK: - Functions used by a multi-section view model
+	
 	// provides a list of locations currently represented by objects in
 	// the items array
 	func locationsForItems() -> [Location] {

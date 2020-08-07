@@ -98,8 +98,7 @@ class LocationsListViewModel: ObservableObject {
 		// the location is not nil, so it's a normal update
 		location.updateValues(from: editableData)
 		Location.saveChanges()
-		NotificationCenter.default.post(name: .locationAdded, object: location)
-
+		NotificationCenter.default.post(name: .locationEdited, object: location)
 	}
 
 }

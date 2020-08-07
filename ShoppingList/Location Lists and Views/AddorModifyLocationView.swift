@@ -15,7 +15,7 @@ struct AddorModifyLocationView: View {
 	
 	// editableLocation is either a Location to edit, or nil to signify
 	// that we're creating a new Location in for the viewModel.
-	var editableLocation: Location? = nil
+	var editableLocation: Location?
 	var viewModel: LocationsListViewModel
 	
 	// we use a specialized form of a ShoppingListViewModel in this View to
@@ -37,12 +37,12 @@ struct AddorModifyLocationView: View {
 	@State private var showDeleteConfirmation: Bool = false
 	
 	// we use an init, so the ShoppingListViewModel for the shopping items at this
-	// locations gets initialized properly
-	init(viewModel: LocationsListViewModel, editableLocation: Location? = nil) {
+	// locations gets initialized properly with the location as associated data for
+	// the type locationSpecificShoppingList
+	init(viewModel: LocationsListViewModel, at location: Location? = nil) {
 		self.viewModel = viewModel
-		self.editableLocation = editableLocation
-		shoppingItemsViewModel = ShoppingListViewModel(type: .locationSpecificShoppingList(editableLocation))
-		
+		self.editableLocation = location
+		shoppingItemsViewModel = ShoppingListViewModel(type: .locationSpecificShoppingList(location))
 	}
 	
 	var body: some View {
@@ -147,7 +147,7 @@ struct AddorModifyLocationView: View {
 		if !dataHasBeenLoaded {
 			if let location = editableLocation {
 				editableData = EditableLocationData(location: location)
-				shoppingItemsViewModel.loadItems(at: location)
+				shoppingItemsViewModel.loadItems()
 			} // else we already have default, editable data set up right
 			dataHasBeenLoaded = true
 		}
