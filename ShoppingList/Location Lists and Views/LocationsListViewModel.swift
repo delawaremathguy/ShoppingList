@@ -100,24 +100,6 @@ class LocationsListViewModel: ObservableObject {
 		Location.saveChanges()
 		NotificationCenter.default.post(name: .locationAdded, object: location)
 
-//
-//
-//		// if we already have an editableItem, use it, else create it now and add to locations
-//		var itemForCommit: Location
-//		if let itemBeingEdited = location {
-//			itemForCommit = itemBeingEdited
-//		} else {
-//			itemForCommit = Location.addNewLocation()
-//			locations.append(itemForCommit)
-//		}
-//
-//		// apply the update
-//		itemForCommit.updateValues(from: editableData) // an extension on Location
-//
-//		// the order of items is likely affected, either because of a new object
-//		// being added, or a name/location change affects the sort order.
-//		// this will trigger the @Published notification
-//		locations.sort(by: <)
 	}
 
 }

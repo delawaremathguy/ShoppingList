@@ -154,15 +154,15 @@ class ShoppingListViewModel: ObservableObject {
 	
 	// changes availability flag for an item
 	func toggleAvailableStatus(for item: ShoppingItem) {
-		objectWillChange.send()
 		item.isAvailable.toggle()
+		NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
 		ShoppingItem.saveChanges()
 	}
 	
 	// changes onList status for a single item
 	func moveToOtherList(item: ShoppingItem) {
-		removeFromItems(item: item)
 		item.onList.toggle()
+		NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
 		ShoppingItem.saveChanges()
 	}
 	
@@ -170,7 +170,7 @@ class ShoppingListViewModel: ObservableObject {
 	func moveToOtherList(items: [ShoppingItem]) {
 		for item in items {
 			item.onList.toggle()
-			removeFromItems(item: item)
+			NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
 		}
 		ShoppingItem.saveChanges()
 	}
@@ -180,18 +180,16 @@ class ShoppingListViewModel: ObservableObject {
 	func moveAllItemsToOtherList() {
 		for item in items {
 			item.onList.toggle()
+			NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
 		}
-		// empty the array (this triggers objectWillChange)
-		// and there's no need here to establish subscriptions
-		items = []
 		ShoppingItem.saveChanges()
 	}
 	
 	// marks all items in the display as available
 	func markAllItemsAvailable() {
-		objectWillChange.send()
 		for item in items where !item.isAvailable {
 			item.isAvailable = true
+			NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
 		}
 		ShoppingItem.saveChanges()
 	}

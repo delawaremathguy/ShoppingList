@@ -14,9 +14,11 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **August 5, 2020,  about 18:00 GMT**, when these were some of the recent changes I made.
+My Last Update of note was **August 7, 2020,  about 13:00 GMT**, when these were some of the recent changes I made.
 
-* Fixed a silly error (*a coding abnormality*) where the name defining .shoppingItemWillBeDeleted had the wrong string in its definition, so some code was actually treating as edit as both an edit and a WillBeDeleted message.  *duh!*  No items actually got deleted from Core Data in the process, but they were being removed from display in some list views.  I also reorganized some posting of Notifications so that I was not "over-notifying."
+* Finally cleaned up shopping list view models (i.e., fixed a bug) to be sure they sent a notification for everything they did and never directly changed the items array on their own, except in response to a notification. This fixes a problem with items not (visually) moving between lists correctly or (visually) being marked as available/unavailable in some cases.
+
+* Fixed a silly error (*a coding abnormality*) where the name defining .shoppingItemWillBeDeleted had the wrong string in its definition, so some code was actually treating as edit as both an edit and a WillBeDeleted message.  *duh!*  However, no items actually got deleted from Core Data in the process.  I also reorganized some posting of Notifications so that I was not "over-notifying."
 
 * Last week's major rewrite effort to replace all uses of @FetchRequest was, at best, *a partial success*.  My first releases had  code that was  not fully worked out. As I went through the week, I found several omissions as well as a major shortcoming of the design.  I kept running into almost exactly the same issue I had before when using @FetchRequest. But that failed rewrite helped me to recognize the *real issue* at hand in relying completely on SwiftUI and Combine: when something sends out an "objectWillChange" type of message, the problem for anyone listening is that we don't really know *which* object changed or *what* exactly was the type of change.  
 
