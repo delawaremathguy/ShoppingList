@@ -16,8 +16,6 @@ import Foundation
 // -- item has been edited
 // -- item will be deleted
 //
-// we don't do anything similar for Locations, because the app has only one
-// view model, so it does it's own thing
 
 extension Notification.Name {
 	// for changes to shopping items.  the user should pass the relevant ShoppingItem

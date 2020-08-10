@@ -89,7 +89,7 @@ struct PurchasedTabView: View {
 			
 		} // end of NavigationView
 			.onAppear {
-				print("onAppear in Parchased tab")
+//				print("onAppear in Parchased tab")
 				self.viewModel.loadItems()
 				self.searchText = ""
 		}

@@ -24,11 +24,11 @@ import SwiftUI
 // looked to be the same ... it was driven by ForEach(shoppingItems) and did not
 // really see changes to the fields of the item.
 
-// so to make this "work," i passed in a ShoppingItem as an @ObservedObject. then
-// we have other problems.  when this ShoppingItem is deleted elsewhere in
-// the app, this View was still holding on to the ShoppingItem (i.e., not really the View,
-// which comes and goes, but SwiftUI for when the View might get re-instantiated) and,
-// depending upon certain timing conditions, would cause a crash: because the
+// so to make this "work," i next passed in a ShoppingItem as an @ObservedObject.
+// updates will be handled correctly.  but then we have other problems.
+// if this ShoppingItem is deleted elsewhere in the app, this View was still
+// holding a reference to the ShoppingItem and, depending upon certain timing conditions
+// that i htink are related to having used @FetchRequest, would cause a crash: because the
 // shopping item reference became meaningless (it was still a Core Data reference
 // to something that was deleted in Core Data terms, but not yet saved out to disk
 // -- i.e., a fault for which .isDeleted is/maybe true and .isFault is true).
@@ -37,14 +37,16 @@ import SwiftUI
 // (a non-optional Int32).
 
 // so some re-thinking forced me into this little trickery below, to pass in the values
-// of an item from the List/ForEach construct for this View for display.
+// of an item from the List/ForEach construct for this View for display, using a custon struct.
 // and now this works fine, although even here, i'm not convinced it should. apparently this
-// syntax is enough for the List/ForEach to recognize the change in any relevant fields.
+// syntax is enough for the List/ForEach to do the right thing for updates.
 
-// but at least i am not holding on to a reference to the object; and i may be getting
-// either some unseen or accidental help
-// because i use a @FetchRequest, which performs a lot of magic behind the scenes in how it
-// forces redraws of the List view in which this view displays.
+// finally, one curiosity is that if you make `var itemData: ShoppingItemRowData` into
+// `@State var itemData: ShoppingItemRowData`, this view will NOT update correctly, for
+// the simple reason that by setting @State, SwiftUI takes full ownership.  nothing outside
+// can reset it (e.g., running the body property that makes the list won't reset the
+// property, even though it looks like it should), and nothing inside the view changes it,
+// so you're stuck with this view until the view finally disappears.
 
 struct ShoppingItemRowData {
 	var isAvailable: Bool = true

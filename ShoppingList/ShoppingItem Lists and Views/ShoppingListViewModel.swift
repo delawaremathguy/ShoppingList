@@ -216,22 +216,16 @@ class ShoppingListViewModel: ObservableObject {
 	// updates data for a ShoppingItem
 	func updateDataFor(item: ShoppingItem?, using editableData: EditableShoppingItemData) {
 		
-		// if item is nil, it's a signal to add a new item with the packaged data, as well as
-		// notify all other view models like us, that we have just added a new shopping
-		// item and that they should put this item in their array of items if it's
-		// of interest to them
-		guard let item = item else {
+		if let item = item {
+			item.updateValues(from: editableData)
+			NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
+		} else {
 			let newItem = ShoppingItem.addNewItem()
 			newItem.updateValues(from: editableData)
 			NotificationCenter.default.post(name: .shoppingItemAdded, object: newItem)
-			return
 		}
 		
-		// the item is not nil, so it's a normal update.  use the same process of
-		// notifying ou and other view models like us, that the item has been edited
-		item.updateValues(from: editableData)
 		ShoppingItem.saveChanges()
-		NotificationCenter.default.post(name: .shoppingItemEdited, object: item)
 	}
 		
 	// MARK: - Functions used by a multi-section view model

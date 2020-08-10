@@ -122,10 +122,12 @@ struct ShoppingListTabView2: View {
 
 		} // end of NavigationView
 			.onAppear {
-				print("onAppear in ShoppingListTabView2")
+//				print("onAppear in ShoppingListTabView2")
 				self.viewModel.loadItems()
-		}
-
+			}
+//			.onReceive(viewModel.objectWillChange) { _ in
+//				print("objectWillChange received in ShoppingListTabView2")
+//			}
 	} // end of body: some View
 			
 	func handleOnDeleteModifier(at indexSet: IndexSet, within location: Location) {

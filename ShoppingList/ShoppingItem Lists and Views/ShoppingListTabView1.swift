@@ -101,9 +101,14 @@ struct ShoppingListTabView1: View {
 			
 		} // end of NavigationView
 			.onAppear {
-				print("onAppear ShoppingListTabView1")
+//				print("onAppear ShoppingListTabView1")
 				self.viewModel.loadItems()
 			}
+//			.onDisappear { print("ShoppingListTabView1 disappear") }
+//		.onReceive(viewModel.objectWillChange) { _ in
+//			print("objectWillChange received in ShoppingListTabView1")
+//		}
+
 		
 	} // end of body: some View
 	
