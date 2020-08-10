@@ -56,7 +56,20 @@ struct ShoppingItemRowData {
 	var showLocation: Bool = true	// whether this is a two-line display, with location as secondary line
 	
 	init(item: ShoppingItem, showLocation: Bool = true) {
-		isAvailable  = item.isAvailable
+		// note on init: because objects come out of Core Data, there have been times in development
+		// where the List code seems to say that a Core Data item that's been/being deleted is still
+		// sort of there: it shows up as an item with item.isDeleted = false, but item.isFault = true
+		// and that means that it cannot find its optional name string, or its location.  so the
+		// code below just protects against that.  the funny thing is, it almost never happens except
+		// for when the very last item remaining in the ShoppingList is deleted; and in some
+		// cases, you can actully see the name of the item being changed to "Item being deleted"
+		// before it disappears.  in XCode 11.6, i have not seen this; but the problem seems to remain
+		// in XCode 12 beta4, despite the fact that i have removed all use of @FectRequest coding
+		// and implemented my own viewModels as a replacement.  so this is built-in protection
+		// against that case, which i am sure
+		// depends on timing of Core Data deletion and SwiftUI redrawing.  i am not going to
+		// fight with this anymore -- i'll just go with the flow for now.
+		isAvailable = item.isAvailable
 		name = item.name ?? "Item being deleted"
 		locationName = item.location?.name ?? "Some Location"
 		quantity = item.quantity

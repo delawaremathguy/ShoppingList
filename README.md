@@ -2,11 +2,9 @@
 
 This is a simple, in-progress, "fail-in-public" iOS app development project using SwiftUI to process a shopping list that you can take to the grocery store with you, and swipe off the items as you pick them up.  It persists data in CoreData.
 
-I'm making this repo publicly available.  I am interested in asking some questions about what I am doing (e.g., in the Apple Developer forums, on the HackingWithSwift forums), and possibly getting some feedback, and it's easier to do that if I expose all the source for inspection.  There was also a recent question on the Apple Developer's forum, *[Example using Core Data between views](https://forums.developer.apple.com/thread/133370)* that expressed some frustration in not being able to find enough examples of working with CoreData and getting list updates done correctly (that whole thing about Identifiable, id:\.self, @ObservedObject, @FetchRequest, etc).  My hope is this project will fill some of that need, even if it's not yet demonstrated to be 100% bullet-proof.
-
 However, be warned: 
 
-* the project source is likely to change often -- this is an ongoing project for me to get more familiar with certain details of SwiftUI; 
+* the project source can change -- this is an ongoing project for me to get more familiar with certain details of SwiftUI; 
 * there may be errors in the code, or some areas of the code might need help with regard to best practices; and
 * nevertheless, this seems reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
 
@@ -14,27 +12,19 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **August 7, 2020,  about 15:00 GMT**, when these were some of the recent changes I made.
+My Last Update of note was **August 10, 2020**, when these were some of the recent changes I made.
 
-* Finally cleaned up shopping list and location view models (i.e., fixed a bug or two) to be sure they sent the correct notification for everything they did and never directly changed the items or locations array on their own, except in response to a notification. This fixes a problem with items not updating visually in some places.
+* Cleaned up shopping list and location view models (i.e., fixed a bug or two) to be sure they sent the correct notification for everything they did and never directly changed the items or locations array on their own, except in response to a notification. This fixes a problem with items not updating visually in some places.  I also made sure that newly-created ShoppingItems and Locations were saved right away.
 
-* Fixed a silly error (*a coding abnormality*) where the name defining .shoppingItemWillBeDeleted had the wrong string in its definition, so some code was actually treating as edit as both an edit and a WillBeDeleted message.  *duh!*  However, no items actually got deleted from Core Data in the process.  I also reorganized some posting of Notifications so that I was not "over-notifying."
+* Reorganized much of this README document.
 
-* Last week's major rewrite effort to replace all uses of @FetchRequest was, at best, *a partial success*.  My first releases had  code that was  not fully worked out. As I went through the week, I found several omissions as well as a major shortcoming of the design.  I kept running into almost exactly the same issue I had before when using @FetchRequest. But that failed rewrite helped me to recognize the *real issue* at hand in relying completely on SwiftUI and Combine: when something sends out an "objectWillChange" type of message, the problem for anyone listening is that we don't really know *which* object changed or *what* exactly was the type of change.  
 
-* So I have completely ripped out my reliance even on Combine and *gone completely old-school*, just like I would have built this app using UIKit, before there was SwiftUI and Combine.  I post Notifications that a ShoppingItem or a Location has either been created, or edited, or is about to be deleted.  Every   view model signs up for appropriate notifications and can see which shopping item or location is posting the notification and what kind of change is happening. The view model can then react accordingly and alert SwiftUI.  *Of course, I could come back a week from now and tell you this whole thing does not work either, but that's my deal in posting this code and your assumed risk in using it*.
 
-* This rewrite solves a lot of problems in the distributed SwiftUI situation in *this* app.  The biggest problem has always involved deletions of Core Data objects.  An example in this app: the shopping list view (View 1) holds a list of items to display.  But alternatively, navigate down the path of Locations -> tap on a location -> ModifyLocationView -> tap on a shopping item listed at that location -> ModifyShoppingItemView (View 2), and tap "delete this shopping item."  The shopping list (View 1) will see a change coming at it, but it doesn't know which item sent the change, and more importantly, it doesn't know what the change was -- especially when it is going to be deleted.
+I have, only briefly, tested out this code with XCode 12beta 4, and here are some observations so far:
 
-* I really do now believe that while @FetchRequest is a convenience for simple cases -- especially where no items ever get deleted -- it's not always the best solution that links up Core Data to SwiftUI.  I also think it breaks the MVVM architecture.  Instead of asking a view model to make some changes to a Core Data object, you just make the change yourself, directly on the object, and then expect that @FetchRequest sees the change and does the right thing.  But there is no centralized editing of objects: if code starts breaking, you have to look through a lot of source code to find out where some Core Data object was edited or not edited differently than it was somewhere else.  And the problem that I kept running into with @FetchRequest concerned *deletions* of Core Data objects being managed by a @FetchRequest, and I was never convinced it "did the right thing."
-
-* I also am using a little bit of a new technique with the new code to do *some* deletions. If an item listed in View1 appears in a detail-like, child View2 and is to be "deleted" in View2, View2 dismisses and queues the actual deletion with the right viewModel on the main queue with a short delay (about 1/2 second).  That way, View2 goes away, SwiftUI does all the view clean-up, we return to View1, and we see a nice transition as the item is then deleted. this delay tactic seems to avoid all the ugly messages about a tableview being laid out outside the view hierarchy (in XCode 11.6), as well.
-
-I have, briefly, tested out this code with XCode 12beta 4, and here are some observations so far:
-
-* Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  However, XCode will generate a duplicate conformance error, not on my adding conformance, but *on its own generated file*, which was a little confusing at first.
+* Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  However, XCode will generate a duplicate conformance error, not on my adding conformance, but *primarily on its own generated file*, which was a little confusing at first.
 * GroupedListStyle now puts a section header in .uppercase by default, but you can override that by using .textcase(.none) so the header displays the title exactly as you want.
-* Things otherwise look good on first look, except there are now a whole new set of console messages.
+* Things otherwise look good; however, the "deletion issue" that seems to be gone in XCode 11.6 still seems to be out there in the new XCode 12 beta 4.  i have extensive comments in the code about handling this.
 
 ## License
 
@@ -87,45 +77,46 @@ Finally, there is a  tab for "development-only" purposes, that allows wholesale 
 So, if you plan to play with or use this app, the app will start with an empty shopping list and an almost-empty location list (it will contain the sacred "Unknown Location"); from there you can create your own shopping items and locations associated with those items.  Alternatively,  go straight  to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
 
 
-## Some Things I'm Working On
+## Comments & Things I Could Work On
+
+* This version makes no direct use of @FetchRequest or Combine and I have *gone completely old-school*, just like I would have built this app using UIKit, before there was SwiftUI and Combine.  I post Notifications that a ShoppingItem or a Location has either been created, or edited, or is about to be deleted.  Every  view model loads it data only once from Core Data, and signs up for appropriate notifications.  From then on, it can see which shopping item or location is posting the notification and what kind of change is happening. (It never refetches data from Core Data.) The view model can then react accordingly and alert SwiftUI.  This most recent design suits my needs.
+
 
 * I am puzzled by how to handle rotation.  Rotate from a compact-width orientation into a regular-width orientation  (e.g., iPhone 11) and, yes, you get something surprising (I understand that part and think I can handle that later).  But then rotate back into a compact-width orientation and the display goes a little strange.
 
+* I should invest a little time on iPadOS.  (Unfortunately, my iPad 2 is stuck in iOS 9.)
+
 *  I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). Since I added contextMenus, I get a plenty of "Unable to simultaneously satisfy constraints" messages.  I'm ignoring them for now, and I have already seen fewer or none of these in testing out XCode 12. Several internet comments  seem to be saying ignoring most of these messages is the right thing to do for now.
 
-* I'd like to look at CloudKit support for the database, but probably separately, for my own use, although this  could return 
-to public view if I run into trouble and have to ask for help.  The general theory is that you just replace NSPersistentContainer with NSPersistentCloudkitContainer, flip a few switches in the project, add the right entitlements, and off you go. *I doubt that is truly the case*, and certainly there will be a collection of new issues that arise.
+* I'd like to look at CloudKit support for the database, but probably separately, for my own use, although this  could return to public view if I run into trouble and have to ask for help.  The general theory is that you just replace NSPersistentContainer with NSPersistentCloudkitContainer, flip a few switches in the project, add the right entitlements, and off you go. *I doubt that is truly the case*, and certainly there will be a collection of new issues that arise.
 
-* I have thought about expanding the app and database to support multiple "Stores," each of which has "Locations," 
-and having "ShoppingItems" being many-to-many with Locations so one item can be available in many Stores would be a nice exercise. 
-But I don't see that I gain anything more in the way of learning about SwiftUI by doing this, so I doubt that I'll pursue
-this any time soon.
+* I have thought about expanding the app and database to support multiple "Stores," each of which has "Locations," and having "ShoppingItems" being many-to-many with Locations so one item can be available in many Stores would be a nice exercise. But I have worked with Core Data several times, and I don't see that I gain anything more in the way of learning about SwiftUI by doing this, so I doubt that I'll pursue this any time soon.
 
 
-*  I'm looking at the new SwiftUI releases from WWDC  and can definitely use quite a bit of it very easily (e.g., a ColorPicker). 
+## Future Development of ShoppingList
 
-
-
-However, please be aware that there will be a point  where I will stop working on this project (at least in  public).  
-**That time is coming soon**.  
-
-
-Remember that I built this project in public only as an experiment, and as a reference in trying to offer some 
+Remember that I built this project in public only as an experiment, and to   offer some 
 suggested code to the 
-many developers who keep running into the generic problem of: an item appears in View A; it is edited in View B; 
-but its appearance in View A does not get updated properly.  I was also hoping I might get a comment or two 
-along the way about what I am doing right or doing wrong. But I am  certainly not at all interested in creating the next great 
+many developers who keep running into the **generic problem** of: an item appears in View A; it is edited in View B; 
+but its appearance in View A does not get updated properly.  The updating problem is worse in the Core Data situation,
+where  the model data consists of objects (classes), not structs .
+**Whether you pass around structs or classes  
+with Views has a direct and important effect on how SwiftUI handles
+View updating**.
+
+* My current use of notifications and "view models" seems to solve a lot of the **generic problem** in the distributed SwiftUI situation of *this* app.  The biggest problem has always involved deletions of Core Data objects.  An example in this app: the shopping list view (View 1) holds a list of items to display.  But alternatively, navigate down the path of Locations -> tap on a location -> ModifyLocationView -> tap on a shopping item listed at that location -> ModifyShoppingItemView (View 2), and tap "delete this shopping item."  The shopping list (View 1) will see a change coming at it, but it doesn't know which item sent the change, and more importantly, it doesn't know what the change was -- especially when it is going to be deleted.  And when using @FetchRequest, view updating and deletion always seems out-of-sync.
+
+At some point, however,   I will stop working on this project.
+**That time is now coming very soon**.  I have learned a lot about SwiftUI  -- that was the point of the project --
+and I am  certainly not at all interested in creating the next, killer 
 shopping list app or moving any of this to the App Store.  *The world really does not need a new list-making app*.
 
 
-
-
-
-## Anything Else?
+## Closing
 
 The project is what it is -- it's an on-going, out-in-public offering of code that may be of use to some; it might be something you'd like to play with or even develop on your own (fixing some things that are currently broken, or adding better design elements); or it might be something you'll look at and realize you've done something similar and run into similar problems.
 
-By the way: what you see today may not look anything like what it looks like tomorrow.  I've already had cases of getting something to work, then found it didn't work after the next change, and I've gone back and re-architected.  The CoreData model has changed multiple times -- but I do not rely on data migrations. (Yes, migrations were working correctly and I've done them in other projects, but at this stage, it's easier to just dump the database as JSON; delete the app; change the data model; and reload the data in code at startup ... which may require some coding changes to the code that loads it.)  Please see the code and comments in Development.swift and look at the new "Dev Tools" tab view for some explanations about how to load sample data, or dump the CoreData database to JSON.
+By the way: what you see today may not look anything like what it looks like tomorrow.  I've already had cases of getting something to work, then found it didn't work after the next change, and I've gone back and re-architected.  The CoreData model  changed multiple times in early development -- but I do not rely on data migrations. (I've done migrations in other projects, but for this app, it's easier to just dump the database as JSON; delete the app; change the data model; and reload the data in code at startup ... which may require some coding changes to the code that loads it.)  Please see the code and comments in Development.swift and look at the new "Dev Tools" tab view for some explanations about how to load sample data, or dump the CoreData database to JSON.
 
 Finally, a story. I have another sizeable UIKit-based project, completely unrelated to this Shopping List project. I had every intention of moving it to the App Store. But it lacked a couple of features (mostly synching with the Cloud across devices). And curiously, I had originally used CoreData to persist data when i started building it, when there was some cloud integration.
 
