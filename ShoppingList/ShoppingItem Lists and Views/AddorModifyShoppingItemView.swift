@@ -140,7 +140,7 @@ struct AddorModifyShoppingItemView: View {
 		guard editableData.canBeSaved else { return }
 		presentationMode.wrappedValue.dismiss()
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-			self.viewModel.updateDataFor(item: self.editableItem, using: self.editableData)
+			self.viewModel.updateData(for: self.editableItem, using: self.editableData)
 		}
 	}
 	
@@ -148,10 +148,10 @@ struct AddorModifyShoppingItemView: View {
 	// delay in calling for the deletion after dismiss(), long enough to let SwifUI
 	// leave this View and go back to the list it came from, and
 	// THEN be told that something's been removed. this seems a little silly, but
-	// for XCode 11.6/iOS 13.6, this eliminates the console messages about views being told
+	// for XCode 11.6/iOS 13.6, this eliminates most of the console messages about views being told
 	// to layout outside their view hierarchy -- this View will be gone and we'll have returned
 	// to the View we came from and it will be onscreen when it gets the deletion.
-	// curiously, in the Stanford CS193p lectures of Spring, 2020, Paul Hegarty used
+	// curiously, in the Stanford CS193p lectures of Spring, 2020, Paul Hegarty introduced
 	// this technique at one point in a similar situation to "let things settle down."
 	func deleteItem() {
 		if let item = editableItem {

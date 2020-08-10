@@ -137,7 +137,7 @@ struct AddorModifyLocationView: View {
 	func commitData() {
 		presentationMode.wrappedValue.dismiss()
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-			self.viewModel.updateDataFor(location: self.editableLocation, using: self.editableData)
+			self.viewModel.updateData(for: self.editableLocation, using: self.editableData)
 		}
 	}
 

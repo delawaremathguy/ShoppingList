@@ -82,23 +82,22 @@ class LocationsListViewModel: ObservableObject {
 		Location.delete(location: location, saveChanges: true)
 	}
 	
-	func updateDataFor(location: Location?, using editableData: EditableLocationData) {
+	func updateData(for location: Location?, using editableData: EditableLocationData) {
 		// if the incoming item is not nil, then this is just a straight update.
 		// otherwise, we must create the new Location here and add it to
 		// our list of locations
 		
 		// if location is nil, it's a signal to add a new item with the packaged data
-		guard let location = location else {
+		if let location = location {
+			location.updateValues(from: editableData)
+			NotificationCenter.default.post(name: .locationEdited, object: location)
+		} else {
 			let newLocation = Location.addNewLocation()
 			newLocation.updateValues(from: editableData)
 			NotificationCenter.default.post(name: .locationAdded, object: newLocation)
-			return
 		}
 		
-		// the location is not nil, so it's a normal update
-		location.updateValues(from: editableData)
 		Location.saveChanges()
-		NotificationCenter.default.post(name: .locationEdited, object: location)
 	}
 
 }

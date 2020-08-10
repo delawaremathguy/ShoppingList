@@ -214,7 +214,7 @@ class ShoppingListViewModel: ObservableObject {
 	}
 	
 	// updates data for a ShoppingItem
-	func updateDataFor(item: ShoppingItem?, using editableData: EditableShoppingItemData) {
+	func updateData(for item: ShoppingItem?, using editableData: EditableShoppingItemData) {
 		
 		if let item = item {
 			item.updateValues(from: editableData)
