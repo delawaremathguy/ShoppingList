@@ -60,14 +60,21 @@ struct ShoppingItemRowData {
 		// where the List code seems to say that a Core Data item that's been/being deleted is still
 		// sort of there: it shows up as an item with item.isDeleted = false, but item.isFault = true
 		// and that means that it cannot find its optional name string, or its location.  so the
-		// code below just protects against that.  the funny thing is, it almost never happens except
-		// for when the very last item remaining in the ShoppingList is deleted; and in some
-		// cases, you can actully see the name of the item being changed to "Item being deleted"
-		// before it disappears.  in XCode 11.6, i have not seen this; but the problem seems to remain
+		// code below just protects against that in case it ever shows up again -- although i have not
+		// seen this with XCode 11.6/iOS 13.6 anytime recently.
+		
+		// nevertheless, even if it's not happening anymore, you should know that the funny thing is,
+		// it almost never happened except for when the very last item remaining in the ShoppingList
+		// is deleted; and in some cases, because of the nil-coalescing code below, you could actully
+		// see the name of the item being changed to "Item being deleted" before it disappeared.
+		// again, in XCode 11.6, i have not seen this; but the underlying problem seems to remain
 		// in XCode 12 beta4, despite the fact that i have removed all use of @FectRequest coding
-		// and implemented my own viewModels as a replacement.  so this is built-in protection
-		// against that case, which i am sure
-		// depends on timing of Core Data deletion and SwiftUI redrawing.  i am not going to
+		// and implemented my own viewModels as a replacement.  i think it's all about timing of
+		// when SwiftUI does its thing; and it's clear that XCode 12 beta4 and SwiftUI 2 handles the timing
+		// of when Views are created and destroyed much differently than XCode 11.6 and SwiftUI 1 did.
+		
+		// so the nil-coalescing below is built-in protection for any such case.  it appears you
+		// really do need this protection in XCode 12 beta 4.  bottom line: i am not going to
 		// fight with this anymore -- i'll just go with the flow for now.
 		isAvailable = item.isAvailable
 		name = item.name ?? "Item being deleted"

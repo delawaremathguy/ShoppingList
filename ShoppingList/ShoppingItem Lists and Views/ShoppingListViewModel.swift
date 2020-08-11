@@ -48,6 +48,7 @@ class ShoppingListViewModel: ObservableObject {
 																					 name: .shoppingItemEdited, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemWillBeDeleted),
 																					 name: .shoppingItemWillBeDeleted, object: nil)
+//		print("ShoppingListViewModel of type \(usageType) created.")
 	}
 	
 	// call this loadItems once the object has been created, before using it. in usage,
