@@ -74,7 +74,7 @@ struct ShoppingListTabView2: View {
 											})
 									}
 								}
-								.listRowBackground(Color(item.backgroundColor))
+								//.listRowBackground(Color(item.backgroundColor))
 								
 							} // end of ForEach
 								.onDelete(perform: { offsets in

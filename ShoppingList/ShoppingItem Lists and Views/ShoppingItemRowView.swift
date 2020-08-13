@@ -1,5 +1,5 @@
 //
-//  ItemView.swift
+//  ShoppingItemRowView.swift
 //  ShoppingList
 //
 //  Created by Jerry on 5/14/20.
@@ -54,10 +54,11 @@ struct ShoppingItemRowData {
 	var locationName: String = ""
 	var quantity: Int32 = 0
 	var showLocation: Bool = true	// whether this is a two-line display, with location as secondary line
+	var uiColor = UIColor()
 	
 	init(item: ShoppingItem, showLocation: Bool = true) {
 		// note on init: because objects come out of Core Data, there have been times in development
-		// where the List code seems to say that a Core Data item that's been/being deleted is still
+		// where the List code seems to say that a Core Data item that's been/is being deleted is still
 		// sort of there: it shows up as an item with item.isDeleted = false, but item.isFault = true
 		// and that means that it cannot find its optional name string, or its location.  so the
 		// code below just protects against that in case it ever shows up again -- although i have not
@@ -68,9 +69,10 @@ struct ShoppingItemRowData {
 		// is deleted; and in some cases, because of the nil-coalescing code below, you could actully
 		// see the name of the item being changed to "Item being deleted" before it disappeared.
 		// again, in XCode 11.6, i have not seen this; but the underlying problem seems to remain
-		// in XCode 12 beta4, despite the fact that i have removed all use of @FectRequest coding
+		// in XCode 12 beta4, despite the fact that i have removed all use of @FecthRequest coding
 		// and implemented my own viewModels as a replacement.  i think it's all about timing of
-		// when SwiftUI does its thing; and it's clear that XCode 12 beta4 and SwiftUI 2 handles the timing
+		// when SwiftUI and Core Data do their things; and it's clear that XCode 12 beta4 and
+		// SwiftUI 2 handles the timing
 		// of when Views are created and destroyed much differently than XCode 11.6 and SwiftUI 1 did.
 		
 		// so the nil-coalescing below is built-in protection for any such case.  it appears you
@@ -81,6 +83,7 @@ struct ShoppingItemRowData {
 		locationName = item.location?.name ?? "Some Location"
 		quantity = item.quantity
 		self.showLocation = showLocation
+		uiColor = item.backgroundColor
 	}
 	
 	init() { } // syntax necessity, although all values are reasonable setd
@@ -94,6 +97,10 @@ struct ShoppingItemRowView: View {
 	
 	var body: some View {
 		HStack {
+			// color bar at left (new in this code)
+			Color(itemData.uiColor)
+				.frame(width: 10, height: 36)
+			
 			VStack(alignment: .leading) {
 				
 				if itemData.isAvailable {

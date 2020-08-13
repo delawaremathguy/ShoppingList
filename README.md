@@ -12,11 +12,14 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **August 10, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **August 13, 2020**, when these were some of the recent changes I made.
 
-* Cleaned up shopping list and location view models (i.e., fixed a bug or two) to be sure they sent the correct notification for everything they did and never directly changed the items or locations array on their own, except in response to a notification. This fixes a problem with items not updating visually in some places.  I also made sure that newly-created ShoppingItems and Locations were saved right away.
+* Changed the use of color in the shopping list and purchased list -- no longer a background color, but just a color bar at the left of the item.  it looks a lot cleaner to my eye; but you can swap out the six or eight lines of code I added for this if you like the previous display.
 
-* Reorganized much of this README document.
+* (Previously) Cleaned up shopping list and location view models (i.e., fixed a bug or two) to be sure they sent the correct notification for everything they did and never directly changed the items or locations array on their own, except in response to a notification. This fixes a problem with items not updating visually in some places.  I also made sure that newly-created ShoppingItems and Locations were saved right away.
+
+* (Previously) Reorganized much of this README document.
+
 
 
 
@@ -74,7 +77,11 @@ The fourth tab is an in-store timer, with three simple button controls: "Start,"
 
 Finally, there is a  tab for "development-only" purposes, that allows wholesale loading of sample data, removal of all data, offloading data for later use, and changing the sectioned-display of the shopping list. It's easier to make changes and see them here, rather than hunt through the source code to make these changes (although there is plenty of commentary in the source code).
 
-So, if you plan to play with or use this app, the app will start with an empty shopping list and an almost-empty location list (it will contain the sacred "Unknown Location"); from there you can create your own shopping items and locations associated with those items.  Alternatively,  go straight  to the Dev Tools tab and tap the "Load Sample Data" button, play with the app, then delete the data when you're finished with it.
+So, 
+
+* **If you plan to use this app**, the app will start with an empty shopping list and an almost-empty location list (it will contain the sacred "Unknown Location"); from there you can create your own shopping items and locations associated with those items.  
+
+* **If you plan to play with or just test out this app**, go straight  to the Dev Tools tab and tap the "Load Sample Data" button.  Now you can  play with the app, and eventually delete the data when you're finished.
 
 
 ## Comments & Things I Could Work On
@@ -91,6 +98,10 @@ So, if you plan to play with or use this app, the app will start with an empty s
 * I'd like to look at CloudKit support for the database, but probably separately, for my own use, although this  could return to public view if I run into trouble and have to ask for help.  The general theory is that you just replace NSPersistentContainer with NSPersistentCloudkitContainer, flip a few switches in the project, add the right entitlements, and off you go. *I doubt that is truly the case*, and certainly there will be a collection of new issues that arise.
 
 * I have thought about expanding the app and database to support multiple "Stores," each of which has "Locations," and having "ShoppingItems" being many-to-many with Locations so one item can be available in many Stores would be a nice exercise. But I have worked with Core Data several times, and I don't see that I gain anything more in the way of learning about SwiftUI by doing this, so I doubt that I'll pursue this any time soon.
+
+* I could add a printing capability, or even a general sharing capability.  I did this in another (*UI-Kit based*) project, so it should easy, right?  
+
+
 
 
 ## Future Development of ShoppingList

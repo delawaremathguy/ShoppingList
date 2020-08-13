@@ -10,6 +10,13 @@ import SwiftUI
 
 struct DevToolsTabView: View {
 	
+	// i have made no real effort to pretty-up this View.  it's purely a
+	// development hack to load sample data, remove data, and flip a few
+	// switches in the code.  this could become a "settings" or "preferences"
+	// tab in the future, in which case i would clean it up; although the only
+	// things that might remain are whether the shopping list is displayed in
+	// sections or not, and whether the timer is stopped when in the background.
+	
 	@State private var confirmDeleteAllDataShowing = false
 	@State private var confirmDataHasBeenAdded = false
 	@State private var locationsAdded: Int = 0
