@@ -21,7 +21,6 @@ struct DevToolsTabView: View {
 	@State private var confirmDataHasBeenAdded = false
 	@State private var locationsAdded: Int = 0
 	@State private var shoppingItemsAdded: Int = 0
-	@Binding var shoppingListSectionSwitch: Bool
 	@State private var disableTimerWhenAppIsNotActive = kDisableTimerWhenAppIsNotActive
 
 	var body: some View {

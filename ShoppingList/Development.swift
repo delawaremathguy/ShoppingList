@@ -17,14 +17,13 @@ import UIKit
 
 let kShowDevToolsTab = true
 
-// this boolean control whether the Shopping List is shown as multiple Sections,
+// this boolean control whether the Shopping List is iniitally shown as multiple Sections,
 // one Section per Location, or whether it shows only a one simple list (items
 // will still be listed in the same order, just not sectioned).  you can change
-// this value here directly (i now have single section on by default).  additionally,
-// if you have the Dev Tools tab showing, you can change this in real time to see
-// the effect.
+// this value here directly (i now have single section on by default).  the eager
+// developer might want to put this value in UserDefaults ...
 
-var kShowMultiSectionShoppingList = false
+var gShowMultiSectionShoppingList = false
 
 // i'm torn about this next setting.  i find it easier when i am in the store shopping to swipe
 // to say "i just put that in the cart, take it off today's shopping list."  but

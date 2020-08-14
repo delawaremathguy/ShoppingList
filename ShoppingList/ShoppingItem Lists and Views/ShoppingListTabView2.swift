@@ -8,6 +8,9 @@
 
 import SwiftUI
 
+THIS VIEW IS NO LONGER USED AND THE FILE WILL NOT COMPILE
+BECAUSE OF THIS TEXT IN THE FILE.
+
 // this is a "less-than-straightforward" list display of items on the shopping list.
 // in this view, we mirror most of the code from ShoppingListTabView1, but the
 // inner view constructs handles sectioning of the list by Location.
@@ -32,7 +35,7 @@ struct ShoppingListTabView2: View {
 	@State private var isAddNewItemSheetShowing: Bool = false
 	@State private var isDeleteItemAlertShowing: Bool = false
 	@State private var itemToDelete: ShoppingItem?
-	@ObservedObject var viewModel = ShoppingListViewModel(type: .multiSectionShoppingList)
+	@ObservedObject var viewModel = ShoppingListViewModel(type: .shoppingList)
 
 	// access to section option (just so we can change the MainView's section preference)
 	@Binding var multiSectionDisplay: Bool

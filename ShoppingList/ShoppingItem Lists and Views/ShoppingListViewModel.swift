@@ -18,8 +18,8 @@ class ShoppingListViewModel: ObservableObject {
 	// since we're really wrapping four different types of ShoppingListViewModel here
 	// all together, it's useful to define the types for clarity, and record which one we are
 	enum viewModelUsageType {
-		case singleSectionShoppingList 		// drives ShoppingListTabView1
-		case multiSectionShoppingList 		// drives ShoppingListTabView2
+		case shoppingList 		// drives ShoppingListTabView1
+//		case multiSectionShoppingList 		// drives ShoppingListTabView2
 		case purchasedItemShoppingList 		// drives PurchasedTabView
 		case locationSpecificShoppingList(Location?)	// drives LocationsTabView with associated data
 	}
@@ -60,7 +60,7 @@ class ShoppingListViewModel: ObservableObject {
 	func loadItems() {
 		if dataHasNotBeenLoaded {
 			switch usageType {
-				case .singleSectionShoppingList, .multiSectionShoppingList:
+				case .shoppingList: //, .multiSectionShoppingList:
 					items = ShoppingItem.currentShoppingList(onList: true)
 				case .purchasedItemShoppingList:
 					items = ShoppingItem.currentShoppingList(onList: false)
@@ -122,7 +122,7 @@ class ShoppingListViewModel: ObservableObject {
 	// says whether a shopping item is of interest to us.
 	func isOurKind(item: ShoppingItem) -> Bool {
 		switch usageType {
-			case .singleSectionShoppingList, .multiSectionShoppingList:
+			case .shoppingList: //, .multiSectionShoppingList:
 				return item.onList == true
 			case .purchasedItemShoppingList:
 				return item.onList == false
@@ -137,7 +137,7 @@ class ShoppingListViewModel: ObservableObject {
 	// that could change the sort order (which varies depending on who we are).
 	private func sortItems() {
 		switch usageType {
-			case .singleSectionShoppingList, .multiSectionShoppingList:
+			case .shoppingList: // , .multiSectionShoppingList:
 				items.sort(by: { $0.name! < $1.name! }) 
 				items.sort(by: { $0.visitationOrder < $1.visitationOrder })
 			case .purchasedItemShoppingList, .locationSpecificShoppingList:

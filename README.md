@@ -4,17 +4,19 @@ This is a simple, in-progress, "fail-in-public" iOS app development project usin
 
 However, be warned: 
 
-* the project source can change -- this is an ongoing project for me to get more familiar with certain details of SwiftUI; 
-* there may be errors in the code, or some areas of the code might need help with regard to best practices; and
-* nevertheless, this seems reasonably stable and does pretty much work as I suggest as of today (I really do use it myself when I go shopping).
+* the project source may change -- this is an ongoing project for me to get more familiar with certain details of SwiftUI, *although I am almost at the end of the public development cycle on this app*;  and
+* there may be errors in the code, or some areas of the code might need help with regard to best practices.
+
+
+Nevertheless, this project seems reasonably stable and does pretty much work as I suggest as of today (I used it just today at the grocery store and I am now starting to like it a lot).
 
 Feel free to use this as is, to develop further,  to completely ignore, or even just to inspect and then send me a note to tell me I am doing this all wrong.  
 
 ## Last Update of Note
 
-My Last Update of note was **August 13, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **August 14, 2020**, when these were some of the recent changes I made.
 
-* Added a quick change in the shopping list between a single-section display and a multi-section display (tap left-most icon in navigation bar).
+* Combined the two versions of code for a shopping list view (single-section or multi-sectioned) into a single View and made the choice of which view to use an easy selection by tapping the NavigationBar's leading button.
 
 * Changed the use of color in the shopping list and purchased list -- no longer a background color, but just a color bar at the left of the item.  it looks a lot cleaner to my eye; but you can swap out the six or eight lines of code I added for this if you like the previous display.
 
@@ -22,22 +24,6 @@ My Last Update of note was **August 13, 2020**, when these were some of the rece
 
 * (Previously) Reorganized much of this README document.
 
-
-
-
-I have, only briefly, tested out this code with XCode 12beta 4, and here are some observations so far:
-
-* Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  However, XCode will generate a duplicate conformance error, not on my adding conformance, but *primarily on its own generated file*, which was a little confusing at first.
-* GroupedListStyle now puts a section header in .uppercase by default, but you can override that by using .textcase(.none) so the header displays the title exactly as you want.
-* Things otherwise look good; however, the "deletion issue" that seems to be gone in XCode 11.6 still seems to be out there in the new XCode 12 beta 4.  i have extensive comments in the code about handling this.
-
-## License
-
-* The SearchBarView in the Purchased items view was created by Simon Ng.  It appeared in [an article in AppCoda](https://www.appcoda.com/swiftui-search-bar/) and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCoda/SwiftUISearchBar. 
-* The app icon was created by Wes Breazell from [the Noun Project](https://thenounproject.com). 
-* The extension I use on Bundle to load JSON files is due to Paul Hudson (@twostraws, [hackingwithswift.com](https://hackingwithswift.com)) 
-
-Otherwise, almost all of the code is original,  and it's yours if you want it -- please see LICENSE for the usual details and disclaimers.
 
 ## General App Structure
 
@@ -103,6 +89,11 @@ So,
 
 * I could add a printing capability, or even a general sharing capability.  I did this in another (*UI-Kit based*) project, so it should easy, right?  
 
+I have, only briefly, tested out this code with **XCode 12beta 4**, and here are some observations so far:
+
+* Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  However, XCode will generate a duplicate conformance error, not on my adding conformance, but *primarily on its own generated file*, which was a little confusing at first.
+* GroupedListStyle now puts a section header in .uppercase by default, but you can override that by using .textcase(.none) so the header displays the title exactly as you want.
+* Things otherwise look good; however, the "deletion issue" that seems to be gone in XCode 11.6 still seems to be out there in the new XCode 12 beta 4.  i have extensive comments in the code about handling this.
 
 
 
@@ -140,3 +131,13 @@ I have since rebuilt that app in UIKit with CoreData (it was easier than you thi
 So far,  WWDC2020 has given me more than enough so I can move forward and eventually take that other app to the App Store.
 
 Feel free to contact me about questions and comments.
+
+
+## License
+
+* The SearchBarView in the Purchased items view was created by Simon Ng.  It appeared in [an article in AppCoda](https://www.appcoda.com/swiftui-search-bar/) and is copyright © 2020 by AppCoda. You can find it on GitHub under AppCoda/SwiftUISearchBar. 
+* The app icon was created by Wes Breazell from [the Noun Project](https://thenounproject.com). 
+* The extension I use on Bundle to load JSON files is due to Paul Hudson (@twostraws, [hackingwithswift.com](https://hackingwithswift.com)) 
+
+Otherwise, almost all of the code is original,  and it's yours if you want it -- please see LICENSE for the usual details and disclaimers.
+

@@ -17,7 +17,6 @@ import CoreData
 
 struct MainView: View {
 	@State private var selectedTab = 1
-	@State private var showMultiSectionShoppingList = kShowMultiSectionShoppingList
 	
 	var body: some View {
 		TabView(selection: $selectedTab) {
@@ -27,13 +26,7 @@ struct MainView: View {
 			// in the Dev Tools tab if you have it showing) will let you see the
 			// two different options.
 			
-			Group {
-				if showMultiSectionShoppingList {
-					ShoppingListTabView2(multiSectionDisplay: $showMultiSectionShoppingList)
-				} else {
-					ShoppingListTabView1(multiSectionDisplay: $showMultiSectionShoppingList)
-				}
-			}
+			ShoppingListTabView()
 			.tabItem {
 				Image(systemName: "cart")
 				Text("Shopping List")
@@ -58,7 +51,7 @@ struct MainView: View {
 			}.tag(4)
 			
 			if kShowDevToolsTab { // this setting is in Development.swift
-				DevToolsTabView(shoppingListSectionSwitch: $showMultiSectionShoppingList)
+				DevToolsTabView()
 					.tabItem {
 						Image(systemName: "wrench")
 						Text("Dev Tools")
