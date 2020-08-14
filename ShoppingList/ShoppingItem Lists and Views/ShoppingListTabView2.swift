@@ -34,6 +34,9 @@ struct ShoppingListTabView2: View {
 	@State private var itemToDelete: ShoppingItem?
 	@ObservedObject var viewModel = ShoppingListViewModel(type: .multiSectionShoppingList)
 
+	// access to section option (just so we can change the MainView's section preference)
+	@Binding var multiSectionDisplay: Bool
+	
 	var body: some View {
 		NavigationView {
 		VStack(spacing: 0) {
@@ -113,12 +116,18 @@ struct ShoppingListTabView2: View {
 		} // end of VStack
 			.navigationBarTitle("Shopping List")
 			.navigationBarItems(
+				leading:
+					Button(action: { self.multiSectionDisplay = false }) {
+						Image(systemName: "tray.2")
+							.resizable()
+							.frame(width: 20, height: 20)
+					},
 				trailing:
-				Button(action: { self.isAddNewItemSheetShowing = true }) {
-					Image(systemName: "plus")
-						.resizable()
-						.frame(width: 16, height: 16)
-			})
+					Button(action: { self.isAddNewItemSheetShowing = true }) {
+						Image(systemName: "plus")
+							.resizable()
+							.frame(width: 20, height: 20)
+				})
 
 		} // end of NavigationView
 			.onAppear {

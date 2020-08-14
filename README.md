@@ -14,6 +14,8 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 My Last Update of note was **August 13, 2020**, when these were some of the recent changes I made.
 
+* Added a quick change in the shopping list between a single-section display and a multi-section display (tap left-most icon in navigation bar).
+
 * Changed the use of color in the shopping list and purchased list -- no longer a background color, but just a color bar at the left of the item.  it looks a lot cleaner to my eye; but you can swap out the six or eight lines of code I added for this if you like the previous display.
 
 * (Previously) Cleaned up shopping list and location view models (i.e., fixed a bug or two) to be sure they sent the correct notification for everything they did and never directly changed the items or locations array on their own, except in response to a notification. This fixes a problem with items not updating visually in some places.  I also made sure that newly-created ShoppingItems and Locations were saved right away.
@@ -110,10 +112,8 @@ Remember that I built this project in public only as an experiment, and to   off
 suggested code to the 
 many developers who keep running into the **generic problem** of: an item appears in View A; it is edited in View B; 
 but its appearance in View A does not get updated properly.  The updating problem is worse in the Core Data situation,
-where  the model data consists of objects (classes), not structs .
-**Whether you pass around structs or classes  
-with Views has a direct and important effect on how SwiftUI handles
-View updating**.
+where  the model data consists of objects (classes), not structs .  **Whether you pass around structs or classes  
+with Views has a direct and important effect on how SwiftUI handles View updating**.
 
 * My current use of notifications and "view models" seems to solve a lot of the **generic problem** in the distributed SwiftUI situation of *this* app.  The biggest problem has always involved deletions of Core Data objects.  An example in this app: the shopping list view (View 1) holds a list of items to display.  But alternatively, navigate down the path of Locations -> tap on a location -> ModifyLocationView -> tap on a shopping item listed at that location -> ModifyShoppingItemView (View 2), and tap "delete this shopping item."  The shopping list (View 1) will see a change coming at it, but it doesn't know which item sent the change, and more importantly, it doesn't know what the change was -- especially when it is going to be deleted.  And when using @FetchRequest, view updating and deletion always seems out-of-sync.
 

@@ -29,9 +29,9 @@ struct MainView: View {
 			
 			Group {
 				if showMultiSectionShoppingList {
-					ShoppingListTabView2()
+					ShoppingListTabView2(multiSectionDisplay: $showMultiSectionShoppingList)
 				} else {
-					ShoppingListTabView1()
+					ShoppingListTabView1(multiSectionDisplay: $showMultiSectionShoppingList)
 				}
 			}
 			.tabItem {

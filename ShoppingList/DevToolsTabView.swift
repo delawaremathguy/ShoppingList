@@ -28,6 +28,7 @@ struct DevToolsTabView: View {
 		NavigationView {
 		VStack(spacing: 20) {
 			
+			Group {
 			Text("These controls are here so that you can add some sample data, play with it, and later delete it.")
 				.padding([.leading, .trailing], 10)
 			
@@ -62,18 +63,24 @@ struct DevToolsTabView: View {
 				writeAsJSON(items: ShoppingItem.allShoppingItems(), to: kShoppingItemsFilename)
 				writeAsJSON(items: Location.allLocations(userLocationsOnly: true), to: kLocationsFilename)
 			}
+			} // end of Group
 			
-			Text("Try out the single-section or multi-section versions of the Shopping List, or set/try out different behaviours of the timer.")
+			Text("To see the difference between the single-section or multi-section versions of the Shopping List, just tap the tray or double-tray icon at the top, left of the shpping list.")
+				.italic()
+				.foregroundColor(.secondary)
 				.padding([.leading, .trailing], 10)
 
-			HStack(spacing: 5) {
-				Text("Shopping list display: ") + Text(shoppingListSectionSwitch ? "Multi-Section" : "Single Section").bold()
-				Button("Change") {
-					self.shoppingListSectionSwitch.toggle()
-					// kShowMultiSectionShoppingList.toggle()
-				}
-			}
+//			HStack(spacing: 5) {
+//				Text("Shopping list display: ") + Text(shoppingListSectionSwitch ? "Multi-Section" : "Single Section").bold()
+//				Button("Change") {
+//					self.shoppingListSectionSwitch.toggle()
+//					// kShowMultiSectionShoppingList.toggle()
+//				}
+//			}
 			
+//			Text("See different behaviour of the timer.")
+//				.padding([.leading, .trailing], 10)
+
 			HStack(spacing: 5) {
 				Text("Suspend timer in background: ") + Text(disableTimerWhenAppIsNotActive ? "Yes" : "No").bold()
 				Button("Change") {
