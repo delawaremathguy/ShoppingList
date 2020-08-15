@@ -110,8 +110,7 @@ folks who keep running into SwiftUI's **generic problem** of:
 
 > an item appears in View A; it is edited in View B (a detail view that appears either by a NavigationLink or a .sheet presentation); but its appearance in View A does not get updated properly upon return.  
 
-SwiftUI does a lot of the updating for you automatically (the *single-source-of-truth doctrine*), but the situation is more tricky when using Core Data because  the model data consists of objects (classes), not structs.  SwiftUI does provide @FetchRequest and @ObservedObject (and Combine if you go deeper), but the updating problem is not solved just by sprinkling @ObservedObject property wrappers around in your code. It matters in SwiftUI whether you pass around structs or classes  
-in SwiftUI Views, and exactly how you pass them.  
+SwiftUI does a lot of the updating for you automatically (the *single-source-of-truth doctrine*), but the situation is more tricky when using Core Data because  the model data consists of objects (classes), not structs.  SwiftUI does provide @FetchRequest and @ObservedObject (and Combine if you go deeper), but the updating problem is not solved just by sprinkling @ObservedObject property wrappers around in your code. It matters in SwiftUI whether you pass around structs or classes  in SwiftUI Views, and exactly how you pass them.  
 
 
 Indeed, the biggest issue that I found in this app involved updates following a deletion of a Core Data object.  My conclusion is that  @FetchRequest and SwiftUI don't always interact that well.
