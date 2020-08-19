@@ -31,13 +31,15 @@ My Last Update of note was **August 19, 2020**, when these were some of the rece
 
 ![](Screenshot1.jpg)
 ![](Screenshot2.jpg)
+
+
 ![](Screenshot3.jpg)
 ![](Screenshot4.jpg)
 
 The main screen is a TabView, to show 
 * a current shopping list, 
-* a (searchable) list of previously purchased items, and
-* a list of "locations" in a store, such as "Dairy," "Fruits & Vegetables," "Deli," and so forth, and
+* a (searchable) list of previously purchased items, 
+* a list of "locations" in a store, such as "Dairy," "Fruits & Vegetables," "Deli," and so forth, 
 * an in-store timer, to track how long it takes you to complete shopping, and
 * optionally, for purposes of demonstration, a "Dev Tools" tab to make wholesale adjustments to the data and the shopping list display (this can be hidden for real usage).
 
@@ -111,9 +113,7 @@ shopping list app or moving any of this to the App Store.  *The world really doe
 
 ##  View Updating Issues
 
-Remember that I built this project in public only as an experiment, and to   offer some 
-suggested code to the 
-folks who keep running into SwiftUI's **generic problem** of: 
+Remember that I built this project in public only as an experiment, and to   offer some  suggested code to the  folks who keep running into SwiftUI's **generic problem** of: 
 
 > an item appears in View A; it is edited in View B (a detail view that appears either by a NavigationLink or a .sheet presentation); but its appearance in View A does not get updated properly upon return.  
 
