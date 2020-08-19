@@ -27,10 +27,10 @@ My Last Update of note was **August 14, 2020**, when these were some of the rece
 
 ## General App Structure
 
-[](Screenshot1.jpg)
-[](Screenshot2.jpg)
-[](Screenshot3.jpg)
-[](Screenshot4.jpg)
+![](Screenshot1.jpg)
+![](Screenshot2.jpg)
+![](/Screenshot3.jpg)
+![](/Screenshot4.jpg)
 
 The main screen is a TabView, to show 
 * a current shopping list, 
