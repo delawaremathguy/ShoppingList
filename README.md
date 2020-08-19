@@ -14,11 +14,13 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **August 14, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **August 19, 2020**, when these were some of the recent changes I made.
 
-* Combined the two versions of code for a shopping list view (single-section or multi-sectioned) into a single View and made the choice of which view to use an easy selection by tapping the NavigationBar's leading button.
+* Added screenshots
 
-* Changed the use of color in the shopping list and purchased list -- no longer a background color, but just a color bar at the left of the item.  it looks a lot cleaner to my eye; but you can swap out the six or eight lines of code I added for this if you like the previous display.
+* (Previously) Combined the two versions of code for a shopping list view (single-section or multi-sectioned) into a single View and made the choice of which view to use an easy selection by tapping the NavigationBar's leading button.
+
+* (Previously) Changed the use of color in the shopping list and purchased list -- no longer a background color, but just a color bar at the left of the item.  it looks a lot cleaner to my eye; but you can swap out the six or eight lines of code I added for this if you like the previous display.
 
 * (Previously) Cleaned up shopping list and location view models (i.e., fixed a bug or two) to be sure they sent the correct notification for everything they did and never directly changed the items or locations array on their own, except in response to a notification. This fixes a problem with items not updating visually in some places.  I also made sure that newly-created ShoppingItems and Locations were saved right away.
 
@@ -29,12 +31,12 @@ My Last Update of note was **August 14, 2020**, when these were some of the rece
 
 ![](Screenshot1.jpg)
 ![](Screenshot2.jpg)
-![](/Screenshot3.jpg)
-![](/Screenshot4.jpg)
+![](Screenshot3.jpg)
+![](Screenshot4.jpg)
 
 The main screen is a TabView, to show 
 * a current shopping list, 
-* a list of previously purchased items, and
+* a (searchable) list of previously purchased items, and
 * a list of "locations" in a store, such as "Dairy," "Fruits & Vegetables," "Deli," and so forth, and
 * an in-store timer, to track how long it takes you to complete shopping, and
 * optionally, for purposes of demonstration, a "Dev Tools" tab to make wholesale adjustments to the data and the shopping list display (this can be hidden for real usage).
