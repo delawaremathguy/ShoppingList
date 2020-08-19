@@ -18,8 +18,7 @@ class ShoppingListViewModel: ObservableObject {
 	// since we're really wrapping four different types of ShoppingListViewModel here
 	// all together, it's useful to define the types for clarity, and record which one we are
 	enum viewModelUsageType {
-		case shoppingList 		// drives ShoppingListTabView1
-//		case multiSectionShoppingList 		// drives ShoppingListTabView2
+		case shoppingList 		// drives ShoppingListTabView
 		case purchasedItemShoppingList 		// drives PurchasedTabView
 		case locationSpecificShoppingList(Location?)	// drives LocationsTabView with associated data
 	}

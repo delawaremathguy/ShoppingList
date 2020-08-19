@@ -48,7 +48,10 @@ struct TimerTabView: View {
 				
 			}
 			.navigationBarTitle("In-Store Timer")
-		}
+		} // end of NavigationView
+			.onAppear { print("TimerTabView appear") }
+			.onDisappear { print("TimerTabView disappear") }
+
 	}
 	
 	func timeString(accumulatedTime: TimeInterval) -> String {

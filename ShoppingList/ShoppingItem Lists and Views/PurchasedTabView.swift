@@ -89,11 +89,12 @@ struct PurchasedTabView: View {
 			
 		} // end of NavigationView
 			.onAppear {
-//				print("onAppear in Parchased tab")
+				print("PurchasedTabView appear")
 				self.viewModel.loadItems()
 				self.searchText = ""
 		}
-		
+		.onDisappear { print("PurchasedTabView disappear") }
+
 	}
 	
 	func sectionHeaderTitle() -> String {

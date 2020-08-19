@@ -122,7 +122,11 @@ invoked on an item in the list
 
 			
 		} // end of NavigationView
-			.onAppear { self.viewModel.loadItems() }
+			.onAppear {
+				print("ShoppingListTabView appear")
+				self.viewModel.loadItems()
+			}
+			.onDisappear { print("ShoppingListTabView disappear") }
 		
 	} // end of body: some View
 	

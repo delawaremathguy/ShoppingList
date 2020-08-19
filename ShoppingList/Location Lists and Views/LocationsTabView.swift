@@ -77,9 +77,13 @@ struct LocationsTabView: View {
 							.resizable()
 							.frame(width: 16, height: 16)
 				})
-				.onAppear { self.viewModel.loadLocations() }
+				.onAppear {
+					print("LocationsTabView appear")
+					self.viewModel.loadLocations()
+				}
 			
 		} // end of NavigationView
+			.onDisappear { print("LocationsTabView disappear") }
 	} // end of var body: some View
 		
 }

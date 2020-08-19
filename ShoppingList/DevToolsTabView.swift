@@ -64,21 +64,10 @@ struct DevToolsTabView: View {
 			}
 			} // end of Group
 			
-			Text("To see the difference between the single-section or multi-section versions of the Shopping List, just tap the tray or double-tray icon at the top, left of the shpping list.")
+			Text("To see the difference between the single-section or multi-section versions of the Shopping List, just tap the tray or double-tray icon at the top, left of the shopping list.")
 				.italic()
 				.foregroundColor(.secondary)
 				.padding([.leading, .trailing], 10)
-
-//			HStack(spacing: 5) {
-//				Text("Shopping list display: ") + Text(shoppingListSectionSwitch ? "Multi-Section" : "Single Section").bold()
-//				Button("Change") {
-//					self.shoppingListSectionSwitch.toggle()
-//					// kShowMultiSectionShoppingList.toggle()
-//				}
-//			}
-			
-//			Text("See different behaviour of the timer.")
-//				.padding([.leading, .trailing], 10)
 
 			HStack(spacing: 5) {
 				Text("Suspend timer in background: ") + Text(disableTimerWhenAppIsNotActive ? "Yes" : "No").bold()
@@ -95,12 +84,14 @@ struct DevToolsTabView: View {
 			Spacer()
 
 			Text("This tab view can be hidden if you wish (see Development.swift)")
-				.padding([.leading, .trailing], 10)
+				.padding([.leading, .trailing, .bottom], 10)
 
 			
 		} // end of VStack
 			.navigationBarTitle("Dev Tools")
 		} // end of NavigationView
+			.onAppear { print("DevToolsTabView appear") }
+			.onDisappear { print("DevToolsTabView disappear") }
 	} // end of body
 	
 }
