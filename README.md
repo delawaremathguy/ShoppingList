@@ -14,7 +14,9 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **August 19, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **August 20, 2020**, when these were some of the recent changes I made.
+
+* Did a quick check with XCode 12 beta 5 (the news is good!)
 
 * Added screenshots
 
@@ -99,14 +101,14 @@ So,
 
 * I could add a printing capability, or even a general sharing capability (e.g., email the list to someone else).  I did this in another (*UI-Kit based*) project, so it should be easy, right?  
 
-I have, only briefly, tested out this code with **XCode 12beta 4**, and here are some observations so far:
+I have, only briefly, tested out this code with **XCode 12beta 5**, and here are some observations so far:
 
 * Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  However, XCode will generate a duplicate conformance error, not on my adding conformance, but *primarily on its own generated file*, which was a little confusing at first.
 * GroupedListStyle now puts a section header in .uppercase by default, but you can override that by using .textcase(.none) so the header displays the title exactly as you want.
-* Things otherwise look good; however, the "deletion issue" that seems to be gone in XCode 11.6 might still be there in the new XCode 12 beta 4.  i have extensive comments in the code about handling this.
+* Things otherwise look good, and even the "deletion issue" that I worked on so much and (*I think*) eliminated in XCode 11.6 does not pop up (*so far*) in the new XCode 12 beta 5.  i have extensive comments in the code about handling this (*see ShoppingItemRowData.swift*).
 
 At some point, however,   I will stop working on this project.
-**That time is now coming very soon**.  I have learned a lot about SwiftUI  -- that was the point of the project --
+**That time is very close to being just about now**.  I have learned a lot about SwiftUI  -- that was the point of the project --
 and I am  certainly not at all interested in creating the next, killer 
 shopping list app or moving any of this to the App Store.  *The world really does not need a new list-making app*.
 
