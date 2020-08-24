@@ -147,13 +147,11 @@ func insertNewLocations(from codableLocations: [LocationCodable]) {
 func deleteAllData() {
 	let shoppingItems = ShoppingItem.allShoppingItems()
 	for item in shoppingItems {
-		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item)
 		ShoppingItem.delete(item: item)
 	}
 	
 	let locations = Location.allLocations(userLocationsOnly: true)
 	for location in locations {
-		NotificationCenter.default.post(name: .locationWillBeDeleted, object: location)
 		Location.delete(location: location)
 	}
 	

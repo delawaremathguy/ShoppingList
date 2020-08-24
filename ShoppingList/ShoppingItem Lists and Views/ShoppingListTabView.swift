@@ -58,7 +58,6 @@ invoked on an item in the list
 				if viewModel.itemCount == 0 {
 					EmptyListView(listName: "Shopping")
 				} else {
-					
 					SLSimpleHeaderView(label: "Items Listed: \(viewModel.itemCount)")
 					if multiSectionDisplay {
 						MultiSectionShoppingListView(viewModel: viewModel,
@@ -101,9 +100,10 @@ invoked on an item in the list
 							gShowMultiSectionShoppingList.toggle()
 						}) {
 							Image(systemName: self.multiSectionDisplay ? "tray.2" : "tray")
-									.resizable()
-								.frame(width: 30, height: 20)
-							},
+								.resizable()
+								.scaledToFill()
+								.frame(height: 20)
+					},
 					trailing:
 						Button(action: { self.isAddNewItemSheetShowing = true }) {
 							Image(systemName: "plus")
@@ -181,12 +181,14 @@ struct SingleSectionShoppingListView: View {
 		List {
 			// one main section, showing all items
 			ForEach(viewModel.items) { item in
+				// display a single row here for 'item'
 				NavigationLink(destination: AddorModifyShoppingItemView(viewModel: self.viewModel, editableItem: item)) {
 					ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
 						.contextMenu {
-							shoppingItemContextMenu(viewModel: self.viewModel, for: item, deletionTrigger: {
-								self.itemToDelete = item
-								self.isDeleteItemAlertShowing = true
+							shoppingItemContextMenu(viewModel: self.viewModel,
+																			for: item, deletionTrigger: {
+																				self.itemToDelete = item
+																				self.isDeleteItemAlertShowing = true
 							})
 					} // end of contextMenu
 				} // end of NavigationLink
@@ -214,16 +216,16 @@ struct MultiSectionShoppingListView: View {
 		List {
 			ForEach(viewModel.locationsForItems()) { location in
 				Section(header: SLSectionHeaderView(title: location.name!)) {
-					
+					// display items in this location
 					ForEach(self.viewModel.items(at: location)) { item in
-						
 						// display a single row here for 'item'
 						NavigationLink(destination: AddorModifyShoppingItemView(viewModel: self.viewModel, editableItem: item)) {
 							ShoppingItemRowView(itemData: ShoppingItemRowData(item: item, showLocation: false))
 								.contextMenu {
-									shoppingItemContextMenu(viewModel: self.viewModel, for: item, deletionTrigger: {
-										self.itemToDelete = item
-										self.isDeleteItemAlertShowing = true
+									shoppingItemContextMenu(viewModel: self.viewModel,
+																					for: item, deletionTrigger: {
+																						self.itemToDelete = item
+																						self.isDeleteItemAlertShowing = true
 									})
 							}
 						}

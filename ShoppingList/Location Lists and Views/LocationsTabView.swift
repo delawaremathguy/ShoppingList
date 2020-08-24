@@ -75,7 +75,7 @@ struct LocationsTabView: View {
 					Button(action: { self.isAddNewLocationSheetShowing = true }) {
 						Image(systemName: "plus")
 							.resizable()
-							.frame(width: 16, height: 16)
+							.frame(width: 20, height: 20)
 				})
 				.onAppear {
 					print("LocationsTabView appear")

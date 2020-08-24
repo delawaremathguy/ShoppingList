@@ -14,19 +14,19 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Last Update of Note
 
-My Last Update of note was **August 20, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **August 24, 2020**, when these were some of the recent changes I made.
 
-* Did a quick check with XCode 12 beta 5 (the news is good!)
+* The ShoppingList(ViewModel) now properly responds to certain edits on Locations.  This was necessary because changing a Location's visitationOrder (as well as deleting a Location) can affect the display of the one-section ShoppingList, because it might require a resort of the items.  The code for the multi-section shopping list and the purchased item list have different behaviours: the former sections out the items first by Locations, then by items within each section (independent of the order of the items array), while the latter sorts alphabetically.
 
-* Added screenshots
+* A ShoppingItem no longer needs a `visitationOrder` field that mirrors the `visitationOrder` of its associated Location.  There are no remaining references in code that read or write the value of this field.  However, I have not removed this field from the .xcdatamodeld file (*doing so might disturb a whole bunch of folks who tried the app and started using it, and I'd like not to add a migration to Version 2 to the data model just yet*).
+
+* (Previously) Did a quick check with XCode 12 beta 5 (the things look surprisingly good!)
+
+* (Previously) Added screenshots
 
 * (Previously) Combined the two versions of code for a shopping list view (single-section or multi-sectioned) into a single View and made the choice of which view to use an easy selection by tapping the NavigationBar's leading button.
 
 * (Previously) Changed the use of color in the shopping list and purchased list -- no longer a background color, but just a color bar at the left of the item.  it looks a lot cleaner to my eye; but you can swap out the six or eight lines of code I added for this if you like the previous display.
-
-* (Previously) Cleaned up shopping list and location view models (i.e., fixed a bug or two) to be sure they sent the correct notification for everything they did and never directly changed the items or locations array on their own, except in response to a notification. This fixes a problem with items not updating visually in some places.  I also made sure that newly-created ShoppingItems and Locations were saved right away.
-
-* (Previously) Reorganized much of this README document.
 
 
 ## General App Structure

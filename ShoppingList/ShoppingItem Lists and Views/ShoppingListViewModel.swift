@@ -47,7 +47,10 @@ class ShoppingListViewModel: ObservableObject {
 																					 name: .shoppingItemEdited, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemWillBeDeleted),
 																					 name: .shoppingItemWillBeDeleted, object: nil)
-//		print("ShoppingListViewModel of type \(usageType) created.")
+		NotificationCenter.default.addObserver(self, selector: #selector(locationEdited),
+																					 name: .locationEdited, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(locationWillBeDeleted),
+																					 name: .locationWillBeDeleted, object: nil)
 	}
 	
 	// call this loadItems once the object has been created, before using it. in usage,
@@ -117,6 +120,33 @@ class ShoppingListViewModel: ObservableObject {
 			removeFromItems(item: item)
 		}
 	}
+	
+	@objc func locationEdited(_ notification: Notification) {
+		// the notification has a reference to the location that was edited.  we need
+		// to see this notification: if the location's visitationOrder has been changed, that
+		// (may) require a new sort of the items if any item is affected by the change.
+		guard let location = notification.object as? Location else { return }
+		switch usageType {
+			case .shoppingList:
+				if !items.allSatisfy({ $0.location! == location }) {
+					sortItems()
+			}
+			case .purchasedItemShoppingList, .locationSpecificShoppingList(_):
+				break
+		}
+	}
+		
+	@objc func locationWillBeDeleted(_ notification: Notification) {
+		// the notification has a reference to the location that will be deleted.  we need
+		// to see this notification: changes to the location's name will be handled fine
+		// in display, but if the location's visitationOrder has been changed, that
+		// (may) require a new sort of the items if any item is affected by the change.
+		guard let location = notification.object as? Location else { return }
+		if !items.allSatisfy({ $0.location! == location }) {
+			sortItems()
+		}
+	}
+
 		
 	// says whether a shopping item is of interest to us.
 	func isOurKind(item: ShoppingItem) -> Bool {
@@ -138,7 +168,7 @@ class ShoppingListViewModel: ObservableObject {
 		switch usageType {
 			case .shoppingList: // , .multiSectionShoppingList:
 				items.sort(by: { $0.name! < $1.name! }) 
-				items.sort(by: { $0.visitationOrder < $1.visitationOrder })
+				items.sort(by: { $0.location!.visitationOrder < $1.location!.visitationOrder })
 			case .purchasedItemShoppingList, .locationSpecificShoppingList:
 				items.sort(by: { $0.name! < $1.name! })
 		}
@@ -209,7 +239,6 @@ class ShoppingListViewModel: ObservableObject {
 	// view models like us, to take the item out of the array of items before
 	// we delete it from Core Data
 	func delete(item: ShoppingItem) {
-		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item, userInfo: nil)
 		ShoppingItem.delete(item: item, saveChanges: true)
 	}
 	
@@ -242,7 +271,7 @@ class ShoppingListViewModel: ObservableObject {
 	}
 	
 	func items(at location: Location) -> [ShoppingItem] {
-		return items.filter({ $0.location! == location })
+		return items.filter({ $0.location! == location }).sorted(by: { $0.name! < $1.name! }) 
 	}
 
 }

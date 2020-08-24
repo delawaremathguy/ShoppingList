@@ -83,7 +83,7 @@ struct PurchasedTabView: View {
 						Button(action: { self.isAddNewItemSheetShowing = true }) {
 							Image(systemName: "plus")
 								.resizable()
-								.frame(width: 16, height: 16)
+								.frame(width: 20, height: 20)
 						}
 					)
 			

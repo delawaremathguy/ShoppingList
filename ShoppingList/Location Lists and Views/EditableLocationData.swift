@@ -46,10 +46,11 @@ extension Location {
 		
 		// make sure all shopping items at this location have the
 		// updated visitation information
-		if let items = items as? Set<ShoppingItem> {
-			for item in items {
-				item.visitationOrder = visitationOrder
-			}
-		}
+//		if let items = items as? Set<ShoppingItem> {
+//			for item in items {
+//				item.visitationOrder = visitationOrder
+//			}
+//		}
+		
 	}
 }

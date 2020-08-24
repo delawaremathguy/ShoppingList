@@ -78,7 +78,6 @@ class LocationsListViewModel: ObservableObject {
 	}
 
 	func delete(location: Location) {
-		NotificationCenter.default.post(name: .locationWillBeDeleted, object: location)
 		Location.delete(location: location, saveChanges: true)
 	}
 	

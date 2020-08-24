@@ -79,6 +79,7 @@ extension ShoppingItem: Identifiable {
 		// remove reference to this item from its associated location first, then delete
 		let location = item.location
 		location?.removeFromItems(item)
+		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item, userInfo: nil)
 		item.managedObjectContext?.delete(item)
 		if saveChanges {
 			Self.saveChanges()
@@ -94,7 +95,7 @@ extension ShoppingItem: Identifiable {
 		// remove its reference from that location now (notice use of ?.?.!)
 		self.location?.removeFromItems(self)
 		self.location = location
-		visitationOrder = location.visitationOrder
+		// visitationOrder = location.visitationOrder
 	}
 }
 
