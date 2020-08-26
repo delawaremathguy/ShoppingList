@@ -55,9 +55,12 @@ extension ShoppingItem {
 	func updateValues(from editableData: EditableShoppingItemData) {
 		name = editableData.itemName
 		quantity = Int32(editableData.itemQuantity)
-		setLocation(editableData.location)
 		onList = editableData.onList
 		isAvailable = editableData.isAvailable
+		// if we are currently associated with a Location, break that association
+		// and then set new location
+		location?.removeFromItems(self)
+		location = editableData.location
 	}
 }
 

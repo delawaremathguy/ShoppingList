@@ -104,7 +104,7 @@ func populateDatabaseFromJSON() {
 func insertNewItems(from codableShoppingItems: [ShoppingItemCodable]) {
 	
 	// get all Locations that are not the unknown location
-	// group by id for faster lookup below when adding an item to a location
+	// group by name for lookup below when adding an item to a location
 	let locations = Location.allLocations(userLocationsOnly: true)
 	let name2Location = Dictionary(grouping: locations, by: { $0.name! })
 	
@@ -115,12 +115,12 @@ func insertNewItems(from codableShoppingItems: [ShoppingItemCodable]) {
 		newItem.onList = codableShoppingItem.onList
 		newItem.isAvailable = codableShoppingItem.isAvailable
 		
-		// look up matching location by id
+		// look up matching location by name
 		// anything that doesn't match goes to the unknown location.
 		if let location = name2Location[codableShoppingItem.locationName]?.first {
-			newItem.setLocation(location)
+			newItem.location = location
 		} else {
-			newItem.setLocation(Location.unknownLocation()!)
+			newItem.location = Location.unknownLocation()!
 		}
 		
 		NotificationCenter.default.post(name: .shoppingItemAdded, object: newItem, userInfo: nil)
@@ -173,3 +173,16 @@ func deleteAllData() {
 //	print("Core Data DB Path :: \(path ?? "Not found")")
 //}
 
+// MARK: - USeful Extensions to make CodableStructRepresentable work
+
+extension Location: CodableStructRepresentable {
+	var codableProxy: some Encodable & Decodable {
+		return LocationCodable(from: self)
+	}
+}
+
+extension ShoppingItem: CodableStructRepresentable {
+	var codableProxy: some Encodable & Decodable {
+		return ShoppingItemCodable(from: self)
+	}
+}

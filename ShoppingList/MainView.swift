@@ -9,9 +9,9 @@
 import SwiftUI
 import CoreData
 
-// the MainView is where the app begins.  it is a tab view with three
-// tabs, all inside a NavigationView.  a fourth tab also appears if kShowDevToolsTab
-// is true (this is set in code in Development.swift). not much happens here, other
+// the MainView is where the app begins.  it is a tab view with four tabs.
+// a fifth tab also appears if kShowDevToolsTab is true (this is set in code
+// in Development.swift). not much happens here, other
 // than to track the selected tab (1, 2, 3, or 4), although we don't actually
 // use this value for anything right now.
 
@@ -20,11 +20,6 @@ struct MainView: View {
 	
 	var body: some View {
 		TabView(selection: $selectedTab) {
-			
-			// the first tabView is the shopping list.  changing the value of
-			// kShowMultiSectionShoppingList in Development.swift (or interactively
-			// in the Dev Tools tab if you have it showing) will let you see the
-			// two different options.
 			
 			ShoppingListTabView()
 			.tabItem {
@@ -60,14 +55,7 @@ struct MainView: View {
 			
 			
 		} // end of TabView
-			.onAppear(perform: reportEntityCounts) // just for testing ...
-		
-	}
-	
-	func reportEntityCounts() {
-//		print("Number of shopping items is \(ShoppingItem.count())")
-//		print("Number of locations is \(Location.count())")
-	}
+	} // end of var body: some View
 	
 }
 

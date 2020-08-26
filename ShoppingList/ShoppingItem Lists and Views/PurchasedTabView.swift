@@ -67,10 +67,7 @@ struct PurchasedTabView: View {
 								Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
 											message: Text("Are you sure you want to delete this item?"),
 											primaryButton: .cancel(Text("No")),
-											secondaryButton: .destructive(Text("Yes"),
-											action: {
-												self.viewModel.delete(item: self.itemToDelete!)
-											})
+											secondaryButton: .destructive(Text("Yes"), action: deleteSelectedItem)
 								)}
 						
 					}  // end of List
@@ -90,12 +87,19 @@ struct PurchasedTabView: View {
 		} // end of NavigationView
 			.onAppear {
 				print("PurchasedTabView appear")
-				self.viewModel.loadItems()
 				self.searchText = ""
+				self.viewModel.loadItems()
 		}
 		.onDisappear { print("PurchasedTabView disappear") }
 
 	}
+	
+	func deleteSelectedItem() {
+		if let item = itemToDelete {
+			viewModel.delete(item: item)
+		}
+	}
+
 	
 	func sectionHeaderTitle() -> String {
 		if searchText.isEmpty {

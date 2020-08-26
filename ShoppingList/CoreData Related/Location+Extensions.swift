@@ -13,7 +13,14 @@ import CoreData
 let kUnknownLocationName = "Unknown Location"
 let kUnknownLocationVisitationOrder: Int32 = INT32_MAX
 
-extension Location: Identifiable {
+extension Location: Identifiable, Comparable {
+	
+	// add Comparable conformance
+	public static func < (lhs: Location, rhs: Location) -> Bool {
+		lhs.visitationOrder < rhs.visitationOrder
+	}
+	
+	// MARK: - Class Functions for CRUD Operations
 	
 	static func count() -> Int {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
@@ -85,18 +92,21 @@ extension Location: Identifiable {
 	static func delete(location: Location, saveChanges: Bool = false) {
 		// you cannot delete the unknownLocation
 		guard location.visitationOrder != kUnknownLocationVisitationOrder else { return }
-		
+
+		// OK, announce what's about to happen
+		NotificationCenter.default.post(name: .locationWillBeDeleted, object: location)
+
 		// retrieve all items for this location so we can work with them
 		let itemsAtThisLocation = location.items as? Set<ShoppingItem> ?? Set<ShoppingItem>()
 		
-		// take all shopping items associated with this location and
-		// move then to the unknown location
+		// remove all shopping items associated with this location from the Location's
+		// NSSet of ShoppingItem, then move then to the unknown location
 		let theUnknownLocation = Location.unknownLocation()!
 		for item in itemsAtThisLocation {
-			item.setLocation(theUnknownLocation)
+			item.location?.removeFromItems(item)
+			item.location = theUnknownLocation
 		}
 		// and finish the deletion
-		NotificationCenter.default.post(name: .locationWillBeDeleted, object: location)
 		location.managedObjectContext?.delete(location)
 		if saveChanges {
 			PersistentStore.shared.saveContext()
@@ -106,6 +116,8 @@ extension Location: Identifiable {
 	static func saveChanges() {
 		PersistentStore.shared.saveContext()
 	}
+	
+	// MARK: - Reference functions
 	
 	func uiColor() -> UIColor {
 		UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(opacity))
@@ -117,15 +129,3 @@ extension Location: Identifiable {
 	
 }
 
-extension Location: CodableStructRepresentable {
-	var codableProxy: some Encodable & Decodable {
-		return LocationCodable(from: self)
-	}
-}
-	
-extension Location: Comparable {
-	public static func < (lhs: Location, rhs: Location) -> Bool {
-		lhs.visitationOrder < rhs.visitationOrder
-	}
-	
-}

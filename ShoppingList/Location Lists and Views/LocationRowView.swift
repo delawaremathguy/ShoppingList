@@ -16,11 +16,13 @@ struct LocationRowData {
 	var name: String = ""
 	var itemCount: Int = 0
 	var visitationOrder: Int32 = 0
+	var uiColor = UIColor()
 	
 	init(location: Location) {
 		name = location.name!
 		itemCount = location.items!.count
 		visitationOrder = location.visitationOrder
+		uiColor = location.uiColor()
 	}
 }
 
@@ -29,6 +31,10 @@ struct LocationRowView: View {
 	
 	var body: some View {
 		HStack {
+			// color bar at left (new in this code)
+			Color(rowData.uiColor)
+				.frame(width: 10, height: 36)
+			
 			VStack(alignment: .leading) {
 				Text(rowData.name)
 					.font(.headline)

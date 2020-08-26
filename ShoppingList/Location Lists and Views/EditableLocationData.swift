@@ -32,7 +32,7 @@ struct EditableLocationData {
 	
 }
 
-// MARK: - ShoppingItem Convenience Extension
+// MARK: - Location Convenience Extension
 
 extension Location {
 	
@@ -43,14 +43,5 @@ extension Location {
 		green = editableData.green
 		blue = editableData.blue
 		opacity = editableData.opacity
-		
-		// make sure all shopping items at this location have the
-		// updated visitation information
-//		if let items = items as? Set<ShoppingItem> {
-//			for item in items {
-//				item.visitationOrder = visitationOrder
-//			}
-//		}
-		
 	}
 }

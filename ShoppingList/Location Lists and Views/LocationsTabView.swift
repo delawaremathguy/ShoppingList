@@ -57,14 +57,13 @@ struct LocationsTabView: View {
 									}
 							}
 						}
-						.listRowBackground(Color(location.uiColor()))
+						//.listRowBackground(Color(location.uiColor()))
 					} // end of ForEach
 						.alert(isPresented: $showDeleteConfirmation) {
 							Alert(title: Text("Delete \'\(locationToDelete!.name!)\'?"),
 										message: Text("Are you sure you want to delete this location?"),
 										primaryButton: .cancel(Text("No")),
-										secondaryButton: .destructive(Text("Yes"), action: { self.viewModel.delete(location: self.locationToDelete!)
-										})
+										secondaryButton: .destructive(Text("Yes"), action: deleteSelectedLocation)
 							)}
 				} // end of List
 				
@@ -85,5 +84,12 @@ struct LocationsTabView: View {
 		} // end of NavigationView
 			.onDisappear { print("LocationsTabView disappear") }
 	} // end of var body: some View
+	
+	
+	func deleteSelectedLocation() {
+		if let location = locationToDelete {
+			viewModel.delete(location: location)
+		}
+	}
 		
 }

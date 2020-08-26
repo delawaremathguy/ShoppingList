@@ -108,7 +108,7 @@ struct AddorModifyShoppingItemView: View {
 				Alert(title: Text("Delete \'\(editableItem!.name!)\'?"),
 							message: Text("Are you sure you want to delete this item?"),
 							primaryButton: .cancel(Text("No")),
-							secondaryButton: .destructive(Text("Yes"), action: self.deleteItem)
+							secondaryButton: .destructive(Text("Yes"), action: deleteItem)
 				)}
 	}
 		

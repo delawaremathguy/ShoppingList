@@ -9,7 +9,7 @@
 import Foundation
 
 // a ShoppingListViewModel object provides a window into the Code Data store that
-// can be used by ShoppingListTabView1, ShoppingListTabView2, and PurchasedTabView.
+// can be used by ShoppingListTabView and PurchasedTabView.
 // it provides both data out for the view to consume, and handles user intents from the View
 // back to Core Data (with notification to the View that the viewModel has changed).
 
@@ -27,8 +27,11 @@ class ShoppingListViewModel: ObservableObject {
 	// the items on our list
 	@Published var items = [ShoppingItem]()
 	
-	// have we ever been loaded or not?  once is enough, thank you.
-	private var dataHasNotBeenLoaded = true
+	// have we ever been loaded or not?  once is enough, thank you.  the reason
+	// is that we will see notifications for all creations, deletions, and updates
+	// for the items we manage, so can male appropriate modifications to the items
+	// array without having to go back to Core Data and refetch
+	private var dataHasBeenLoaded = false
 		
 	// quick accessors as computed properties
 	var itemCount: Int { items.count }
@@ -40,7 +43,9 @@ class ShoppingListViewModel: ObservableObject {
 	// type will have associated data of the location we're attached to
 	init(type: viewModelUsageType) {
 		usageType = type
-		// sign us up for ShoppingItem change operations
+		// sign us up for ShoppingItem change operations, and also for Location changes
+		// because the order of the items will change if a Location is deleted or have
+		// its visitationOrder modified
 		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemAdded),
 																					 name: .shoppingItemAdded, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemEdited),
@@ -55,12 +60,12 @@ class ShoppingListViewModel: ObservableObject {
 	
 	// call this loadItems once the object has been created, before using it. in usage,
 	// i have called this in .onAppear(), and even though onAppear() can be called
-	// multiple times on the same View -- that's why we have the dataHasNotBeenLoaded so
+	// multiple times on the same View -- that's why we have the dataHasBeenLoaded so
 	// that we're not constantly reloading the items array.  after all, all changes
-	// to items come through us, no matter whether we are on- or -offscreen, so we
+	// to items come through us, no matter whether we are on- or off-screen, so we
 	// claim that we're always in the right state once loaded.
 	func loadItems() {
-		if dataHasNotBeenLoaded {
+		if !dataHasBeenLoaded {
 			switch usageType {
 				case .shoppingList: //, .multiSectionShoppingList:
 					items = ShoppingItem.currentShoppingList(onList: true)
@@ -73,14 +78,14 @@ class ShoppingListViewModel: ObservableObject {
 			}
 			print("shopping list loaded. \(items.count) items.")
 			sortItems()
-			dataHasNotBeenLoaded = false
+			dataHasBeenLoaded = true
 		}
 	}
 
 	
 	// MARK: - Responses to changes in ShoppingItem objects
 	
-	// ALL THREE OF THESE FUNCTIONS RESPOND TO NOTIFICATIONS that an item has
+	// ALL OF THESE FUNCTIONS RESPOND TO NOTIFICATIONS that an item has possibly
 	// been created, edited, or deleted.  Each must determine whether
 	// the event affects the items array.  Note that no other functions
 	// should be changing the items array on their own -- the whole idea is that
@@ -101,14 +106,14 @@ class ShoppingListViewModel: ObservableObject {
 		// the logic here is mostly:
 		// -- did the edit kick the item off our list? if yes, remove it
 		// -- did the edit put the item on our list? if so, add it
-		// -- if it's on the list, sort the items (the edit may have changed the sorting order
+		// -- if it's on the list, sort the items (the edit may have changed the sorting order)
 		// -- otherwise, we don't care
 		if items.contains(item) && !isOurKind(item: item) {
 			removeFromItems(item: item)
 		} else if !items.contains(item) && isOurKind(item: item) {
 			addToItems(item: item)
 		} else if items.contains(item) {
-			sortItems()
+			sortItems()  // an edit may have compromised the sort order
 		}
 	}
 	
@@ -146,7 +151,6 @@ class ShoppingListViewModel: ObservableObject {
 			sortItems()
 		}
 	}
-
 		
 	// says whether a shopping item is of interest to us.
 	func isOurKind(item: ShoppingItem) -> Bool {
@@ -156,14 +160,12 @@ class ShoppingListViewModel: ObservableObject {
 			case .purchasedItemShoppingList:
 				return item.onList == false
 			case .locationSpecificShoppingList(let location):
-				return item.location == location! // this must be not nil (adding a Location has no items)
+				return item.location == location! // this must be not nil
 		}
 	}
 		
-	// we'll do all the sorting ourself and not rely on Core Data sorting anything
-	// for us -- we'll need to do this when loading data, of course, (yes, Core Data
-	// might be better for this), but also whenever we make an edit of an item
-	// that could change the sort order (which varies depending on who we are).
+	// we keep the items array sorted at all times.  whenever the content of the items array
+	// changes, be sure we call sortItems(), which will trigger an objectWillChange.send().
 	private func sortItems() {
 		switch usageType {
 			case .shoppingList: // , .multiSectionShoppingList:
@@ -177,21 +179,21 @@ class ShoppingListViewModel: ObservableObject {
 	// simple utility to remove an item (known to exist)
 	private func removeFromItems(item: ShoppingItem) {
 		let index = items.firstIndex(of: item)!
-		items.remove(at: index)
+		items.remove(at: index) // will not change the sort order of the item array
 	}
 
 	// simple utility to add an item (that we know should be on our list)
 	private func addToItems(item: ShoppingItem) {
-		items.append(item)
+		items.append(item) // may have compromised the sort order
 		sortItems()
 	}
 
 	// MARK: - User Intents
 	
 	// ALL FUNCTIONS IN THIS AREA do CRUD changes to an item directly and then send
-	// a notification to this and to all other shopping list view models that we've done something.
-	// if those view models are interested in the item, then they will adjust their
-	// items array accordingly and will publish the change
+	// a notification to this and to all other shopping list view models that we've done
+	// something to an item. if those view models are interested in the item, then
+	// they will adjust their items array accordingly and will publish the change
 	
 	// changes availability flag for an item
 	func toggleAvailableStatus(for item: ShoppingItem) {
@@ -260,7 +262,7 @@ class ShoppingListViewModel: ObservableObject {
 	// MARK: - Functions used by a multi-section view model
 	
 	// provides a list of locations currently represented by objects in
-	// the items array
+	// the items array to drive the sections of the list
 	func locationsForItems() -> [Location] {
 		// returns all the locactions associated with our items, sorted by visitation order.
 		// we first get the locations of each of the shopping items.
@@ -270,6 +272,7 @@ class ShoppingListViewModel: ObservableObject {
 		return Set(allLocations).sorted(by: <)
 	}
 	
+	// returns the items at a location to drive list items in each section
 	func items(at location: Location) -> [ShoppingItem] {
 		return items.filter({ $0.location! == location }).sorted(by: { $0.name! < $1.name! }) 
 	}

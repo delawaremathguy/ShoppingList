@@ -9,7 +9,7 @@
 import SwiftUI
 
 // this is a list display of items on the shopping list. we use a ShoppingListViewModel
-// object to mediate for use between the data that's over in Core Data and the
+// object to mediate for us between the data that's over in Core Data and the
 // data we need to drive this View.  the view will display either as a single
 // section list, or a multi-section list (initial display is single section), with
 // these areas of the view handled by separate views, each of which has its own,
@@ -20,12 +20,14 @@ struct ShoppingListTabView: View {
 	// notified when changes are made via the ObservableObject protocol
 	@ObservedObject var viewModel = ShoppingListViewModel(type: .shoppingList)
 
-	// local states
+	// local state to trigger showing a sheet to add a new item
 	@State private var isAddNewItemSheetShowing = false
+	// local states to stash away an item to delete and trigger an alert to confirm it
 	@State private var itemToDelete: ShoppingItem?
 	@State private var isDeleteItemAlertShowing = false
 	
-	// keeps track of whether we are a multisection display or not.
+	// local state for are we a multisection display or not.  this must remain in
+	// sync with the global setting (in case this View is destroyed and later recreated)
 	@State var multiSectionDisplay: Bool = gShowMultiSectionShoppingList
 	
 	var body: some View {
@@ -115,10 +117,9 @@ invoked on an item in the list
 					Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
 								message: Text("Are you sure you want to delete this item?"),
 								primaryButton: .cancel(Text("No")),
-								secondaryButton: .destructive(Text("Yes")) {
-									self.viewModel.delete(item: self.itemToDelete!)
-						})
-					}
+								secondaryButton: .destructive(Text("Yes"), action: deleteSelectedItem)
+					)
+				}
 
 			
 		} // end of NavigationView
@@ -129,6 +130,13 @@ invoked on an item in the list
 			.onDisappear { print("ShoppingListTabView disappear") }
 		
 	} // end of body: some View
+	
+	func deleteSelectedItem() {
+		if let item = itemToDelete {
+			viewModel.delete(item: item)
+		}
+	}
+
 	
 	// this function is used to do a swipe-to-delete operation in the SingleSection
 	// view of the shopping list.  we get the index set of the items to "delete,"

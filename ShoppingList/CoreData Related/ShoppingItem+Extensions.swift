@@ -12,6 +12,14 @@ import UIKit
 
 extension ShoppingItem: Identifiable {
 	
+	// MARK: - Added Properties
+	
+	var backgroundColor: UIColor {
+		return location?.uiColor() ?? UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+	}
+	
+	// MARK: - Class functions for CRUD operations
+	
 	// this whole bunch of static functions lets me do a simple fetch and
 	// CRUD operations through the AppDelegate, including one called saveChanges(),
 	// so that i don't have to litter a whole bunch of try? moc.save() statements
@@ -77,30 +85,14 @@ extension ShoppingItem: Identifiable {
 
 	static func delete(item: ShoppingItem, saveChanges: Bool = false) {
 		// remove reference to this item from its associated location first, then delete
+		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item, userInfo: nil)
 		let location = item.location
 		location?.removeFromItems(item)
-		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item, userInfo: nil)
 		item.managedObjectContext?.delete(item)
 		if saveChanges {
 			Self.saveChanges()
 		}
 	}
 	
-	var backgroundColor: UIColor {
-		return location?.uiColor() ?? UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
-	}
-		
-	func setLocation(_ location: Location) {
-		// if this ShoppingItem is already linked to a Location,
-		// remove its reference from that location now (notice use of ?.?.!)
-		self.location?.removeFromItems(self)
-		self.location = location
-		// visitationOrder = location.visitationOrder
-	}
 }
 
-extension ShoppingItem: CodableStructRepresentable {
-	var codableProxy: some Encodable & Decodable {
-		return ShoppingItemCodable(from: self)
-	}
-}

@@ -113,7 +113,7 @@ struct AddorModifyLocationView: View {
 				Alert(title: Text("Delete \'\(editableLocation!.name!)\'?"),
 							message: Text("Are you sure you want to delete this location?"),
 							primaryButton: .cancel(Text("No")),
-							secondaryButton: .destructive(Text("Yes"), action: self.deleteLocation)
+							secondaryButton: .destructive(Text("Yes"), action: deleteLocation)
 				)}
 	}
 	

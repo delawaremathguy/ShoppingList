@@ -4,37 +4,38 @@ This is a simple, in-progress, "fail-in-public" iOS app development project usin
 
 However, be warned: 
 
-* the project source may change -- this is an ongoing project for me to get more familiar with certain details of SwiftUI, *although I am almost at the end of the public development cycle on this app*;  and
+* the project source may still change -- this is an ongoing project for me to get more familiar with certain details of SwiftUI, *although I am almost at the end of the public development cycle on this app*;  and
 * there may be errors in the code, or some areas of the code might need help with regard to best practices.
 
 
-Nevertheless, this project seems reasonably stable and does pretty much work as I suggest as of today (I used it just today at the grocery store and I am now starting to like it a lot).
+Nevertheless, this project seems reasonably stable and does pretty much work as I suggest as of today (I used it just a few days ago at the grocery store and I am now starting to like it a lot).
 
 Feel free to use this as is, to develop further,  to completely ignore, or even just to inspect and then send me a note to tell me I am doing this all wrong.  
 
 ## Last Update of Note
 
-My Last Update of note was **August 24, 2020**, when these were some of the recent changes I made.
+My Last Update of note was **August 26, 2020**, when these were some of the recent changes I made.
 
-* The ShoppingList(ViewModel) now properly responds to certain edits on Locations.  This was necessary because changing a Location's visitationOrder (as well as deleting a Location) can affect the display of the one-section ShoppingList, because it might require a resort of the items.  The code for the multi-section shopping list and the purchased item list have different behaviours: the former sections out the items first by Locations, then by items within each section (independent of the order of the items array), while the latter sorts alphabetically.
+* Switched out coloring of Locations in the LocationsTabView to have a color-bar at the leading edge, rather than coloring the entire background (this is now consistent with ShoppingListTabView and PurchasedTabView coloring). 
 
-* A ShoppingItem no longer needs a `visitationOrder` field that mirrors the `visitationOrder` of its associated Location.  There are no remaining references in code that read or write the value of this field.  However, I have not removed this field from the .xcdatamodeld file (*doing so might disturb a whole bunch of folks who tried the app and started using it, and I'd like not to add a migration to Version 2 to the data model just yet*).
+* Fixed two oversights.  (1) The LocationsListViewModel needs to be aware of certain ShoppingItem deletions; and (2) made sure to send a "xxxxxWillBeDeleted" notification *before doing anything* to effect the deletion (in Core Data) .  *See comments in code on this*.
 
-* (Previously) Did a quick check with XCode 12 beta 5 (the things look surprisingly good!)
+* (Previously) The ShoppingListViewModel now properly responds to certain edits on Locations.  This was necessary because changing a Location's visitationOrder (as well as deleting a Location) can affect the display of the one-section ShoppingList: it might require a resort of the items.  The code for the multi-section shopping list and the purchased item list have different behaviours: the former sections out the items first by Locations, then by items within each section (independent of the order of the items array), while the latter sorts alphabetically.
 
-* (Previously) Added screenshots
+* (Previously) A ShoppingItem no longer needs a `visitationOrder` field that mirrors the `visitationOrder` of its associated Location.  There are no remaining references in code that read or write the value of this field.  However, I have not removed this field from the .xcdatamodeld file (*doing so might disturb a whole bunch of folks who tried the app earlier and started using it, and I'd like not to add a migration to Version 2 to the data model just yet*).
+
+* (Previously) Did a quick check with XCode 12 beta 5 (things look surprisingly good so far, but limited testing!)
 
 * (Previously) Combined the two versions of code for a shopping list view (single-section or multi-sectioned) into a single View and made the choice of which view to use an easy selection by tapping the NavigationBar's leading button.
 
-* (Previously) Changed the use of color in the shopping list and purchased list -- no longer a background color, but just a color bar at the left of the item.  it looks a lot cleaner to my eye; but you can swap out the six or eight lines of code I added for this if you like the previous display.
 
 
 ## General App Structure
 
--> ![](Screenshot1.jpg)  ![](Screenshot2.jpg) <-
+ ![](Screenshot1.jpg)  ![](Screenshot2.jpg) 
 
 
--> ![](Screenshot3.jpg)  ![](Screenshot4.jpg) <-
+ ![](Screenshot3.jpg)  ![](Screenshot4.jpg) 
 
 The main screen is a TabView, to show 
 * a current shopping list, 
@@ -60,7 +61,6 @@ Tapping on any item in either list lets you edit it for name, quantity, assign/e
 The shopping list is sorted by the visitation order of the location in which it is found (and then alphabetically within each Location).  Items in the shopping list cannot be otherwise re-ordered, although all items in the same Location have the same color as a form of grouping.  Tapping on the leading icon in the navigation bar will toggle the display from a simple, one-section list, to a multi-section list.
 
 * Why don't you let me drag these items to reorder them, you ask?  Well, I did the reordering thing one time with .onMove(), and discovered that moving items around in a list in SwiftUI is an absolutely horrific user-experience when you have 30 or 40 items on the list -- so I don't so that anymore.  And I also don't see that you can drag between Sections of a list.
-* ~~The current code offers you the choice to see the shopping list either as one big list where the coloring helps distinguish between different location (use ShoppingListTabView1 when you compile it) or a sectioned-list with GroupedListStyle (use ShoppingListTabView2, the default view).  Both seem to work fine for now; and the DevTools tab lets you flip between these on the fly.~~
 
 
 The third tab shows a list of all locations, listed in visitationOrder (an integer from 1...100).  One special Location is the "Unknown Location," which serves as the default location for all new items.  I use this special location to mean that "I don't really know where this item is yet, but I'll figure it out at the store." In programming terms, this location has the highest of all visitationOrder values, so that it comes last in the list of Locations, and shopping items with an unassigned/unknown location will come at the bottom of the shopping list. 
@@ -90,7 +90,7 @@ So,
 
 * I'd like to look at CloudKit support for the database, but probably separately, for my own use, although this  could return to public view if I run into trouble and have to ask for help.  The general theory is that you just replace NSPersistentContainer with NSPersistentCloudkitContainer, flip a few switches in the project, add the right entitlements, and off you go. *I doubt that is truly the case*, and certainly there will be a collection of new issues that arise.
 
-* I should invest a little time on iPadOS.  Unfortunately, my iPad 2 is stuck in iOS 9, so it's not important to me right now.  As a future option, though -- even though you probably don't want to drag an iPad around in the store with you -- you might want to use it to update the day's shopping list and then, via the cloud, have those changes show up on your phone to use in-store.
+* I should invest a little time with iPadOS.  Unfortunately, my iPad 2 is stuck in iOS 9, so it's not important to me right now.  As a future option, though -- even though you probably don't want to drag an iPad around in the store with you -- you might want to use it to update the day's shopping list and then, via the cloud, have those changes show up on your phone to use in-store.
 
 *  I still get console messages at runtime about tables laying out outside the view hierarchy, and one that's come up recently of "Trying to pop to a missing destination." (current set-up is XCode 11.5, simulator & myiPhone on iOS13.5, and MacOS 10.15.5). Since I added contextMenus, I get a plenty of "Unable to simultaneously satisfy constraints" messages.  I'm ignoring them for now, and I have already seen fewer or none of these in testing out XCode 12. Several internet comments  seem to be saying ignoring most of these messages is the right thing to do for now.
 
@@ -103,6 +103,7 @@ I have, only briefly, tested out this code with **XCode 12beta 5**, and here are
 
 * Core Data now automatically generates an extension of a Core Data class to be Identifiable, if the data model has an id field (mine has type UUID, but maybe other Hashable types apply as well).  So adding my own conformance of Shopping Item and Location to Identifiable is no longer needed.  However, XCode will generate a duplicate conformance error, not on my adding conformance, but *primarily on its own generated file*, which was a little confusing at first.
 * GroupedListStyle now puts a section header in .uppercase by default, but you can override that by using .textcase(.none) so the header displays the title exactly as you want.
+* Tapping on a List item in iOS with a NavigationLink is "selected" as it was in iOS 13, but upon return, unlike iOS 13, the list item remains hilighted as "selected."  I will have to research the problem -- in UIKit, it was simply a tableView.deselectRow(at: animated:) call.
 * Things otherwise look good, and even the "deletion issue" that I worked on so much and (*I think*) eliminated in XCode 11.6 does not pop up (*so far*) in the new XCode 12 beta 5.  i have extensive comments in the code about handling this (*see ShoppingItemRowData.swift*).
 
 At some point, however,   I will stop working on this project.
