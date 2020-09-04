@@ -22,9 +22,11 @@ struct ShoppingListTabView: View {
 
 	// local state to trigger showing a sheet to add a new item
 	@State private var isAddNewItemSheetShowing = false
-	// local states to stash away an item to delete and trigger an alert to confirm it
-	@State private var itemToDelete: ShoppingItem?
-	@State private var isDeleteItemAlertShowing = false
+	// local states to trigger a destructive Alert either to delete
+	// an item, or to move all items off the list
+	@State private var isDestructiveAlertShowing = false
+	@State private var itemToDelete: ShoppingItem? // item to delete, if that's what we want to do
+	@State private var destructiveMoveToOtherList = false  // set to true if moving to other list
 	
 	// local state for are we a multisection display or not.  this must remain in
 	// sync with the global setting (in case this View is destroyed and later recreated)
@@ -63,12 +65,12 @@ invoked on an item in the list
 					SLSimpleHeaderView(label: "Items Listed: \(viewModel.itemCount)")
 					if multiSectionDisplay {
 						MultiSectionShoppingListView(viewModel: viewModel,
-																				 isDeleteItemAlertShowing: $isDeleteItemAlertShowing,
+																				 isDeleteItemAlertShowing: $isDestructiveAlertShowing,
 																				 itemToDelete: $itemToDelete,
 																				 processSwipeToDelete: handleMultiOnDeleteModifier)
 					} else {
 						SingleSectionShoppingListView(viewModel: viewModel,
-																					isDeleteItemAlertShowing: $isDeleteItemAlertShowing,
+																					isDeleteItemAlertShowing: $isDestructiveAlertShowing,
 																					itemToDelete: $itemToDelete,
 																					processSwipeToDelete: handleOnDeleteModifier)
 					}
@@ -83,12 +85,17 @@ invoked on an item in the list
 					Rectangle()
 						.frame(minWidth: 0, maxWidth: .infinity, minHeight: 1, idealHeight: 1, maxHeight: 1)
 					
-					SLCenteredButton(title: "Move All Items off-list", action: { self.viewModel.moveAllItemsToOtherList() })
+					SLCenteredButton(title: "Move All Items Off-list", action: {
+						// setting tese allow the Alert to come up with the right messages and actions
+						self.destructiveMoveToOtherList = true
+						self.isDestructiveAlertShowing = true
+						})
 						.padding([.bottom, .top], 6)
 					
 					if viewModel.hasUnavailableItems {
 						SLCenteredButton(title: "Mark All Items Available", action: { self.viewModel.markAllItemsAvailable() })
 							.padding([.bottom], 6)
+						
 					}
 				} //end of if viewModel.itemCount > 0
 
@@ -113,11 +120,11 @@ invoked on an item in the list
 								.frame(width: 20, height: 20)
 					})
 				
-				.alert(isPresented: $isDeleteItemAlertShowing) {
-					Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
-								message: Text("Are you sure you want to delete this item?"),
-								primaryButton: .cancel(Text("No")),
-								secondaryButton: .destructive(Text("Yes"), action: deleteSelectedItem)
+				.alert(isPresented: $isDestructiveAlertShowing) {
+					Alert(title: Text(destructiveAlertTitle()),
+								message: Text(destructiveAlertMessage()),
+								primaryButton: .cancel(Text("No"), action: destructiveAlertCancel),
+								secondaryButton: .destructive(Text("Yes"), action: destructiveAlertAction)
 					)
 				}
 
@@ -131,11 +138,37 @@ invoked on an item in the list
 		
 	} // end of body: some View
 	
-	func deleteSelectedItem() {
-		if let item = itemToDelete {
+	// data to pass along to the destructive alert that eithers deletes an item
+	// or moves all items off the list.  which these do depend on
+	func destructiveAlertTitle() -> String {
+		if destructiveMoveToOtherList {
+			return "Move All Items Off-List"
+		} else {
+			return "Delete \'\(itemToDelete!.name!)\'?"
+		}
+	}
+	
+	func destructiveAlertMessage() -> String {
+		if destructiveMoveToOtherList {
+			return ""
+		} else {
+			return "Are you sure you want to delete this item?"
+		}
+	}
+	
+	func destructiveAlertCancel() {
+		self.destructiveMoveToOtherList = false
+	}
+	
+	func destructiveAlertAction() {
+		if destructiveMoveToOtherList {
+			self.viewModel.moveAllItemsToOtherList()
+			self.destructiveMoveToOtherList = false
+		} else if let item = itemToDelete {
 			viewModel.delete(item: item)
 		}
 	}
+
 
 	
 	// this function is used to do a swipe-to-delete operation in the SingleSection
@@ -146,7 +179,7 @@ invoked on an item in the list
 	func handleOnDeleteModifier(indexSet: IndexSet) {
 		if kTrailingSwipeMeansDelete {
 			// trigger a deletion alert/confirmation for (only) the first item
-			isDeleteItemAlertShowing = true
+			isDestructiveAlertShowing = true
 			itemToDelete = viewModel.items[indexSet.first!]
 		} else {
 			// this moves the item(s) "to the other list"
@@ -163,7 +196,7 @@ invoked on an item in the list
 		let itemsInThisLocation = viewModel.items(at: location)
 		if kTrailingSwipeMeansDelete {
 			// trigger a deletion alert/confirmation for (only) the first item
-			isDeleteItemAlertShowing = true
+			isDestructiveAlertShowing = true
 			itemToDelete = itemsInThisLocation[indexSet.first!]
 		} else {
 			// this moves the item(s) "to the other list"
