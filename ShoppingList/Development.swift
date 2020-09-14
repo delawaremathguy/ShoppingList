@@ -11,14 +11,14 @@ import CoreData
 import UIKit
 
 // i added what i call a "Dev Tools" tab so that if you want to use this
-// as a real app (device or simulator), access to all the debugging stuff that's
-// I have can be "controlled," so to speak, on a separate tabview, and that tab
+// as a real app (device or simulator), access to all the debugging stuff that
+// i have can be "controlled," so to speak, on a separate tabview; and that tab
 // view can be displayed or not by setting this global variable:
 
 let kShowDevToolsTab = true
 
 // this boolean control whether the Shopping List is iniitally shown as multiple Sections,
-// one Section per Location, or whether it shows only a one simple list (items
+// one Section per Location, or whether it shows only a simple list (items
 // will still be listed in the same order, just not sectioned).  you can change
 // this value here directly (i now have single section on by default).  the eager
 // developer might want to put this value in UserDefaults ...
@@ -34,13 +34,14 @@ var gShowMultiSectionShoppingList = false
 // swipe of ShoppingItems in a list means
 //   (1) delete from Core Data
 //   (2) remove from the current shopping list and place item into history/purchased list
+//
 // my default view of life is that a trailing swipe -- EVEN THOUGH IT SAYS DELETE -- means
 // "move to the other list," so i set this boolean to false to choose option (2)
 // change this flag to true if you want (1)
 
 let kTrailingSwipeMeansDelete = false
 
-// I used these constants and routines during development to import and
+// i used these constants and routines during development to import and
 // export shoppingItems and Locations via JSON
 // these are the filenames for JSON output when dumped from the simulator
 // (and also the filenames in the bundle used for sample data)
@@ -60,7 +61,7 @@ protocol CodableStructRepresentable {
 
 // and (2), knowing that ShoppingItem and Location are NSManagedObjects, and we
 // don't want to write our own custom encoder (eventually we will), we extend each to
-// be able to produce a simple, Codable struct holding only what we want to write out
+// be able to produce a simple, Codable struct proxy holding only what we want to write out
 // (ShoppingItemJSON and LocationJSON structs, respectively)
 func writeAsJSON<T>(items: [T], to filename: String) where T: CodableStructRepresentable {
 	let codableItems = items.map() { $0.codableProxy }
@@ -97,11 +98,11 @@ func populateDatabaseFromJSON() {
 	let codableLocations: [LocationCodable] = Bundle.main.decode(from: kLocationsFilename)
 	insertNewLocations(from: codableLocations)
 	let codableShoppingItems: [ShoppingItemCodable] = Bundle.main.decode(from: kShoppingItemsFilename)
-	insertNewItems(from: codableShoppingItems)
+	insertNewShoppingItems(from: codableShoppingItems)
 	ShoppingItem.saveChanges()
 }
 
-func insertNewItems(from codableShoppingItems: [ShoppingItemCodable]) {
+func insertNewShoppingItems(from codableShoppingItems: [ShoppingItemCodable]) {
 	
 	// get all Locations that are not the unknown location
 	// group by name for lookup below when adding an item to a location
@@ -142,8 +143,9 @@ func insertNewLocations(from codableLocations: [LocationCodable]) {
 	}
 }
 
-
-
+// useful only as an introductory tool.  if you want to try out the app, you can
+// insert s full, working database of ShoppingItems and Locations; play with it;
+// then delete everything and start over.
 func deleteAllData() {
 	let shoppingItems = ShoppingItem.allShoppingItems()
 	for item in shoppingItems {

@@ -28,7 +28,7 @@ import SwiftUI
 // updates will be handled correctly.  but then we have other problems.
 // if this ShoppingItem is deleted elsewhere in the app, this View was still
 // holding a reference to the ShoppingItem and, depending upon certain timing conditions
-// that i htink are related to having used @FetchRequest, would cause a crash: because the
+// that i think are related to having used @FetchRequest, would cause a crash: because the
 // shopping item reference became meaningless (it was still a Core Data reference
 // to something that was deleted in Core Data terms, but not yet saved out to disk
 // -- i.e., a fault for which .isDeleted is/maybe true and .isFault is true).
@@ -66,13 +66,13 @@ struct ShoppingItemRowData {
 		
 		// nevertheless, even if it's not happening anymore, you should know that the funny thing is,
 		// it almost never happened except for when the very last item remaining in the ShoppingList
-		// is deleted; and in some cases, because of the nil-coalescing code below, you could actully
+		// is deleted; and in some cases, because of the nil-coalescing code below, you could actually
 		// see the name of the item being changed to "Item being deleted" before it disappeared.
 		// again, in XCode 11.6, i have not seen this; but the underlying problem seems to remain
-		// in XCode 12 beta4, despite the fact that i have removed all use of @FecthRequest coding
+		// in XCode 12 beta4, despite the fact that i have removed all use of @FetchRequest coding
 		// and implemented my own viewModels as a replacement.  i think it's all about timing of
 		// when SwiftUI and Core Data do their things; and it's clear that XCode 12 beta4 and
-		// SwiftUI 2 handles the timing
+		// SwiftUI 2 handles the timing correctly
 		// of when Views are created and destroyed much differently than XCode 11.6 and SwiftUI 1 did.
 		
 		// so the nil-coalescing below is built-in protection for any such case.  it appears you

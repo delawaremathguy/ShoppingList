@@ -139,7 +139,8 @@ invoked on an item in the list
 	} // end of body: some View
 	
 	// data to pass along to the destructive alert that eithers deletes an item
-	// or moves all items off the list.  which these do depend on
+	// or moves all items off the list.  which these do depend on the value of
+	// the boolean destructiveMoveToOtherList
 	func destructiveAlertTitle() -> String {
 		if destructiveMoveToOtherList {
 			return "Move All Items Off-List"
@@ -207,8 +208,8 @@ invoked on an item in the list
 }
 
 
-// this is the inner section of a single section list, which is mostly just a List/ForEach
-// construct with a NavgiationLink and a contextMenu for each item
+// this is the inner section of a single section list, which is just a List/ForEach
+// construct with a NavigationLink and a contextMenu for each item
 struct SingleSectionShoppingListView: View {
 	
 	@ObservedObject var viewModel: ShoppingListViewModel

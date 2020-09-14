@@ -21,7 +21,7 @@ struct AddorModifyShoppingItemView: View {
 		
 	// addItemToShoppingList just means that by default, a new item will be added to
 	// the shopping list, and so this is true.
-	// however, if inserting a new item from the Purchased list,
+	// however, if inserting a new item from the Purchased item list,
 	// this will be set to false. the user can override here if they wish.
 	var addItemToShoppingList: Bool = true
 	
@@ -152,7 +152,8 @@ struct AddorModifyShoppingItemView: View {
 	// to layout outside their view hierarchy -- this View will be gone and we'll have returned
 	// to the View we came from and it will be onscreen when it gets the deletion.
 	// curiously, in the Stanford CS193p lectures of Spring, 2020, Paul Hegarty introduced
-	// this technique at one point in a similar situation to "let things settle down."
+	// this technique at one point in a similar situation saying that it was
+	// to "let things settle down."
 	func deleteItem() {
 		if let item = editableItem {
 			presentationMode.wrappedValue.dismiss()

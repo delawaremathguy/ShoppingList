@@ -26,7 +26,8 @@ class LocationsListViewModel: ObservableObject {
 
 	
 	init() {
-		// sign us up for Location change operations
+		// sign us up for several change operations that could have an effect on the
+		// LocationsTabView that we assist.  these are obviously any changes to locations
 		NotificationCenter.default.addObserver(self, selector: #selector(locationAdded),
 																					 name: .locationAdded, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(locationEdited),
@@ -34,26 +35,23 @@ class LocationsListViewModel: ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(locationWillBeDeleted),
 																					 name: .locationWillBeDeleted, object: nil)
 		
-		// we also have to watch for deletions of ShoppingItems (see explanation below)
+		// but we also have to watch for deletions of ShoppingItems (see explanation below)
+		// or changes to a ShoppingItem's location
+		// because we display the number of items at a Locations
 		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemWillBeDeleted),
 																					 name: .shoppingItemWillBeDeleted, object: nil)
-		// however, we do not need to watch for shopping items being added or edited here because
-		// (1) an addition cannot take place while we are "in the LocationsTabView," and
-		// (2) an edit of a shopping item does not affect the display of the LocationsTabView
+		NotificationCenter.default.addObserver(self, selector: #selector(shoppingItemEdited),
+																					 name: .shoppingItemEdited, object: nil)
+		// we do not need to watch for shopping items being added here because such an addition
+		// cannot take place while we are "in the LocationsTabView."
 		
 		// THIS BRINGS UP AN INTERESTING SUBTLETY ABOUT A VIEWMODEL. it needs to be aware of any
 		// change in the model that affects the view.  it's not just about the array of objects
 		// represented, but about ANY aspect of the model that's displayed, even if an object
-		// itself has not change.  Core Data clearly illustrates this point: when the Locations tab
-		// is chosen, a shopping item can still be edited (tap location -> tap item in list of
-		// items at the location -> edit the item), but the LocationsTabView shows no information
-		// about specific shopping item data.
-		// the situation for deleting an item is different because the LocationsTabView displays
-		// the number of items at a location.  that's not an attribute of a Core Data entity; but
-		// we are changing the NSSet of shopping items for the location, and so this is, effectively,
-		// an edit of the Location because we display the count of the NSSet, and this does change
-		// and the View needs to know that.
-
+		// itself has not changed.  when the Locations tab is chosen, a shopping item can still be
+		// edited (tap location -> tap item in list of items at the location -> edit the item); and
+		// while the LocationsTabView shows no information about specific shopping item data, it does
+		// show the number of items at the Location. so a deletion or an edit could affect the display.
 	}
 
 	// MARK: - Responses to changes in Location objects
@@ -95,13 +93,17 @@ class LocationsListViewModel: ObservableObject {
 		// we need the display of all locations in the LocationsTabView
 		// to update for the proper number of items at this location.
 		
-		// note that it's only this special case that's a concern.  if a shopping item
-		// is deleted somewhere other than from a View that the LocationsTabView
-		// presents, things will get redrawn anyway when we later "tab into" the Locations tab.
 		guard let shoppingItem = notification.object as? ShoppingItem else { return }
 		if locations.contains(shoppingItem.location!) {
 			objectWillChange.send()
 		}
+	}
+	
+	@objc func shoppingItemEdited(_ notification: Notification) {
+		// this is a little tricky.  if we changed the location of a shopping item, there will
+		// be two entries in the LocationsTabView list that are wrong: the item for the location
+		// where it was, and the item for the location where it is now.  just blasy out a change!
+		objectWillChange.send()
 	}
 
 	// call this loadItems once the object has been created, to populate the locations

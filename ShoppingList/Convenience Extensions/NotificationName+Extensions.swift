@@ -10,11 +10,11 @@ import Foundation
 
 // the whole purpose of the NotificationName+Extensions is to centrally define
 // names for the Notifications we pass around to let all view models know that
-// something is or about to be changed in a Shopping item.  there are generally:
+// something is about to be changed in a Shopping item.  there are generally:
 //
-// -- item was added to the Core Data store
-// -- item has been edited
-// -- item will be deleted
+// -- item/location was added to the Core Data store
+// -- item/location has been edited
+// -- item/location will be deleted
 //
 
 extension Notification.Name {

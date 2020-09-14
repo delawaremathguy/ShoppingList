@@ -14,6 +14,7 @@ extension ShoppingItem: Identifiable {
 	
 	// MARK: - Added Properties
 	
+	// the color associated with a ShoppingItem is the same as that of its location's color
 	var backgroundColor: UIColor {
 		return location?.uiColor() ?? UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
 	}
@@ -84,10 +85,12 @@ extension ShoppingItem: Identifiable {
 	}
 
 	static func delete(item: ShoppingItem, saveChanges: Bool = false) {
-		// remove reference to this item from its associated location first, then delete
+		// let anyone who is interested we're about to kill this ShoppingItem
 		NotificationCenter.default.post(name: .shoppingItemWillBeDeleted, object: item, userInfo: nil)
+		// remove reference to this item from its associated location first
 		let location = item.location
 		location?.removeFromItems(item)
+		// now delete and save (default)
 		item.managedObjectContext?.delete(item)
 		if saveChanges {
 			Self.saveChanges()

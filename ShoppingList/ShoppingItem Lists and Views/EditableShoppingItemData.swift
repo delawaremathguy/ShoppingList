@@ -12,7 +12,7 @@ import Foundation
 // to edit.  it defaults to having values appropriate for a new item upon
 // creation, or can be initialized from a ShoppingItem.  this is something
 // i can then hand off to an edit view.  at some point, that edit view will
-// want to update a ShoppingItem with this data, so we also provide an ectension
+// want to update a ShoppingItem with this data, so we also provide an extension
 // on ShoppingItem to copy this data back to a ShoppingItem.
 
 struct EditableShoppingItemData {

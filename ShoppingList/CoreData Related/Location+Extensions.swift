@@ -15,7 +15,7 @@ let kUnknownLocationVisitationOrder: Int32 = INT32_MAX
 
 extension Location: Identifiable, Comparable {
 	
-	// add Comparable conformance
+	// add Comparable conformance: sort by visitation order
 	public static func < (lhs: Location, rhs: Location) -> Bool {
 		lhs.visitationOrder < rhs.visitationOrder
 	}
@@ -24,7 +24,6 @@ extension Location: Identifiable, Comparable {
 	
 	static func count() -> Int {
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
-//		fetchRequest.predicate = NSPredicate(format: "visitationOrder != %d", kUnknownLocationVisitationOrder)
 		do {
 			let itemCount = try PersistentStore.shared.context.count(for: fetchRequest)
 			return itemCount
@@ -60,6 +59,8 @@ extension Location: Identifiable, Comparable {
 		return newLocation
 	}
 	
+	// parameters for the Unknown Location.  call this only upon startup if
+	// the Core Data database has not yet been initialized
 	static func createUnknownLocation() {
 		let unknownLocation = Location(context: PersistentStore.shared.context)
 		unknownLocation.id = UUID()
@@ -73,7 +74,7 @@ extension Location: Identifiable, Comparable {
 
 	static func unknownLocation() -> Location? {
 		// we only keep one "UnknownLocation" in the data store.  you can
-		// find it because its visitationOrder is the larget 32-bit integer.
+		// find it because its visitationOrder is the largest 32-bit integer.
 		// return nil if no such thing exists, which means that the data store
 		// is empty (since all ShoppingItems have an assigned Location).
 		let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()

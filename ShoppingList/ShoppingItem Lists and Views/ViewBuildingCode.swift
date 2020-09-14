@@ -14,7 +14,7 @@ import SwiftUI
 
 // note for shoppingItemContextMenu below: in XCode 11.5/iOS 13.5, you'll get plenty of layout
 // messages about unsatisfiable constraints in the console when displaying a contextMenu.
-// that's apparently a SwiftUI problem that seems to not be present in XCode 12/iOS 14 beta.
+// that's apparently a SwiftUI problem that seems to not be present in XCode 12/iOS 14 betas.
 
 /// Builds out a context menu for a ShoppingItem that can be used in the shopping list
 /// or the purchased list to quickly move the item to the other list, toggle the state
