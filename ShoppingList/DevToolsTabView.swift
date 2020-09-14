@@ -14,8 +14,7 @@ struct DevToolsTabView: View {
 	// development hack to load sample data, remove data, and flip a few
 	// switches in the code.  this could become a "settings" or "preferences"
 	// tab in the future, in which case i would clean it up; although the only
-	// things that might remain are whether the shopping list is displayed in
-	// sections or not, and whether the timer is stopped when in the background.
+	// thing that might remain is whether the timer is stopped when in the background.
 	
 	@State private var confirmDeleteAllDataShowing = false
 	@State private var confirmDataHasBeenAdded = false
