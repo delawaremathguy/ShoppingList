@@ -66,7 +66,8 @@ struct LocationsTabView: View {
 										secondaryButton: .destructive(Text("Yes"), action: deleteSelectedLocation)
 							)}
 				} // end of List
-				
+				.listStyle(PlainListStyle())
+
 			} // end of VStack
 				.navigationBarTitle("Locations")
 				.navigationBarItems(

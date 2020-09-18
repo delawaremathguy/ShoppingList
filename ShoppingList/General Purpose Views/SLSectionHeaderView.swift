@@ -17,22 +17,22 @@ struct SLSectionHeaderView: View {
 	var title: String
 	
 	var body: some View {
-		GeometryReader { geometry in
-			self.body(for: geometry.size)
+		GeometryReader { geo in
+			if #available(iOS 14, *) {
+				// default section titles in iOS 14 are upper-case and left-justified
+				// so this uses case as intended and centers the title, as in iOS 13
+				Text(title)
+					.font(.body)
+					.foregroundColor(.black)
+					.textCase(.none) // an iOS 14 modifier
+					.position(x: geo.size.width/2, y: geo.size.height/2)
+				
+			} else {
+				Text(title)
+					.font(.body)
+					.foregroundColor(.black)
+			}
 		}
 	}
 	
-	// this is split out to simplify working with the GeometryReader
-	// and see what kind of space is available for us. expect to see some
-	// experimentation here going on.
-	func body(for size: CGSize) -> some View {
-		//		print(size)
-		//		return
-		Text(title)
-			.font(.body)
-			.foregroundColor(.black)
-		//			.background(Color.green)
-		//			.opacity(0.5)
-		//			.frame(minWidth: 0, maxWidth: .infinity)
-	}
 }

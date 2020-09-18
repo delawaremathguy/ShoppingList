@@ -13,7 +13,10 @@ import CoreData
 let kUnknownLocationName = "Unknown Location"
 let kUnknownLocationVisitationOrder: Int32 = INT32_MAX
 
-extension Location: Identifiable, Comparable {
+// TO COMPILE WITH XCODE 11, reinstate this conformance to Identifiable
+// extension Location: Identifiable { /* id is already defined in the core data model */ }
+
+extension Location: Comparable {
 	
 	// add Comparable conformance: sort by visitation order
 	public static func < (lhs: Location, rhs: Location) -> Bool {

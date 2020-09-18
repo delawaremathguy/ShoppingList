@@ -215,7 +215,7 @@ struct SingleSectionShoppingListView: View {
 	@ObservedObject var viewModel: ShoppingListViewModel
 	@Binding var isDeleteItemAlertShowing: Bool
 	@Binding var itemToDelete: ShoppingItem?
-	
+
 	var processSwipeToDelete: (IndexSet) -> ()
 	
 	var body: some View {
@@ -237,6 +237,7 @@ struct SingleSectionShoppingListView: View {
 			} // end of ForEach
 				.onDelete(perform: processSwipeToDelete)
 		}  // end of List
+		.listStyle(PlainListStyle())
 		
 	}
 }

@@ -71,7 +71,8 @@ struct PurchasedTabView: View {
 								)}
 						
 					}  // end of List
-					
+					.listStyle(PlainListStyle())
+
 				} // end of if-else
 			} // end of VStack
 				.navigationBarTitle("Purchased List")
