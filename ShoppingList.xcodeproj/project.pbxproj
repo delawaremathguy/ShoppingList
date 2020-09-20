@@ -47,6 +47,7 @@
 		D6EF5585246D964C007D636B /* ShoppingItemRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */; };
 		D6EF5587246D97C3007D636B /* Development.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6EF5586246D97C3007D636B /* Development.swift */; };
 		D6F375D62485593D005559E6 /* LocationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F375D52485593D005559E6 /* LocationRowView.swift */; };
+		D6F5267A2517A222001E6507 /* IdentifiableConformance11.7.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F526792517A222001E6507 /* IdentifiableConformance11.7.swift */; };
 		D6FC7A0A24635D950096F018 /* ShoppingList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6FC7A0824635D950096F018 /* ShoppingList.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +95,7 @@
 		D6EF5584246D964C007D636B /* ShoppingItemRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemRowView.swift; sourceTree = "<group>"; };
 		D6EF5586246D97C3007D636B /* Development.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Development.swift; sourceTree = "<group>"; };
 		D6F375D52485593D005559E6 /* LocationRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRowView.swift; sourceTree = "<group>"; };
+		D6F526792517A222001E6507 /* IdentifiableConformance11.7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableConformance11.7.swift; sourceTree = "<group>"; };
 		D6FC7A0924635D950096F018 /* ShoppingList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ShoppingList.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -226,6 +228,7 @@
 				D60F14A624686BA80077AD3F /* ShoppingItemCodable.swift */,
 				D648D348246388C100CD881B /* Location+Extensions.swift */,
 				D60F14A824686D710077AD3F /* LocationCodable.swift */,
+				D6F526792517A222001E6507 /* IdentifiableConformance11.7.swift */,
 			);
 			path = "CoreData Related";
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				D6931D6C24C4C60900A61BB6 /* TimerTabView.swift in Sources */,
 				D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */,
 				D60F14A924686D710077AD3F /* LocationCodable.swift in Sources */,
+				D6F5267A2517A222001E6507 /* IdentifiableConformance11.7.swift in Sources */,
 				D62B882B2451162D0051A7CE /* AppDelegate.swift in Sources */,
 				D62B88322451162D0051A7CE /* ShoppingListTabView.swift in Sources */,
 				D65E0E3B24D35B3A000167B2 /* LocationsListViewModel.swift in Sources */,
