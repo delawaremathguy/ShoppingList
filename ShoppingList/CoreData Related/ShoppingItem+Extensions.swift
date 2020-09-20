@@ -10,9 +10,6 @@ import Foundation
 import CoreData
 import UIKit
 
-// TO COMPILE WITH XCODE 11, reinstate this conformance to Identifiable
-// extension ShoppingItem: Identifiable { /* id is already defined in the core data model */ }
-
 extension ShoppingItem {
 	
 	// MARK: - Added Properties

@@ -188,3 +188,25 @@ extension ShoppingItem: CodableStructRepresentable {
 		return ShoppingItemCodable(from: self)
 	}
 }
+
+
+// MARK: Identifiable Conformance for XCode 11
+
+// the lines below must be added if you are using XCode 11 so that ShoppingItem and Location
+// conform to the Identifiable protocol.  there is no code here: each has an id
+// attribute (a UUID) already defined in the Core Data model; we just need to make
+// XCode aware of that.  in XCode 12, the files ShoppingItem+CoreDataProperties and
+// Location+CoreDataProperties that are automatically generated include these
+// conformances, probably because the id field is recognized by name and its
+// type (UUID) is Hashable.  that means that this code would result in duplicate
+// conformance errors.
+
+// UNCOMMENT THE FOLLOWING LINES IF YOU USE XCODE 11
+//extension ShoppingItem: Identifiable {
+//	/* id is already defined in the core data model */
+//}
+//
+//extension Location: Identifiable {
+//	/* id is already defined in the core data model */
+//}
+
