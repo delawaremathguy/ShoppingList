@@ -25,6 +25,9 @@ struct PurchasedTabView: View {
 	@State private var isAddNewItemSheetShowing = false
 	@ObservedObject var viewModel = ShoppingListViewModel(type: .purchasedItemShoppingList)
 	
+	@State private var itemsChecked = [ShoppingItem]()
+
+	
 	var body: some View {
 		NavigationView {
 			VStack {
@@ -53,16 +56,26 @@ struct PurchasedTabView: View {
 					List {
 						ForEach(viewModel.items.filter({ searchTextAppears(in: $0.name!) })) { item in
 							NavigationLink(destination: AddorModifyShoppingItemView(viewModel: self.viewModel, editableItem: item)) {
-								ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
-									.contextMenu {
-										shoppingItemContextMenu(viewModel: self.viewModel, for: item, deletionTrigger: {
-											self.itemToDelete = item
-											self.isDeleteItemAlertShowing = true
-										})
-								}
+								
+								
+								HStack {
+									SelectionIndicatorView(selected: self.itemsChecked.contains(item), uiColor: item.backgroundColor, sfSymbolName: "cart")
+										.onTapGesture {
+											self.handleItemTapped(item)
+									}
+									ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
+										.contextMenu {
+											shoppingItemContextMenu(viewModel: self.viewModel,
+																							for: item, deletionTrigger: {
+																								self.itemToDelete = item
+																								self.isDeleteItemAlertShowing = true
+											})
+									} // end of contextMenu
+								} // end of HStack
+
 							} // end of NavigationLink
 						} // end of ForEach
-							.onDelete(perform: handleOnDeleteModifier)
+							//.onDelete(perform: handleOnDeleteModifier)
 							.alert(isPresented: $isDeleteItemAlertShowing) {
 								Alert(title: Text("Delete \'\(itemToDelete!.name!)\'?"),
 											message: Text("Are you sure you want to delete this item?"),
@@ -92,7 +105,16 @@ struct PurchasedTabView: View {
 				self.viewModel.loadItems()
 		}
 		.onDisappear { print("PurchasedTabView disappear") }
+	}
 
+	func handleItemTapped(_ item: ShoppingItem) {
+		if !itemsChecked.contains(item) {
+			itemsChecked.append(item)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+				self.viewModel.moveToOtherList(item: item)
+				self.itemsChecked.removeAll(where: { $0 == item })
+			}
+		}
 	}
 	
 	func deleteSelectedItem() {
@@ -117,14 +139,14 @@ struct PurchasedTabView: View {
 		
 		// you can choose what happens here according to the value of kTrailingSwipeMeansDelete
 		// that is defined in Development.swift
-		if kTrailingSwipeMeansDelete {
-			// trigger a deletion alert/confirmation
-			isDeleteItemAlertShowing = true
-			itemToDelete = items[indexSet.first!]
-		} else {
+//		if kTrailingSwipeMeansDelete {
+//			// trigger a deletion alert/confirmation
+//			isDeleteItemAlertShowing = true
+//			itemToDelete = items[indexSet.first!]
+//		} else {
 			// this moves the item(s) "to the other list"
 			viewModel.moveToOtherList(items: indexSet.map({ items[$0] }))
-		}
+//		}
 	}
 	
 	// i added this so that the search is not case sensistive, and also just to

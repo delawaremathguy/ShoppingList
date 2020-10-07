@@ -39,7 +39,8 @@ var gShowMultiSectionShoppingList = false
 // "move to the other list," so i set this boolean to false to choose option (2)
 // change this flag to true if you want (1)
 
-let kTrailingSwipeMeansDelete = false
+// note: THIS HAS BEEN DEPRECATED
+// let kTrailingSwipeMeansDelete = false
 
 // i used these constants and routines during development to import and
 // export shoppingItems and Locations via JSON

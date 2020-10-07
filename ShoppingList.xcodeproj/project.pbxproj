@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D606197F2481510E005CE575 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D606197E2481510E005CE575 /* SearchBarView.swift */; };
 		D606198124815F8C005CE575 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D606198024815F8C005CE575 /* LICENSE */; };
+		D60631F3252E42830032CC47 /* SelectionIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60631F2252E42830032CC47 /* SelectionIndicatorView.swift */; };
 		D60F14A724686BA80077AD3F /* ShoppingItemCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A624686BA80077AD3F /* ShoppingItemCodable.swift */; };
 		D60F14A924686D710077AD3F /* LocationCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60F14A824686D710077AD3F /* LocationCodable.swift */; };
 		D610C3BE2451D8DC009F7F36 /* ShoppingItem+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */; };
@@ -54,6 +55,7 @@
 /* Begin PBXFileReference section */
 		D606197E2481510E005CE575 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		D606198024815F8C005CE575 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		D60631F2252E42830032CC47 /* SelectionIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionIndicatorView.swift; sourceTree = "<group>"; };
 		D60F14A624686BA80077AD3F /* ShoppingItemCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingItemCodable.swift; sourceTree = "<group>"; };
 		D60F14A824686D710077AD3F /* LocationCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCodable.swift; sourceTree = "<group>"; };
 		D610C3BD2451D8DC009F7F36 /* ShoppingItem+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingItem+Extensions.swift"; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				D66FF3552492E67100B3ABC8 /* SLCenteredButton.swift */,
 				D65B206B2493005600DB55F1 /* SLSliderControl.swift */,
 				D63B1A0A248EA769001CA309 /* SLSectionHeaderView.swift */,
+				D60631F2252E42830032CC47 /* SelectionIndicatorView.swift */,
 				D640329C24BB2F4A00CC0B94 /* EmptyListView.swift */,
 			);
 			path = "General Purpose Views";
@@ -325,6 +328,7 @@
 				D62B882B2451162D0051A7CE /* AppDelegate.swift in Sources */,
 				D62B88322451162D0051A7CE /* ShoppingListTabView.swift in Sources */,
 				D65E0E3B24D35B3A000167B2 /* LocationsListViewModel.swift in Sources */,
+				D60631F3252E42830032CC47 /* SelectionIndicatorView.swift in Sources */,
 				D6AE3643246F035400F7A237 /* Bundle+Extensions.swift in Sources */,
 				D677946224D58F34006EB9CF /* EditableLocationData.swift in Sources */,
 				D612E16124898EBB007E1412 /* Array+Extensions.swift in Sources */,
@@ -415,7 +419,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -470,7 +474,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

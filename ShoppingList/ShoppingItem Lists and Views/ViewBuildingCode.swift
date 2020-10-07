@@ -39,12 +39,12 @@ func shoppingItemContextMenu(viewModel: ShoppingListViewModel, for item: Shoppin
 		Image(systemName: item.isAvailable ? "pencil.slash" : "pencil")
 	}
 	
-	if !kTrailingSwipeMeansDelete {
+//	if !kTrailingSwipeMeansDelete {
 		Button(action: {
 			deletionTrigger()
 		}) {
 			Text("Delete This Item")
 			Image(systemName: "trash")
 		}
-	}
+//	}
 }

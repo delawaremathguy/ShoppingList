@@ -66,13 +66,13 @@ invoked on an item in the list
 					if multiSectionDisplay {
 						MultiSectionShoppingListView(viewModel: viewModel,
 																				 isDeleteItemAlertShowing: $isDestructiveAlertShowing,
-																				 itemToDelete: $itemToDelete,
-																				 processSwipeToDelete: handleMultiOnDeleteModifier)
+																				 itemToDelete: $itemToDelete)
+//																				 processSwipeToDelete: handleMultiOnDeleteModifier)
 					} else {
 						SingleSectionShoppingListView(viewModel: viewModel,
 																					isDeleteItemAlertShowing: $isDestructiveAlertShowing,
-																					itemToDelete: $itemToDelete,
-																					processSwipeToDelete: handleOnDeleteModifier)
+																					itemToDelete: $itemToDelete)
+//																					processSwipeToDelete: handleOnDeleteModifier)
 					}
 				}
 		
@@ -178,31 +178,31 @@ invoked on an item in the list
 	// to the other list, or it's a true delete for which we trigger an Alert
 	// to ask if you really want to delete, then delete on confirm.
 	func handleOnDeleteModifier(indexSet: IndexSet) {
-		if kTrailingSwipeMeansDelete {
-			// trigger a deletion alert/confirmation for (only) the first item
-			isDestructiveAlertShowing = true
-			itemToDelete = viewModel.items[indexSet.first!]
-		} else {
+//		if kTrailingSwipeMeansDelete {
+//			// trigger a deletion alert/confirmation for (only) the first item
+//			isDestructiveAlertShowing = true
+//			itemToDelete = viewModel.items[indexSet.first!]
+//		} else {
 			// this moves the item(s) "to the other list"
 			let itemsToToggle = viewModel.items
 			viewModel.moveToOtherList(items: indexSet.map({ itemsToToggle[$0] }))
-		}
+//		}
 	}
-	
+
 	// same for handling a swipe-to-delete in the MultiSection view; but in
 	// this case, we're getting both the index set and the location to which
 	// that index set applies (just the items at the location)
 	func handleMultiOnDeleteModifier(at indexSet: IndexSet, within location: Location) {
 		// first, get the list of items on the shopping list for this location
 		let itemsInThisLocation = viewModel.items(at: location)
-		if kTrailingSwipeMeansDelete {
-			// trigger a deletion alert/confirmation for (only) the first item
-			isDestructiveAlertShowing = true
-			itemToDelete = itemsInThisLocation[indexSet.first!]
-		} else {
+//		if kTrailingSwipeMeansDelete {
+//			// trigger a deletion alert/confirmation for (only) the first item
+//			isDestructiveAlertShowing = true
+//			itemToDelete = itemsInThisLocation[indexSet.first!]
+//		} else {
 			// this moves the item(s) "to the other list"
 			viewModel.moveToOtherList(items: indexSet.map({ itemsInThisLocation[$0] }))
-		}
+//		}
 	}
 	
 }
@@ -215,8 +215,12 @@ struct SingleSectionShoppingListView: View {
 	@ObservedObject var viewModel: ShoppingListViewModel
 	@Binding var isDeleteItemAlertShowing: Bool
 	@Binding var itemToDelete: ShoppingItem?
+	
+	// this is a temporary holding array for items being moved to the other list
+	// this is how we tell whether an item is currently in the process of being "checked"
+	@State private var itemsChecked = [ShoppingItem]()
 
-	var processSwipeToDelete: (IndexSet) -> ()
+//	var processSwipeToDelete: (IndexSet) -> ()
 	
 	var body: some View {
 
@@ -225,21 +229,40 @@ struct SingleSectionShoppingListView: View {
 			ForEach(viewModel.items) { item in
 				// display a single row here for 'item'
 				NavigationLink(destination: AddorModifyShoppingItemView(viewModel: self.viewModel, editableItem: item)) {
-					ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
-						.contextMenu {
-							shoppingItemContextMenu(viewModel: self.viewModel,
-																			for: item, deletionTrigger: {
-																				self.itemToDelete = item
-																				self.isDeleteItemAlertShowing = true
-							})
-					} // end of contextMenu
+					HStack {
+						SelectionIndicatorView(selected: self.itemsChecked.contains(item), uiColor: item.backgroundColor)
+							.onTapGesture {
+								self.handleItemTapped(item)
+						}
+						ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
+							.contextMenu {
+								shoppingItemContextMenu(viewModel: self.viewModel,
+																				for: item, deletionTrigger: {
+																					self.itemToDelete = item
+																					self.isDeleteItemAlertShowing = true
+								})
+						} // end of contextMenu
+					} // end of HStack
 				} // end of NavigationLink
 			} // end of ForEach
-				.onDelete(perform: processSwipeToDelete)
+//				.onDelete(perform: processSwipeToDelete)
 		}  // end of List
 		.listStyle(PlainListStyle())
 		
 	}
+	
+	func handleItemTapped(_ item: ShoppingItem) {
+		// add this item to the temporary holding array for items being
+		// moved to the other list, and queue
+		if !itemsChecked.contains(item) {
+			itemsChecked.append(item)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+				self.viewModel.moveToOtherList(item: item)
+				self.itemsChecked.removeAll(where: { $0 == item })
+			}
+		}
+	}
+
 }
 
 // this is the inner section of a multi section list, which is a much more
@@ -253,7 +276,10 @@ struct MultiSectionShoppingListView: View {
 	@Binding var isDeleteItemAlertShowing: Bool
 	@Binding var itemToDelete: ShoppingItem?
 	
-	var processSwipeToDelete: (IndexSet, Location) -> ()
+	@State private var itemsChecked = [ShoppingItem]()
+
+	
+//	var processSwipeToDelete: (IndexSet, Location) -> ()
 	
 	var body: some View {
 		List {
@@ -263,26 +289,43 @@ struct MultiSectionShoppingListView: View {
 					ForEach(self.viewModel.items(at: location)) { item in
 						// display a single row here for 'item'
 						NavigationLink(destination: AddorModifyShoppingItemView(viewModel: self.viewModel, editableItem: item)) {
-							ShoppingItemRowView(itemData: ShoppingItemRowData(item: item, showLocation: false))
-								.contextMenu {
-									shoppingItemContextMenu(viewModel: self.viewModel,
-																					for: item, deletionTrigger: {
-																						self.itemToDelete = item
-																						self.isDeleteItemAlertShowing = true
-									})
-							}
-						}
+							HStack {
+								SelectionIndicatorView(selected: self.itemsChecked.contains(item), uiColor: item.backgroundColor)
+									.onTapGesture {
+										self.handleItemTapped(item)
+								}
+								ShoppingItemRowView(itemData: ShoppingItemRowData(item: item))
+									.contextMenu {
+										shoppingItemContextMenu(viewModel: self.viewModel,
+																						for: item, deletionTrigger: {
+																							self.itemToDelete = item
+																							self.isDeleteItemAlertShowing = true
+										})
+								} // end of contextMenu
+							} // end of HStack
+						} // end of NavigationLink
 						//.listRowBackground(Color(item.backgroundColor))
 						
 					} // end of ForEach
-						.onDelete(perform: { offsets in
-							self.processSwipeToDelete(offsets, location)
-						})
+//						.onDelete(perform: { offsets in
+//							self.processSwipeToDelete(offsets, location)
+//						})
 					
 				} // end of Section
 			} // end of ForEach
 		}  // end of List
 			.listStyle(GroupedListStyle())
 	}
+	
+	func handleItemTapped(_ item: ShoppingItem) {
+		if !itemsChecked.contains(item) {
+			itemsChecked.append(item)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+				self.viewModel.moveToOtherList(item: item)
+				self.itemsChecked.removeAll(where: { $0 == item })
+			}
+		}
+	}
+
 }
 
