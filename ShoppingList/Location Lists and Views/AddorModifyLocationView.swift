@@ -37,7 +37,7 @@ struct AddorModifyLocationView: View {
 	@State private var showDeleteConfirmation: Bool = false
 	
 	// we use an init, so the ShoppingListViewModel for the shopping items at this
-	// locations gets initialized properly with the location as associated data for
+	// location gets initialized properly with the location as associated data for
 	// the type locationSpecificShoppingList
 	init(viewModel: LocationsListViewModel, at location: Location? = nil) {
 		self.viewModel = viewModel

@@ -17,12 +17,12 @@ class ShoppingListViewModel: ObservableObject {
 		
 	// since we're really wrapping three different types of ShoppingListViewModel here
 	// all together, it's useful to define the types for clarity, and record which one we are
-	enum viewModelUsageType {
+	enum ViewModelUsageType {
 		case shoppingList 		// drives ShoppingListTabView
 		case purchasedItemShoppingList 		// drives PurchasedTabView
 		case locationSpecificShoppingList(Location?)	// drives LocationsTabView with associated location data
 	}
-	var usageType: viewModelUsageType
+	var usageType: ViewModelUsageType
 		
 	// the items on our list
 	@Published var items = [ShoppingItem]()
@@ -41,7 +41,7 @@ class ShoppingListViewModel: ObservableObject {
 	
 	// init can be one of three different types. for a location-specific model, the
 	// type will have associated data of the location we're attached to
-	init(type: viewModelUsageType) {
+	init(type: ViewModelUsageType) {
 		usageType = type
 		// sign us up for ShoppingItem and Location change operations.  note that Location changes
 		// matter because the order of the items will change if a Location is deleted or have
@@ -151,9 +151,9 @@ class ShoppingListViewModel: ObservableObject {
 		
 	@objc func locationWillBeDeleted(_ notification: Notification) {
 		// the notification has a reference to the location that will be deleted.  we need
-		// to see this notification: changes to the location's name will be handled fine
-		// in display, but if the location's visitationOrder has been changed, that
-		// (may) require a new sort of the items if any item is affected by the change.
+		// to see this notification: deleting a location has moved all items at that
+		// location into the Unknown Location and thus will probably
+		// require a new sort of the items if any item is affected by the change.
 		guard let location = notification.object as? Location else { return }
 		if !items.allSatisfy({ $0.location! == location }) {
 			sortItems()
@@ -166,7 +166,7 @@ class ShoppingListViewModel: ObservableObject {
 	// says whether a shopping item is of interest to us.
 	private func isOurKind(item: ShoppingItem) -> Bool {
 		switch usageType {
-			case .shoppingList: //, .multiSectionShoppingList:
+			case .shoppingList:
 				return item.onList == true
 			case .purchasedItemShoppingList:
 				return item.onList == false

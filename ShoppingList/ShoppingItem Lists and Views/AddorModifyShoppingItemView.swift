@@ -26,7 +26,7 @@ struct AddorModifyShoppingItemView: View {
 	var addItemToShoppingList: Bool = true
 	
 	// this editableData stuct contains all of the fields of a ShoppingItem that
-	// can be edited here, so that we're not doing a "live edit" on the ShoppingItem.
+	// can be edited here, so that we're not doing a "live edit" on the ShoppingItem
 	// itself.  this will be defaulted properly in .onAppear()
 	@State private var editableData = EditableShoppingItemData()
 

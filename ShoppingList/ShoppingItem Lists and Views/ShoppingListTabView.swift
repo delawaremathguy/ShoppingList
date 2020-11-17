@@ -67,12 +67,12 @@ invoked on an item in the list
 						MultiSectionShoppingListView(viewModel: viewModel,
 																				 isDeleteItemAlertShowing: $isDestructiveAlertShowing,
 																				 itemToDelete: $itemToDelete)
-//																				 processSwipeToDelete: handleMultiOnDeleteModifier)
+						//																				 processSwipeToDelete: handleMultiOnDeleteModifier)
 					} else {
 						SingleSectionShoppingListView(viewModel: viewModel,
 																					isDeleteItemAlertShowing: $isDestructiveAlertShowing,
 																					itemToDelete: $itemToDelete)
-//																					processSwipeToDelete: handleOnDeleteModifier)
+						//																					processSwipeToDelete: handleOnDeleteModifier)
 					}
 				}
 		
@@ -245,7 +245,6 @@ struct SingleSectionShoppingListView: View {
 					} // end of HStack
 				} // end of NavigationLink
 			} // end of ForEach
-//				.onDelete(perform: processSwipeToDelete)
 		}  // end of List
 		.listStyle(PlainListStyle())
 		
