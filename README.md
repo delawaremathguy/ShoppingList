@@ -10,7 +10,7 @@ Feel free to use this as is, to develop further,  to completely ignore, or even 
 
 ## Update Available as of December 4, 2020
 
-[An updated version of this project, retitled *ShoppingList14*, has been released](https://github/com/DelawareMathGuy/ShoppingList14). It incorporates some iOS 14 features, compiles with XCode12.2 and runs under iOS 14.2.  
+[An updated version of this project, retitled *ShoppingList14*, has been released](https://github.com/DelawareMathGuy/ShoppingList14). It incorporates some iOS 14 features, compiles with XCode12.2 and runs under iOS 14.2.  
 
 **This project, ShoppingList, will no longer be updated.**
 
